@@ -30,8 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Stateless
-@LocalBean
-@Singleton
 public class DownloadRepository {
     @PersistenceContext(unitName="topcatv2")
     EntityManager em;
@@ -41,7 +39,7 @@ public class DownloadRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadRepository.class);
 
-    public List<Download> getDownloadsByFacilityName(Map<String, Object> params) throws ParseException{
+    public List<Download> getDownloads(Map<String, Object> params) throws ParseException{
         List<Download> downloads = new ArrayList<Download>();
 
         String facilityName = (String) params.get("facilityName");
@@ -63,23 +61,23 @@ public class DownloadRepository {
             sb.append("SELECT d FROM Download d WHERE d.isDeleted = false");
 
             if(facilityName != null) {
-                sb.append( " AND d.facilityName = :facilityName");
+                facilityName = generateExpression(sb, "facilityName", facilityName);
             }
 
             if(userName != null) {
-                sb.append( " AND d.userName like concat(:userName, '%')");
+                userName = generateExpression(sb, "userName", userName);
             }
 
             if(status != null) {
-                sb.append( " AND d.status like concat(:status, '%')");
+                status = generateExpression(sb, "status", status);
             }
 
             if(transport != null) {
-                sb.append( " AND d.transport like concat(:transport, '%')");
+                transport = generateExpression(sb, "transport", transport);
             }
 
             if(preparedId != null) {
-                sb.append( " AND d.preparedId like concat(:preparedId, '%')");
+                preparedId = generateExpression(sb, "preparedId", preparedId);
             }
 
             if(createdAtFrom != null && createdAtTo != null) {
@@ -98,8 +96,11 @@ public class DownloadRepository {
                 query.setParameter("userName", userName);
             }
 
+
             if(status != null) {
+                logger.debug("before setParameter");
                 query.setParameter("status", status);
+                logger.debug("after setParameter");
             }
 
             if(transport != null) {
@@ -132,6 +133,20 @@ public class DownloadRepository {
         }
 
         return downloads;
+    }
+
+    private String generateExpression(StringBuilder sb, String fieldName, String value){
+        sb.append(" AND d." + fieldName + " ");
+        if(value.matches("(?s)^[*].*[*]$")){
+            sb.append("like concat('%', :" + fieldName + ", '%')");
+        } else if(value.matches("(?s)^.*[*]$")){
+            sb.append("like concat(:" + fieldName + ", '%')");
+        } else if(value.matches("(?s)^[*].*$")){
+            sb.append( "like concat('%', " + fieldName + ")");
+        } else {
+            sb.append("= :" + fieldName);
+        }
+        return value.replace("(?s)^[*](.*)[*]$", "$1");
     }
 
     public List<Download> getCheckDownloads(Map<String, String> params) {

@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Stateless
-@LocalBean
-@Singleton
 public class ExecutePoll {
     private static final Logger logger = LoggerFactory.getLogger(ExecutePoll.class);
 

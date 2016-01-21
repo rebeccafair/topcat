@@ -44,6 +44,9 @@ import static com.jayway.restassured.config.SSLConfig.*;
 @UsingDataSet("download.json")
 @RunWith(Arquillian.class)
 public class RestAPITest {
+
+
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
@@ -98,6 +101,7 @@ public class RestAPITest {
         assertEquals("{\"value\":\"ok\"}", ping);
     }
 
+    /*
 
     @Test
     public void return404() {
@@ -199,6 +203,7 @@ public class RestAPITest {
 
         return icatSessionId;
     }
+    */
 
 
 }

@@ -66,8 +66,8 @@ public class UserResource {
     @EJB
     private IdsClientBean idsClientService;
 
-    @EJB
-    private ExecutorBean executorBean;
+    //@EJB
+    //private ExecutorBean executorBean;
 
 
     @GET
@@ -381,7 +381,7 @@ public class UserResource {
 
             // if isTwoLevel storage and is https request start a check status thread
             if (isTwoLevel == true && cartSubmitDTO.getTransport().equals("https")) {
-                executorBean.executeAsync(preparedId);
+                //executorBean.executeAsync(preparedId);
             }
 
         } else {

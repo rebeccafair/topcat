@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 
 
 @Stateless
-@LocalBean
-@Singleton
 public class CartRepository {
     private static final Logger logger = LoggerFactory.getLogger(CartRepository.class);
 

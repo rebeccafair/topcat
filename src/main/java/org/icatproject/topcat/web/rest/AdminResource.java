@@ -81,7 +81,7 @@ public class AdminResource {
     @GET
     @Path("/downloads/facility/{facilityName}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getDownloadsByFacilityName(
+    public Response getDownloads(
             @PathParam("facilityName") String facilityName,
             @QueryParam("icatUrl") String icatUrl,
             @QueryParam("sessionId") String sessionId,
@@ -97,7 +97,7 @@ public class AdminResource {
 
         onlyAllowAdmin(icatUrl, sessionId);
 
-        logger.info("getDownloadsByFacilityName() called");
+        logger.info("getDownloads() called");
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("facilityName", facilityName);
@@ -111,7 +111,7 @@ public class AdminResource {
         params.put("page", page);
 
         List<Download> downloads = new ArrayList<Download>();
-        downloads = downloadRepository.getDownloadsByFacilityName(params);
+        downloads = downloadRepository.getDownloads(params);
 
         return Response.ok().entity(new GenericEntity<List<Download>>(downloads){}).build();
     }
