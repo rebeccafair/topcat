@@ -1,6 +1,6 @@
 {    
     "site": {
-        "topcatApiPath": "https://localhost:8181/api/v1",
+        "topcatApiPath": "https://topcat-dev.esc.rl.ac.uk/api/v1",
         "home" : "my-data",
         "enableEuCookieLaw" : true,
         "paging" : {
@@ -1307,36 +1307,33 @@
                             "default": true,
                             "items": [
                                 {
-                                    "label": "METATABS.INVESTIGATION.NAME",
-                                    "value": "name"
+                                    "field": "name"
                                 },
                                 {
-                                    "label": "METATABS.INVESTIGATION.TITLE",
-                                    "value": "title"
+                                    "field": "visitId"
                                 },
                                 {
-                                    "label": "METATABS.INVESTIGATION.SUMMARY",
-                                    "value": "summary"
+                                    "field": "title"
                                 },
                                 {
-                                    "label": "METATABS.INVESTIGATION.START_DATE",
-                                    "value": "startDate",
+                                    "field": "summary"
+                                },
+                                {
+                                    "field": "startDate",
                                     "template": "{{item.value | date:'yyyy-MM-dd'}}"
                                 },
                                 {
-                                    "label": "METATABS.INVESTIGATION.END_DATE",
-                                    "value": "endDate",
+                                    "field": "endDate",
                                     "template": "{{item.value | date:'yyyy-MM-dd'}}"
                                 }
-                            ]
+                       ]
                         },
                         {
                             "title": "METATABS.INVESTIGATION_USERS.TABTITLE",
                             "items": [
                                 {
-                                    "find": "user",
-                                    "label": "METATABS.INVESTIGATION_USERS.NAME",
-                                    "value": "fullName"
+                                    "title": "METATABS.INVESTIGATION_USERS.NAME",
+                                    "field": "investigationUser.fullName"
                                 }
                                 
                             ]
@@ -1345,9 +1342,7 @@
                             "title": "METATABS.INVESTIGATION_SAMPLES.TABTITLE",
                             "items": [
                                 {
-                                    "find": "sample",
-                                    "label": "METATABS.INVESTIGATION_SAMPLES.SAMPLE_NAME",
-                                    "value": "name"
+                                    "field": "investigationSample.name"
                                 }
                             ]
                         },
@@ -1355,9 +1350,8 @@
                             "title": "Publications",
                             "items": [
                                 {
-                                    "find": "publication",
-                                    "label": "Reference",
-                                    "value": "fullReference"
+                                    "title": "Reference",
+                                    "field": "fullReference"
                                 }
                             ]
                         }
