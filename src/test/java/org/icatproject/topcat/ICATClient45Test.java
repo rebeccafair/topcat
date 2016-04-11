@@ -23,6 +23,7 @@ import org.junit.Test;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ICATClient45Test {
+
     private static Properties prop;
     private static String icatSessionId;
     private static ICATClientInterface service;
@@ -32,6 +33,8 @@ public class ICATClient45Test {
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
+        TestHelpers.installTrustManager();
+
         prop = new Properties();
         InputStream is = ICATClient45Test.class.getClassLoader().getResourceAsStream("icatserver.properties");
         try {
@@ -149,6 +152,7 @@ public class ICATClient45Test {
     }
     */
 
+
     @Test
     public void username() {
         String username = null;
@@ -208,9 +212,5 @@ public class ICATClient45Test {
 
         assertFalse(isValid);
     }
-
-
-
-
 
 }
