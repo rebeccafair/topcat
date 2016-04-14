@@ -51,7 +51,6 @@
     this.investigation = $stateParams.investigation == 'true';
     this.dataset = $stateParams.dataset == 'true';
     this.datafile = $stateParams.datafile == 'true';
-    this.visable = false;
     if(this.investigation){
       this.currentTab = 'investigation';
     } else if(this.dataset){
@@ -65,6 +64,7 @@
       if(!that[type]) return;
       createGridOptions.call(that, type);
     });
+    this.isLoading = true;
     $q.all(promises).then(function(){
       _.each(['investigation', 'dataset', 'datafile'], function(type){
         if(!that[type]) return;
@@ -73,6 +73,7 @@
           entity.getSize(timeout.promise);
         });
       });
+      that.isLoading = false;
     });
 
 
@@ -81,10 +82,22 @@
       row.browse();
     };
 
+    this.showTabs = function(row){
+        $rootScope.$broadcast('rowclick', {
+            'type': row.entity.entityType,
+            'id' : row.entity.id,
+            'facilityName': row.entity.facilityName
+        });
+    };
+
     function createGridOptions(type){
       var gridApi;
-      var gridOptions = _.merge({data: [], appScopeProvider: this, enableSelectAll: false}, tc.config().search.gridOptions[type]);
+      var gridOptions = _.merge({data: [], appScopeProvider: that, enableSelectAll: false}, tc.config().search.gridOptions[type]);
       helpers.setupIcatGridOptions(gridOptions, type);
+      gridOptions.useExternalPagination =  false;
+      gridOptions.useExternalSorting =  false;
+      gridOptions.useExternalFiltering =  false;
+
 
       gridOptions.onRegisterApi = function(_gridApi) {
         gridApi = _gridApi;
@@ -96,7 +109,7 @@
             if(_.find(gridApi.selection.getSelectedRows(), identity)){
                 row.entity.addToCart(timeout.promise);
             } else {
-                tc.user(facilityName).cart(timeout.promise).then(function(cart){
+                tc.user(row.entity.facilityName).cart(timeout.promise).then(function(cart){
                     if(cart.isCartItem(row.entity.entityType, row.entity.id)){
                         row.entity.deleteFromCart(timeout.promise);
                     }
