@@ -14,15 +14,75 @@
         element : document.documentElement,
         module : 'angularApp',
         resolve : {
-            APP_CONFIG : ['$http', function($http) {
+            APP_CONFIG : ['$http', '$q', function($http, $q) {
                 var port = parseInt(window.location.port);
+                var url;
                 if(port === 10080 || port === 9000){
-                    return $http.get('config/topcat_dev.json', {headers: noCacheHeaders});
+                    url = 'config/topcat_dev.json';
+                } else {
+                    url = 'config/topcat.json';
                 }
-                return $http.get('config/topcat.json', {headers: noCacheHeaders});
-            } ],
+                return $http({
+                    url: url,
+                    method: 'GET',
+                    transformResponse: function (json) {
+                        try {
+                            return jsonlint.parse(json);
+                        } catch(e){
+                            alert(url + "\n\n" + e.message);
+                        }
+                        return {};
+                    }
+                }).then(function(response){
+                    var config = response.data;
+                    var defered = $q.defer();
+                    var promises = [];
+                    _.each(config.facilities, function(facility, facilityName){
+                        if(!facility.icatUrl){
+                            promises.push($.get(facility.idsUrl + "/ids/getIcatUrl").then(function(icatUrl){
+                                facility.icatUrl = icatUrl;
+                            }));
+                        }
+                    });
+                    $q.all(promises).then(function(){
+                        defered.resolve(config);
+                    });
+                    return defered.promise;
+                }).then(function(config){
+                    var defered = $q.defer();
+                    var promises = [];
+                    _.each(config.facilities, function(facility, facilityName){
+                        if(!facility.authenticationTypes){
+                            promises.push($.get(facility.icatUrl + "/icat/properties").then(function(properties){
+                                facility.authenticationTypes = _.map(properties.authenticators, function(authenticator){
+                                    return {
+                                        title: authenticator.friendly || authenticator.mnemonic,
+                                        plugin: authenticator.mnemonic
+                                    };
+                                });
+                            }));
+                        }
+                    });
+                    $q.all(promises).then(function(){
+                        defered.resolve(config);
+                    });
+                    return defered.promise;
+                });
+            }],
             LANG : ['$http', function($http) {
-                return $http.get('languages/lang.json', {headers: noCacheHeaders});
+                var url = 'languages/lang.json';
+                return $http({
+                    url: url,
+                    method: 'GET',
+                    transformResponse: function (json) {
+                        try {
+                            return jsonlint.parse(json);
+                        } catch(e){
+                            alert(url + "\n\n" + e.message);
+                        }
+                        return {};
+                    }
+                });
             } ]
         }
     });
@@ -263,6 +323,15 @@
                     url: '/admin/:facilityName',
                     templateUrl: 'views/admin.html',
                     controller: 'AdminController as adminController'
+                })
+                .state('doi-redirect', {
+                    url: '/doi-redirect/:facilityName/:entityType/:entityId',
+                    controller: 'DoiRedirectController',
+                    resolve: {
+                        authenticate : ['Authenticate', function(Authenticate) {
+                            return Authenticate.authenticate();
+                        }]
+                    }
                 });
                 $urlRouterProvider.otherwise('/');
 

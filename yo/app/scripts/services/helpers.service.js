@@ -23,7 +23,7 @@
                         field = matches[2];
                     }
 
-                    if(!item.label){
+                    if(!item.label && item.label !== ''){
                         var entityTypeNamespace = helpers.constantify(entityType);
                         var fieldNamespace = helpers.constantify(field);
                         item.label = "METATABS." + entityTypeNamespace + "." + fieldNamespace;
@@ -36,16 +36,16 @@
             var type = columnDef.type;
             var field = columnDef.field.replace(/^.*\./, '').replace(/\|.*$/, '');
 
-
             if(!columnDef.filter){
                 if(type == 'string'){
                     columnDef.filter = {
                         "condition": uiGridConstants.filter.CONTAINS,
                         "placeholder": "Containing...",
-                        "type": "input",
+                        "type": "input"
                     }
                 }
             }
+
             if(!columnDef.filters){
                 if(type == 'date'){
                     columnDef.filters = [
@@ -65,7 +65,7 @@
             if(!columnDef.cellFilter){
                 if(field.match(/Date$/)){
                     columnDef.cellFilter = "date: 'yyyy-MM-dd'"
-                } else {
+                } else if(field.match(/Time$/)) {
                     columnDef.cellFilter = "date: 'yyyy-MM-dd HH:mm:ss'"
                 }
             }
@@ -113,6 +113,7 @@
             if(columnDef.filter && typeof columnDef.filter.condition == 'string'){
             	columnDef.filter.condition = uiGridConstants.filter[columnDef.filter.condition.toUpperCase()];
             }
+
     	};
 
     	this.setupTopcatGridOptions = function(gridOptions, entityType){
@@ -137,12 +138,12 @@
 
             _.each(gridOptions.columnDefs, function(columnDef){
                 columnDef.enableHiding = false;
-                
             	var field = columnDef.field;
             	var type = entitySchema.fields[field];
             	if(!columnDef.type) columnDef.type = type;
             	helpers.setupColumnDef(columnDef, entityType, helpers.constantify(entityType) + '.COLUMN');
-	        });
+            });
+
     	};
 
     	this.setupIcatGridOptions = function(gridOptions, entityType){
@@ -263,7 +264,7 @@
 	            gridOptions.columnDefs.push({
 	                name : 'actions',
 	                visible: true,
-	                translateDisplayName: 'BROWSE.COLUMN.ACTIONS.NAME',
+	                title: 'BROWSE.COLUMN.ACTIONS.NAME',
 	                enableFiltering: false,
 	                enable: false,
 	                enableColumnMenu: false,
@@ -319,6 +320,7 @@
         };
 
         this.typeOf = function(data){
+            if(data === null) return 'null';
 			var out = typeof data;
 			if(out == 'object'){
 				if(data instanceof Array) return 'array';

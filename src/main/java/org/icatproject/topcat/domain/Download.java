@@ -68,6 +68,9 @@ public class Download implements Serializable {
     @Column(name = "EMAIL")
     private String email;
 
+    @Column(name = "IS_EMAIL_SENT")
+    private Boolean isEmailSent = false;
+
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private DownloadStatus status;
@@ -174,6 +177,14 @@ public class Download implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getIsEmailSent() {
+        return isEmailSent;
+    }
+
+    public void setIsEmailSent(Boolean isEmailSent) {
+        this.isEmailSent = isEmailSent;
     }
 
     public DownloadStatus getStatus() {

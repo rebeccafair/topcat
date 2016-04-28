@@ -19,7 +19,11 @@
   		return _.map(APP_CONFIG.facilities, function(facility, facilityName){ return tc.facility(facilityName); });
   	};
 
-  	this.config = function(){ return APP_CONFIG.site; }
+  	this.config = function(){ 
+      var out = APP_CONFIG.site;
+      if(!out.topcatUrl) out.topcatUrl = "https://" + window.location.host;
+      return out;
+    }
 
     this.cache = function(){
       if(!cache) cache = tcCache.create('topcat');
@@ -157,9 +161,7 @@
     	return $q.all(promises);
     };
 
-		var topcatApiPath = this.config().topcatApiPath + "/topcat/";
-		this.topcatApiPath = topcatApiPath;
-		helpers.generateRestMethods(this, topcatApiPath);
+		helpers.generateRestMethods(this, this.config().topcatUrl + "/topcat/");
 
   });
 
