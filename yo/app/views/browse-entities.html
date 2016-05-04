@@ -42,6 +42,14 @@
     </div>
 </div>
 
+<div ng-if="!browseEntitiesController.gridOptions.externalFilters.length == 0" class ="filter-row">
+<div class="filter-select" ng-repeat="filter in browseEntitiesController.gridOptions.externalFilters">
+    <select ng-model="filter.selectedOption" ng-options="option as option for option in filter.options" ng-change="browseEntitiesController.externalFilterChanged()">
+    <option value="" selected>{{browseEntitiesController.gridOptions.externalFilters.filterText | translate}} {{filter.label | translate}}</option> 
+    </select>
+</div>
+</div>
+
 <div>
     <div ng-if="browseEntitiesController.isScroll" ui-grid="browseEntitiesController.gridOptions" ui-grid-infinite-scroll ui-grid-selection ui-grid-save-state ui-grid-selection ui-grid-resize-columns  class="browse-grid" take-up-remaining-height>
         <div class="no-rows row" ng-show="!browseEntitiesController.isLoading && browseEntitiesController.gridOptions.data.length == 0">

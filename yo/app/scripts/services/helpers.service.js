@@ -176,7 +176,7 @@
                 }
 
                 if(!variableEntityType) return;
-                
+
                 var entitySchema = icatSchema.entityTypes[variableEntityType];
                 var type = entitySchema.fields[field];
                 if(!columnDef.type) columnDef.type = type;
@@ -358,7 +358,6 @@
 				} else if(!found){
 					out = variations.default.apply(that, args);
 				}
-
 				return out;
 			};
 		}
@@ -399,7 +398,7 @@
 	        		_query.push(expression.join(''));
 	        	}
 	        } catch(e) {
-	        	console.error("can't build query", query, e)
+	            console.error("can't build query", query, e)
 	        }
 	        return _query.join(' ');
 		};

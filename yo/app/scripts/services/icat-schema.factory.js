@@ -292,7 +292,8 @@
 					'relationships':{
 						'datasets': {
 							'entityType': 'dataset',
-							'cardinality': '0,*'
+							'cardinality': '0,*',
+							'variableName': 'dataset'
 						},
 						'facility': {
 							'entityType': 'facility',
@@ -416,7 +417,8 @@
 						},
 						'instrumentScientists': {
 							'entityType': 'instrumentScientist',
-							'cardinality': '0,*'
+							'cardinality': '0,*',
+							'variableName': 'instrumentScientistPivot'
 						},
 						'investigationInstruments': {
 							'entityType': 'investigationInstrument',
@@ -438,7 +440,8 @@
 						},
 						'user': {
 							'entityType': 'user',
-							'cardinality': '1,1'
+							'cardinality': '1,1',
+							'variableName': 'instrumentScientist'
 						}
 					}
 				},

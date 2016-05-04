@@ -293,3 +293,14 @@ a[ng-click]{
 .ui-grid-cell-contents {
     padding: 3px;
 }
+
+.filter-row {
+  display: inline-block;
+  padding: 0px 0px 0px 0px;
+}
+
+.filter-select {
+  padding: 0px 8px 0px 0px;
+  font-size: 11pt;
+  float: left;
+}

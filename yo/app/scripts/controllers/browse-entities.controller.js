@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('BrowseEntitiesController', function($state, $q, $scope, $rootScope, $translate, $timeout, $templateCache, tc, helpers){
+    app.controller('BrowseEntitiesController', function($state, $q, $scope, $rootScope, $translate, $timeout, $templateCache, tc, helpers, icatSchema){
         var that = this; 
         var stateFromTo = $state.current.name.replace(/^.*?(\w+-\w+)$/, '$1');
         var entityType = stateFromTo.replace(/^.*-/, '');
@@ -24,12 +24,14 @@
         var stopListeningForCartChanges =  $rootScope.$on('cart:change', function(){
             updateSelections();
         });
+
         $scope.$on('$destroy', function(){
             canceler.resolve();
             stopListeningForCartChanges();
         });
 
         helpers.setupIcatGridOptions(gridOptions, entityType);
+        if (gridOptions.externalFilters) { setupExternalFilters(); }
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
 
@@ -47,6 +49,47 @@
             return sortColumn.sort.priority;
         });
 
+        function setupExternalFilters() {
+              gridOptions.externalFilters.filterText = "FILTERS.FILTER_TEXT";
+            _.each(gridOptions.externalFilters, function(filter){
+                var filterEntityType = filter.field.replace(/^(\w*)\..*$/, '$1');
+                filter.fieldName = filter.field.replace(/^.*?\.?(\w*)$/, '$1');
+                if (icatSchema.entityTypes[filterEntityType]) { filter.entityType = filterEntityType; }
+                var out = icat.queryBuilder(filter.entityType || entityType);
+                _.each($state.params, function(id, name){
+                    var matches;
+                    if(matches = name.match(/^(.*)Id$/)){
+                        var variableName = matches[1];
+                        out.where(["?.id = ?", variableName.safe(), parseInt(id)]);
+                    }
+                });
+                out.limit(0, 50);
+                out.run(canceler.promise).then(function(entities){
+                    filter.options = [];
+                    _.each(entities, function(entity){
+                        filter.options.push(entity[filter.fieldName]);
+                    });
+
+                }, function(error) {
+                    var errorMessage = error || "";
+                    console.error("Failed to load external filter: " + filter.field + "\n" + errorMessage);
+                })
+
+                if(!filter.label && filter.label !== ''){
+                    var entityTypeNamespace = helpers.constantify(entityType);
+                    if (filter.entityType) {
+                        var fieldNamespace = helpers.constantify(filter.entityType)
+                    } else {
+                    var fieldNamespace = helpers.constantify(filter.field);
+                    }
+                    filter.label = "FILTERS." + entityTypeNamespace + "." + fieldNamespace;
+                }
+            });
+        };
+
+        this.externalFilterChanged = function (){
+            gridApi.core.raise.filterChanged();
+        };
 
         function generateQueryBuilder(){
             var entityType = stateFromTo.replace(/^.*-/, '');
@@ -116,8 +159,17 @@
                 }
                 
             });
-        
-            
+
+            _.each(gridOptions.externalFilters, function(filter){
+                if (filter.selectedOption) {
+                    if (icatSchema.entityTypes[filter.entityType]) {
+                        out.where(['?.? = ?', entityType.safe(), filter.jpqlExpression.safe(), filter.selectedOption]);
+                    } else {
+                        out.where(['?.? = ?', entityType.safe(), filter.fieldName.safe(), filter.selectedOption]);
+                    }
+                }
+            });
+
             _.each(sortColumns, function(sortColumn){
                 if(sortColumn.colDef){
                     out.orderBy(sortColumn.colDef.jpqlExpression, sortColumn.sort.direction);
@@ -273,7 +325,7 @@
                 });
             });
 
-            //filter change calkback
+            //filter change callback
             gridApi.core.on.filterChanged($scope, function(){
                 canceler.resolve();
                 canceler = $q.defer();

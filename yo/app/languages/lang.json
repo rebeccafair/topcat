@@ -539,8 +539,19 @@
             "SIZE" : "File Size",
             "LOCATION" : "Location",
             "PARAMETERS" : "Parameters"
+        },
+        "USER" : {
+            "FULL_NAME" : "Name"
         }
     },
+    "FILTERS" : {
+        "FILTER_TEXT" : "Filter by",
+        "DATASET" : {
+            "DATASET_TYPE" : "dataset type",
+            "NAME" : "dataset name"
+        }
+
+        },
     "FOOTER" : {
         "HTML" : "<div ><a href=\"http://www.diamond.ac.uk\">Diamond Light Source</a> | <a href=\"http://www.diamond.ac.uk/Legal.html\">Privacy Policy</a> | <a ui-sref=\"cookie-policy\">Cookie Policy</a> | <a href=\"http://www.diamond.ac.uk/Home/About.html\">About Us</a></div>"
     },

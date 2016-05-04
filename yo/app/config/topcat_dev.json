@@ -212,6 +212,7 @@
     "facilities": {
         "test": {
             "title": "TEST",
+            "icatUrl": "https://localhost:8181",
             "idsUrl": "https://localhost:8181",
             "facilityId": 1,
             "hierarchy": [
@@ -1049,6 +1050,12 @@
                             "field": "visitId"
                         },
                         {
+                            "field": "investigationInstrument.fullName"
+                        },
+                        {
+                            "field": "size"
+                        },
+                        {
                             "field": "datafileParameter.numericValue",
                             "title": "BROWSE.COLUMN.INVESTIGATION.RUN_NUMBER",
                             "type": "number",
@@ -1063,12 +1070,6 @@
                                     "type": "input"
                                 }
                             ]
-                        },
-                        {
-                            "field": "investigationInstrument.fullName"
-                        },
-                        {
-                            "field": "size"
                         },
                         {
                             "field": "startDate",
@@ -1200,7 +1201,6 @@
                             "title": "METATABS.INVESTIGATION_USERS.TABTITLE",
                             "items": [
                                 {
-                                    "title": "METATABS.INVESTIGATION_USERS.NAME",
                                     "field": "investigationUser.fullName"
                                 }
                                 
@@ -1247,8 +1247,17 @@
                             {
                                 "field": "modTime"
                             }
+                        ],
+                        "externalFilters": [
+                            {
+                                "field": "datasetType.name",
+                                "jpqlExpression": "type.name"
+                            },
+                            {
+                                "field": "name"
+                            }
                         ]
-                    },
+                     },
                     "metaTabs": [
                         {
                             "title": "METATABS.DATASET.TABTITLE",
