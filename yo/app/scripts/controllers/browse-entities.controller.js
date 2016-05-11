@@ -24,6 +24,7 @@
         var stopListeningForCartChanges =  $rootScope.$on('cart:change', function(){
             updateSelections();
         });
+        var variablePaths = icatSchema.entityTypes[entityType].variablePaths;
 
         $scope.$on('$destroy', function(){
             canceler.resolve();
@@ -52,9 +53,25 @@
         function setupExternalFilters() {
               gridOptions.externalFilters.filterText = "FILTERS.FILTER_TEXT";
             _.each(gridOptions.externalFilters, function(filter){
-                var filterEntityType = filter.field.replace(/^(\w*)\..*$/, '$1');
-                filter.fieldName = filter.field.replace(/^.*?\.?(\w*)$/, '$1');
-                if (icatSchema.entityTypes[filterEntityType]) { filter.entityType = filterEntityType; }
+
+                var matches = filter.field.match(/^(\w*)?\.?(\w*)$/);
+                if (matches[2]) {
+                    filter.variableName = matches[1];
+                    filter.fieldName = matches[2];
+                } else {
+                    filter.fieldName = matches[1];
+                }
+
+                if (filter.variableName) {
+                _.each(icatSchema.entityTypes, function(entityType){
+                    _.each(entityType.relationships, function(relationship){
+                        if (_.isEqual(relationship.variableName, filter.variableName)){
+                            filter.entityType = relationship.entityType;
+                        }
+                    })
+                });
+                }
+
                 var out = icat.queryBuilder(filter.entityType || entityType);
                 _.each($state.params, function(id, name){
                     var matches;
@@ -63,24 +80,27 @@
                         out.where(["?.id = ?", variableName.safe(), parseInt(id)]);
                     }
                 });
-                out.limit(0, 50);
+                out.limit(0, 10);
+
                 out.run(canceler.promise).then(function(entities){
                     filter.options = [];
+                    var filterOptions = [];
                     _.each(entities, function(entity){
-                        filter.options.push(entity[filter.fieldName]);
+                        filterOptions.push(entity[filter.fieldName]);
                     });
+                    filter.options = _.uniq(filterOptions);
 
                 }, function(error) {
-                    var errorMessage = error || "";
-                    console.error("Failed to load external filter: " + filter.field + "\n" + errorMessage);
+                    var errorMessage = "Failed to load external filter: " + filter.field + "\n";
+                    console.error(errorMessage.concat(JSON.stringify(error) || ""));
                 })
 
-                if(!filter.label && filter.label !== ''){
+                if(!filter.label){
                     var entityTypeNamespace = helpers.constantify(entityType);
                     if (filter.entityType) {
                         var fieldNamespace = helpers.constantify(filter.entityType)
                     } else {
-                    var fieldNamespace = helpers.constantify(filter.field);
+                        var fieldNamespace = helpers.constantify(filter.field);
                     }
                     filter.label = "FILTERS." + entityTypeNamespace + "." + fieldNamespace;
                 }
@@ -162,8 +182,11 @@
 
             _.each(gridOptions.externalFilters, function(filter){
                 if (filter.selectedOption) {
-                    if (icatSchema.entityTypes[filter.entityType]) {
-                        out.where(['?.? = ?', entityType.safe(), filter.jpqlExpression.safe(), filter.selectedOption]);
+                    var variablePaths = icatSchema.entityTypes[entityType].variablePaths;
+                    var variablePath = variablePaths[filter.variableName] || [];
+                    var path = _.flatten([[entityType], variablePath]).join('.');
+                    if (path) {
+                        out.where(['?.? = ?', path.safe(), filter.fieldName.safe(), filter.selectedOption]);
                     } else {
                         out.where(['?.? = ?', entityType.safe(), filter.fieldName.safe(), filter.selectedOption]);
                     }

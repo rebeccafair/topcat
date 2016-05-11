@@ -490,7 +490,8 @@
 						},
 						'type': {
 							'entityType': 'investigationType',
-							'cardinality': '1,1'
+							'cardinality': '1,1',
+							'variableName': 'investigationType'
 						},
 						'investigationInstruments': {
 							'entityType': 'investigationInstrument',
@@ -594,7 +595,8 @@
 					'relationships':{
 						'investigations': {
 							'entityType': 'investigation',
-							'cardinality': '0,*'
+							'cardinality': '0,*',
+							'variableName': 'investigation'
 						},
 						'facility': {
 							'entityType': 'facility',
@@ -835,7 +837,8 @@
 						},
 						'datasets': {
 							'entityType': 'dataset',
-							'cardinality': '0,*'
+							'cardinality': '0,*',
+							'variableName': 'dataset'
 						},
 						'type': {
 							'entityType': 'sampleType',
@@ -843,7 +846,8 @@
 						},
 						'investigation': {
 							'entityType': 'investigation',
-							'cardinality': '1,1'
+							'cardinality': '1,1',
+							'variableName': 'investigation'
 						}
 					}
 				},
@@ -1049,6 +1053,5 @@
 
 		return out;
     });
-    	
 
 })();
