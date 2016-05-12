@@ -7,6 +7,45 @@
     app.service('helpers', function($http, $q, $timeout, uiGridConstants, icatSchema, topcatSchema){
     	var helpers = this;
 
+        this.setupExternalFilters = function(externalFilters, entityType) {
+            externalFilters.filterText = "FILTERS.FILTER_TEXT";
+            _.each(externalFilters, function(filter){
+
+                var matches = filter.field.match(/^(\w*)?\.?(\w*)$/);
+                if (matches[2]) {
+                    filter.variableName = matches[1];
+                    filter.fieldName = matches[2];
+                } else {
+                    filter.fieldName = matches[1];
+                }
+
+                if (filter.variableName) {
+                    _.each(icatSchema.entityTypes, function(entityType){
+                        _.each(entityType.relationships, function(relationship){
+                            if (_.isEqual(relationship.variableName, filter.variableName)){
+                                filter.entityType = relationship.entityType;
+                            }
+                        });
+                    });
+
+                    var variablePaths = icatSchema.entityTypes[entityType].variablePaths;
+                    var variablePath = variablePaths[filter.variableName] || [];
+                    filter.variablePath = _.flatten([[entityType], variablePath]).join('.');
+
+                }
+
+                if(!filter.label){
+                    var entityTypeNamespace = helpers.constantify(entityType);
+                    if (filter.entityType) {
+                        var fieldNamespace = helpers.constantify(filter.entityType)
+                    } else {
+                        var fieldNamespace = helpers.constantify(filter.field);
+                    }
+                    filter.label = "FILTERS." + entityTypeNamespace + "." + fieldNamespace;
+                }
+            });
+        };
+
     	this.setupMetatabs = function(metaTabs, entityType){
     		_.each(metaTabs, function(metaTab){
                 _.each(metaTab.items, function(item){

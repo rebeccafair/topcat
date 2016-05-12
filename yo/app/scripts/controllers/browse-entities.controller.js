@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('BrowseEntitiesController', function($state, $q, $scope, $rootScope, $translate, $timeout, $templateCache, tc, helpers, icatSchema){
+    app.controller('BrowseEntitiesController', function($state, $q, $scope, $rootScope, $translate, $timeout, $templateCache, tc, helpers){
         var that = this; 
         var stateFromTo = $state.current.name.replace(/^.*?(\w+-\w+)$/, '$1');
         var entityType = stateFromTo.replace(/^.*-/, '');
@@ -24,7 +24,6 @@
         var stopListeningForCartChanges =  $rootScope.$on('cart:change', function(){
             updateSelections();
         });
-        var variablePaths = icatSchema.entityTypes[entityType].variablePaths;
 
         $scope.$on('$destroy', function(){
             canceler.resolve();
@@ -32,7 +31,8 @@
         });
 
         helpers.setupIcatGridOptions(gridOptions, entityType);
-        if (gridOptions.externalFilters) { setupExternalFilters(); }
+        if (gridOptions.externalFilters) { helpers.setupExternalFilters(gridOptions.externalFilters, entityType); }
+
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
 
@@ -50,28 +50,12 @@
             return sortColumn.sort.priority;
         });
 
-        function setupExternalFilters() {
-              gridOptions.externalFilters.filterText = "FILTERS.FILTER_TEXT";
+        this.externalFilterChanged = function (){
+            gridApi.core.raise.filterChanged();
+        };
+
+        function getExternalFilterOptions(){
             _.each(gridOptions.externalFilters, function(filter){
-
-                var matches = filter.field.match(/^(\w*)?\.?(\w*)$/);
-                if (matches[2]) {
-                    filter.variableName = matches[1];
-                    filter.fieldName = matches[2];
-                } else {
-                    filter.fieldName = matches[1];
-                }
-
-                if (filter.variableName) {
-                _.each(icatSchema.entityTypes, function(entityType){
-                    _.each(entityType.relationships, function(relationship){
-                        if (_.isEqual(relationship.variableName, filter.variableName)){
-                            filter.entityType = relationship.entityType;
-                        }
-                    })
-                });
-                }
-
                 var out = icat.queryBuilder(filter.entityType || entityType);
                 _.each($state.params, function(id, name){
                     var matches;
@@ -94,22 +78,8 @@
                     var errorMessage = "Failed to load external filter: " + filter.field + "\n";
                     console.error(errorMessage.concat(JSON.stringify(error) || ""));
                 })
-
-                if(!filter.label){
-                    var entityTypeNamespace = helpers.constantify(entityType);
-                    if (filter.entityType) {
-                        var fieldNamespace = helpers.constantify(filter.entityType)
-                    } else {
-                        var fieldNamespace = helpers.constantify(filter.field);
-                    }
-                    filter.label = "FILTERS." + entityTypeNamespace + "." + fieldNamespace;
-                }
             });
-        };
-
-        this.externalFilterChanged = function (){
-            gridApi.core.raise.filterChanged();
-        };
+        }
 
         function generateQueryBuilder(){
             var entityType = stateFromTo.replace(/^.*-/, '');
@@ -182,11 +152,8 @@
 
             _.each(gridOptions.externalFilters, function(filter){
                 if (filter.selectedOption) {
-                    var variablePaths = icatSchema.entityTypes[entityType].variablePaths;
-                    var variablePath = variablePaths[filter.variableName] || [];
-                    var path = _.flatten([[entityType], variablePath]).join('.');
-                    if (path) {
-                        out.where(['?.? = ?', path.safe(), filter.fieldName.safe(), filter.selectedOption]);
+                    if (filter.variablePath) {
+                        out.where(['?.? = ?', filter.variablePath.safe(), filter.fieldName.safe(), filter.selectedOption]);
                     } else {
                         out.where(['?.? = ?', entityType.safe(), filter.fieldName.safe(), filter.selectedOption]);
                     }
@@ -328,6 +295,7 @@
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;
             restoreState();
+            getExternalFilterOptions();
 
             getPage().then(function(results){
                 gridOptions.data = results;
