@@ -42,9 +42,9 @@
     </div>
 </div>
 
-<div ng-if="!browseEntitiesController.gridOptions.externalFilters.length == 0" class ="filter-row">
-<div class="filter-select" ng-repeat="filter in browseEntitiesController.gridOptions.externalFilters">
-    <select ng-model="filter.selectedOption" ng-options="option as option for option in filter.options" ng-change="browseEntitiesController.externalFilterChanged()">
+<div ng-if="!browseEntitiesController.gridOptions.externalFilters.length == 0" class ="form-inline">
+<div class="form-group filter-row" ng-repeat="filter in browseEntitiesController.gridOptions.externalFilters">
+    <select class="form-control filter-select" ng-model="filter.selectedOption" ng-options="option as option for option in filter.options" ng-change="browseEntitiesController.externalFilterChanged()">
     <option value="" selected>{{browseEntitiesController.gridOptions.externalFilters.filterText | translate}} {{filter.label | translate}}</option> 
     </select>
 </div>
