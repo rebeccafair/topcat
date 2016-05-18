@@ -479,7 +479,11 @@
 						}
 						if(_.isUndefined(options.byPassIntercepter)) options.byPassIntercepter = true;
 						var url = prefix + offset;
-						if(methodName.match(/get|delete/) && params !== '') url += '?' + params;
+						if(methodName.match(/get|delete/) && params !== '' && prefix === 'ijp/'){
+                            url += 'q' + params;
+                        } else if(methodName.match(/get|delete/) && params !== '') {
+                            url += '?' + params;
+                        }
 						var out = $q.defer();
 						var args = [url];
 						if(methodName.match(/post|put/)) args.push(params);

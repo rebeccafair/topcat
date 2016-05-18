@@ -1,0 +1,7 @@
+[{"name":"Date",
+"executable":"date",
+"multiple":"false",
+"type":"batch",
+"datasetTypes":[],
+"jobOptions":[]
+}]

@@ -1,0 +1,33 @@
+[{"name":"Test args - multiple datasets/files",
+"executable":"test_args.py",
+"multiple":"true",
+"type":"batch",
+"datasetTypes":["atemoon", "possiblemathematics"],
+"jobOptions":[   
+    {"Option 1":{
+        "name":"Option 1",
+        "groupName":"",
+        "type":"string",
+        "programParameter":"--option-one",
+        "values":[],
+        "defaultValue":"",
+        "minValue":"",
+        "maxValue":"",
+        "condition":"",
+        "tip":""
+        }
+    },
+    {"Option 2":{
+        "name":"Option 2",
+        "groupName":"",
+        "type":"string",
+        "programParameter":"--option-two",
+        "values":[],
+        "defaultValue":"",
+        "minValue":"",
+        "maxValue":"",
+        "condition":"",
+        "tip":""
+        }
+    }]
+}]

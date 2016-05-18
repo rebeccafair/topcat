@@ -130,6 +130,8 @@
 
 		this.ids = function(facilityName){ return this.facility(facilityName).ids(); };
 
+    this.ijp = function(facilityName){ return this.facility(facilityName).ijp(); };
+
 		this.admin = function(facilityName){ return this.facility(facilityName).admin(); };
 
 		this.user = function(facilityName){ return this.facility(facilityName).user(); };
