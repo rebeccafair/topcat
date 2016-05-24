@@ -217,7 +217,7 @@
             "facilityId": 1,
             "hierarchy": [
                 "facility",
-                "proposal",
+                "instrument",
                 "investigation",
                 "dataset",
                 "datafile"
@@ -230,6 +230,10 @@
                 {
                     "title": "DB",
                     "plugin": "db"
+                },
+                {
+                    "title": "LDAP",
+                    "plugin": "ldap"
                 }
             ],
             "downloadTransportTypes": [
@@ -423,6 +427,25 @@
                     ]
                 }
             },
+            "myJobs": {
+                "gridOptions": {
+                    "enableFiltering": true,
+                    "columnDefs": [
+                        {
+                            "field": "jobId"
+                        },
+                        {
+                            "field": "name"
+                        },
+                        {
+                            "field": "date"
+                        },
+                        {
+                            "field": "status"
+                        }
+                    ]
+                }
+            },
             "browse":{
                 "instrument": {
                     "gridOptions": {
@@ -532,6 +555,14 @@
                             },
                             {
                                 "field": "endDate"
+                            },
+                            {
+                                "field": "investigationType.name"
+                            }
+                        ],
+                        "externalFilters": [
+                            {
+                                "field": "investigationType.name"
                             }
                         ]
                     },
@@ -599,6 +630,23 @@
                             },
                             {
                                 "field": "modTime"
+                            },
+                            {
+                                "field": "datasetType.name"
+                            },
+                            {
+                                "field": "datasetSample.name"
+                            }
+                        ],
+                        "externalFilters": [
+                            {
+                                "field": "datasetType.name"
+                            },
+                            {
+                                "field": "datasetSample.name"
+                            },
+                            {
+                                "field": "complete"
                             }
                         ]
                     },
@@ -624,10 +672,10 @@
                             "title": "METATABS.DATASET_TYPE.TABTITLE",
                             "items": [
                                 {
-                                    "field": "name"
+                                    "field": "datasetType.name"
                                 },
                                 {
-                                    "field": "description"
+                                    "field": "datasetType.description"
                                 }
                             ]
                         }
@@ -1246,15 +1294,15 @@
                             },
                             {
                                 "field": "modTime"
+                            },
+                            {
+                                "field": "datasetType.name"
                             }
                         ],
                         "externalFilters": [
                             {
                                 "field": "datasetType.name",
                                 "jpqlExpression": "type.name"
-                            },
-                            {
-                                "field": "name"
                             }
                         ]
                      },

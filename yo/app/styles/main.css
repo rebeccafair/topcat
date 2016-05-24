@@ -84,6 +84,11 @@ body {
   height: 400px;
 }
 
+.my-jobs-grid {
+  width: 100%;
+  height: 400px;
+}
+
 .element-spinner {
   position: relative;
   display: block;
@@ -303,4 +308,12 @@ a[ng-click]{
 .filter-select {
   height: 25px;
   padding: 0px;
+}
+
+.job-details .modal-dialog {
+  width: 700px;
+}
+
+.job-details .modal-body {
+  height: 700px;
 }

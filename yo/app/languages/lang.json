@@ -14,6 +14,7 @@
         "LOGOUT_ALL": "Logout All",
         "MAIN_TAB" : {
             "MY_DATA" : "My Data",
+            "MY_JOBS" : "My Jobs",
             "BROWSE" : "Browse",
             "SEARCH" : "Search",
             "CART" : "Cart",
@@ -244,6 +245,17 @@
             "TOOLTIP" : {
                 "TEXT" : "@:BROWSE.SELECTOR.TOOLTIP.TEXT"
             }
+        }
+    },
+    "MY_JOBS" : {
+        "TITLE" : "My Jobs",
+        "NO_RESULTS" : "You do not have any jobs",
+        "LOADING" : "Loading - please wait",
+        "COLUMN": {
+            "JOB_ID": "Job Id",
+            "NAME": "Job Type",
+            "DATE": "Submitted",
+            "STATUS": "Status"
         }
     },
     "CART" : {

@@ -335,6 +335,29 @@
                 });
                 $urlRouterProvider.otherwise('/');
 
+        _.some(APP_CONFIG.facilities, function(facility){
+            if (facility.ijpUrl != undefined) {
+                 $stateProvider.state('home.my-jobs', {
+                    url: '/my-jobs/:facilityName',
+                    resolve: {
+                        authenticate : ['Authenticate', function(Authenticate) {
+                            return Authenticate.authenticate();
+                        }]
+                    },
+                    views: {
+                        'my-jobs@home': {
+                            templateUrl: 'views/main-my-jobs.html'
+                        },
+                        '@home.my-jobs': {
+                            templateUrl: 'views/partial-my-jobs-panel.html',
+                            controller: 'MyJobsController as myJobsController'
+                        }
+                    }
+                });
+                 return true;
+            }
+        });
+
         })
         .config(function (pollerConfig) {
             pollerConfig.neverOverwrite = true;

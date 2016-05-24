@@ -78,6 +78,7 @@
  
         });
 
+        if (facility.config().ijpUrl == undefined) console.error('ijpUrl is undefined for facility ' + facility.config().title);
     		helpers.generateRestMethods(this, facility.config().ijpUrl + 'ijp/');
     	}
 		

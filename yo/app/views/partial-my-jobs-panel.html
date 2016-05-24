@@ -1,0 +1,29 @@
+<h1 translate="MY_JOBS.TITLE"></h1>
+
+
+<div ng-show="myJobsController.ijpFacilities.length > 1">
+    <ul class="nav nav-tabs nav-tabs-head">
+        <li ng-repeat="facility in myJobsController.ijpFacilities" ng-class="{active: facility.config().facilityName == $state.params.facilityName}">
+            <a ui-sref="home.my-jobs({facilityName: facility.config().facilityName})">{{facility.config().title}}</a>
+        </li>
+    </ul>
+    <br>
+</div>
+<div ng-if="myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-infinite-scroll ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
+    <div class="no-rows row" ng-show="!myJobsController.isLoading && myJobsController.gridOptions.data.length == 0">
+        <div class="col-xs-12 empty-message" translate="MY_JOBS.NO_RESULTS"></div>
+    </div>
+    <div class="no-rows row" ng-show="myJobsController.isLoading">
+        <div class="col-xs-12 empty-message" translate="MY_JOBS.LOADING"></div>
+    </div>
+</div>
+<div ng-if="!myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-pagination ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
+    <div class="no-rows row" ng-show="myJobsController.gridOptions.data.length == 0">
+        <div class="no-rows row" ng-show="!myJobsController.isLoading && myJobsController.gridOptions.data.length == 0">
+            <div class="col-xs-12 empty-message" translate="MY_JOBS.NO_RESULTS"></div>
+        </div>
+        <div class="no-rows row" ng-show="myJobsController.isLoading">
+            <div class="col-xs-12 empty-message" translate="MY_JOBS.LOADING"></div>
+        </div>
+    </div>
+</div>

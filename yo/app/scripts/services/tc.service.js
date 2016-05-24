@@ -148,6 +148,10 @@
 			return _.select(this.facilities(), function(facility){ return facility.icat().session().sessionId === undefined; });
 		};
 
+    this.ijpFacilities = function(){
+      return _.select(this.facilities(), function(facility){ return facility.config().ijpUrl !== undefined; });
+    };
+
 		this.purgeSessions = function(){
     	var promises = [];
 
