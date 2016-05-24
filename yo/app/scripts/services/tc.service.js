@@ -149,7 +149,7 @@
 		};
 
     this.ijpFacilities = function(){
-      return _.select(this.facilities(), function(facility){ return facility.config().ijpUrl !== undefined; });
+      return _.select(this.userFacilities(), function(facility){ return facility.config().ijpUrl !== undefined; });
     };
 
 		this.purgeSessions = function(){

@@ -9,16 +9,8 @@
     </ul>
     <br>
 </div>
-<div ng-if="myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-infinite-scroll ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
-    <div class="no-rows row" ng-show="!myJobsController.isLoading && myJobsController.gridOptions.data.length == 0">
-        <div class="col-xs-12 empty-message" translate="MY_JOBS.NO_RESULTS"></div>
-    </div>
-    <div class="no-rows row" ng-show="myJobsController.isLoading">
-        <div class="col-xs-12 empty-message" translate="MY_JOBS.LOADING"></div>
-    </div>
-</div>
-<div ng-if="!myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-pagination ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
-    <div class="no-rows row" ng-show="myJobsController.gridOptions.data.length == 0">
+<div ng-if="myJobsController.ijpFacilities.length > 0">
+    <div ng-if="myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-infinite-scroll ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
         <div class="no-rows row" ng-show="!myJobsController.isLoading && myJobsController.gridOptions.data.length == 0">
             <div class="col-xs-12 empty-message" translate="MY_JOBS.NO_RESULTS"></div>
         </div>
@@ -26,4 +18,16 @@
             <div class="col-xs-12 empty-message" translate="MY_JOBS.LOADING"></div>
         </div>
     </div>
+    <div ng-if="!myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-pagination ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
+        <div class="no-rows row" ng-show="myJobsController.gridOptions.data.length == 0">
+            <div class="no-rows row" ng-show="!myJobsController.isLoading && myJobsController.gridOptions.data.length == 0">
+                <div class="col-xs-12 empty-message" translate="MY_JOBS.NO_RESULTS"></div>
+            </div>
+            <div class="no-rows row" ng-show="myJobsController.isLoading">
+                <div class="col-xs-12 empty-message" translate="MY_JOBS.LOADING"></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div ng-if="myJobsController.ijpFacilities.length === 0"><p>The ICAT Job Portal is not enabled for this facility</p></div>

@@ -17,18 +17,18 @@
         var facilityName = $state.params.facilityName;
 
         this.ijpFacilities = tc.ijpFacilities();
-        console.log(this.ijpFacilities);
 
         if($state.params.facilityName == ''){
-          $state.go('home.my-jobs', {facilityName: this.ijpFacilities[0].config().facilityName});
-          return;
+            if (this.ijpFacilities.length > 0) {
+                $state.go('home.my-jobs', {facilityName: this.ijpFacilities[0].config().facilityName});
+            }
+            return;
         }
 
         var gridOptions = _.merge({
             data: [],
             appScopeProvider: this
         }, facility.config().myJobs.gridOptions);
-
 
         setUpGridOptions();
         this.gridOptions = gridOptions;
@@ -114,3 +114,7 @@
             });
 
         };
+
+    });
+
+})();
