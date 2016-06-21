@@ -31,7 +31,9 @@
         });
 
         helpers.setupIcatGridOptions(gridOptions, entityType);
-        if (gridOptions.externalFilters) { helpers.setupExternalFilters(gridOptions.externalFilters, entityType); }
+
+        gridOptions.externalFilters = gridOptions.externalFilters || [];
+        helpers.setupExternalFilters(gridOptions.externalFilters, entityType);
 
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
@@ -92,7 +94,6 @@
                     var errorMessage = "Failed to load external filter: " + filter.field + "\n";
                     console.error(errorMessage.concat(JSON.stringify(error) || ""));
                 });
-
             }
         }
 
