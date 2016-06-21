@@ -282,6 +282,12 @@
             },
             "CANCEL" : {
                 "TEXT" : "Close"
+            },
+            "CONFIGURE_JOB" : {
+                "TEXT" : "Configure Job",
+                "TOOLTIP" : {
+                    "TEXT" : "Click to configure and run a job on the cart items"
+                }
             }
         },
         "ACTIONS" : {
@@ -319,6 +325,29 @@
                 "BUTTON" : {
                     "OK" : {
                         "TEXT" : "OK"
+                    },
+                    "CANCEL" : {
+                        "TEXT" : "Cancel"
+                    }
+                }
+            }
+        },
+        "CONFIGURE_JOB" : {
+            "MODAL" : {
+                "TITLE" : "Configure Job",
+                "JOB_TYPES_LOADING_MESSAGE" : "Finding compatible job types...",
+                "NO_JOB_TYPES_MESSAGE" : "There are no job types compatible with this cart",
+                "NO_JOB_OPTIONS_MESSAGE" : "There are no configuration options for this job type",
+                "ERROR" : {
+                    "REQUIRED" : "This field is required",
+                    "INTEGER" : "This field must be an integer",
+                    "FLOAT" : "This field must be a number",
+                    "MAX" : "This field must be between {{min}} and {{max}}",
+                    "MIN" : "This field must be between {{min}} and {{max}}"
+                },
+                "BUTTON" : {
+                    "SUBMIT_JOB" : {
+                        "TEXT" : "Submit Job"
                     },
                     "CANCEL" : {
                         "TEXT" : "Cancel"

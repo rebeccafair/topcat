@@ -1,6 +1,6 @@
 {    
     "site": {
-        "topcatUrl": "https://localhost:8181",
+        "topcatUrl": "https://sig-24.esc.rl.ac.uk:8181",
         "home" : "my-data",
         "enableEuCookieLaw" : true,
         "paging" : {
@@ -212,8 +212,9 @@
     "facilities": {
         "test": {
             "title": "TEST",
-            "icatUrl": "https://localhost:8181",
+            "icatUrl": "https://sig-24.esc.rl.ac.uk:8181",
             "idsUrl": "https://localhost:8181",
+            "ijpUrl": "",
             "facilityId": 1,
             "hierarchy": [
                 "facility",
@@ -423,25 +424,6 @@
                                     "type": "input"
                                 }
                             ]
-                        }
-                    ]
-                }
-            },
-            "myJobs": {
-                "gridOptions": {
-                    "enableFiltering": true,
-                    "columnDefs": [
-                        {
-                            "field": "jobId"
-                        },
-                        {
-                            "field": "name"
-                        },
-                        {
-                            "field": "date"
-                        },
-                        {
-                            "field": "status"
                         }
                     ]
                 }
@@ -724,6 +706,298 @@
                             "items": [
                                 {
                                     "field": "stringValue"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "lsf": {
+            "name": "LSF",
+            "title": "Lasers for Science Facility",
+            "icatUrl": "https://data.octopus.clf.stfc.ac.uk:8181",
+            "idsUrl": "https://data.octopus.clf.stfc.ac.uk:8181",
+            "ijpUrl": "",
+            "hierarchy": [
+                "facility",
+                "dataset",
+                "datafile"
+            ],
+            "authenticationTypes": [
+                {
+                    "title": "Database",
+                    "plugin": "db"
+                },
+                {
+                    "title": "Username/Password (LDAP)",
+                    "plugin": "ldap"
+                }
+            ],
+            "downloadTransportTypes": [
+                {
+                    "type" : "https",
+                    "default" : true,
+                    "url": "https://data.octopus.clf.stfc.ac.uk"
+                }
+            ],
+            "admin":{
+                "gridOptions": {
+                    "columnDefs": [
+                        {
+                            "field": "userName"
+                        },
+                        {
+                            "field": "preparedId"
+                        },
+                        {
+                            "field": "transport"
+                        },
+                        {
+                            "field": "status"
+                        },
+                        {
+                            "field": "size"
+                        },
+                        {
+                            "field": "createdAt"
+                        },
+                        {
+                            "field": "isDeleted"
+                        }
+                    ]
+                }
+            },
+            "myData": {
+                "entityType" : "investigation",
+                "gridOptions": {
+                    "columnDefs": [
+                        {
+                            "field": "title",
+                            "link": true
+                        },
+                        {
+                            "field": "visitId",
+                            "link": true
+                        },
+                        {
+                            "field": "size|bytes"
+                        },
+                        {
+                            "field": "startDate",
+                            "excludeFuture": false,
+                            "sort": {
+                              "direction": "desc",
+                              "priority": 1
+                            }
+                        },
+                        {
+                            "field": "endDate"
+                        }
+                    ]
+                }
+            },
+            "browse": {
+                "proposal": {
+                    "gridOptions": {
+                        "enableFiltering": true,
+                        "columnDefs": [
+                            {
+                                "field": "investigation.title",
+                                "link": true,
+                                "breadcrumb": true
+                            },
+                            {
+                                "field": "name",
+                                "link": true
+                            }
+                        ]
+                    }
+                },
+                "investigation": {
+                    "gridOptions": {
+                        "columnDefs": [
+                            {
+                                "field": "title",
+                                "link": true,
+                                "breadcrumb": true
+                            },
+                            {
+                                "field": "name"
+                            },
+                            {
+                                "field": "visitId"
+                            },
+                            {
+                                "field": "size|bytes"
+                            },
+                            {
+                                "field": "startDate",
+                                "excludeFuture": false,
+                                "sort": {
+                                  "direction": "desc",
+                                  "priority": 1
+                                }
+                            },
+                            {
+                                "field": "endDate"
+                            }
+                        ]
+                    },
+                    "metaTabs": [
+                        {
+                            "title": "METATABS.INVESTIGATION.TABTITLE",
+                            "items": [
+                                {
+                                    "field": "title"
+                                },
+                                {
+                                    "field": "name"
+                                },
+                                {
+                                    "field": "visitId"
+                                },
+                                {
+                                    "field": "summary"
+                                },
+                                {
+                                    "field": "startDate",
+                                    "template": "{{item.value | date:'yyyy-MM-dd'}}"
+                                },
+                                {
+                                    "field": "endDate",
+                                    "template": "{{item.value | date:'yyyy-MM-dd'}}"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "METATABS.INVESTIGATION_USERS.TABTITLE",
+                            "items": [
+                                {
+                                    "label": "METATABS.INVESTIGATION_USERS.NAME",
+                                    "field": "investigationUser.fullName"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "METATABS.INVESTIGATION_SAMPLES.TABTITLE",
+                            "items": [
+                                {
+                                    "field": "investigationSample.name"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "Publications",
+                            "items": [
+                                {
+                                    "title": "Reference",
+                                    "field": "fullReference"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "dataset": {
+                    "gridOptions": {
+                        "enableSelection": true,
+                        "columnDefs": [
+                            {
+                                "field": "name",
+                                "link": true
+                            },
+                            {
+                                "field": "size|bytes"
+                            },
+                            {
+                                "field": "createTime",
+                                "sort": {
+                                  "direction": "desc",
+                                  "priority": 1
+                                }
+                            },
+                            {
+                                "field": "modTime"
+                            },
+                            {
+                                "field": "datasetType.name"
+                            }
+                        ]
+                    },
+                    "metaTabs": [
+                        {
+                            "title": "METATABS.DATASET.TABTITLE",
+                            "items": [
+                                {
+                                    "field": "name"
+                                },
+                                {
+                                    "field": "description"
+                                },
+                                {
+                                    "field": "createTime",
+                                    "template": "{{item.value | date:'yyyy-MM-dd HH:mm:ss'}}"
+                                },
+                                {
+                                    "field": "modTime",
+                                    "template": "{{item.value | date:'yyyy-MM-dd HH:mm:ss'}}"
+                                }
+                            ]
+                        },
+                        {
+                            "title": "METATABS.DATASET_TYPE.TABTITLE",
+                            "items": [
+                                {
+                                    "field": "datasetType.name"
+                                },
+                                {
+                                    "field": "datasetType.description"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "datafile": {
+                    "gridOptions": {
+                        "enableSelection": true,
+                        "enableDownload": true,
+                        "columnDefs": [
+                            {
+                                "field": "name"
+                            },
+                            {
+                                "field": "location"
+                            },
+                            {
+                                "field": "fileSize|bytes"
+                            },
+                            {
+                                "field": "createTime",
+                                "sort": {
+                                  "direction": "desc",
+                                  "priority": 1
+                                }
+                            },
+                            {
+                                "field": "modTime"
+                            }
+                        ]
+                    },
+                    "metaTabs": [
+                        {
+                            "title": "METATABS.DATAFILE.TABTITLE",
+                            "items": [
+                                {
+                                    "field": "name"
+                                },
+                                {
+                                    "field": "description"
+                                },
+                                {
+                                    "field": "fileSize|bytes"
+                                },
+                                {
+                                    "field": "location"
                                 }
                             ]
                         }
@@ -1028,8 +1302,9 @@
         "isis": {
             "name": "ISIS",
             "title": "ISIS",
-            "icatUrl": "https://icatdev15.isis.cclrc.ac.uk",
-            "idsUrl": "https://idsdev2.isis.cclrc.ac.uk",
+            "icatUrl": "https://icat-dev.isis.stfc.ac.uk",
+            "idsUrl": "https://idsdev.isis.cclrc.ac.uk",
+            "ijpUrl": "",
             "hierarchy": [
                 "facility",
                 "instrument",
@@ -1077,6 +1352,25 @@
                         },
                         {
                             "field": "isDeleted"
+                        }
+                    ]
+                }
+            },
+            "myJobs": {
+                "gridOptions": {
+                    "enableFiltering": true,
+                    "columnDefs": [
+                        {
+                            "field": "jobId"
+                        },
+                        {
+                            "field": "name"
+                        },
+                        {
+                            "field": "date"
+                        },
+                        {
+                            "field": "status"
                         }
                     ]
                 }

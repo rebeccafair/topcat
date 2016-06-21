@@ -19,6 +19,9 @@
         var delay = $timeout(1000);
         var filter = function(){ return true; };
         var sorter = function(){ return true; };
+
+        this.ijpFacilities = tc.ijpFacilities();
+
         helpers.setupTopcatGridOptions(gridOptions, 'cartItem');
         gridOptions.columnDefs.push({
             name : 'actions',
@@ -32,6 +35,16 @@
         this.gridOptions = gridOptions;
         this.totalSize = undefined;
 
+        this.configureJob = function() {
+            $uibModal.open({
+                templateUrl : 'views/configure-job.html',
+                controller: "ConfigureJobController as configureJobController",
+                size : 'lg',
+                resolve: {
+                    cartItems: getCartItems()
+                }
+            })
+        };
 
         this.cancel = function() {
             $uibModalInstance.dismiss('cancel');

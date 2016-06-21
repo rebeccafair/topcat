@@ -78,6 +78,36 @@
  
         });
 
+        this.submitJob = helpers.overload({
+          'string': function(jobType){
+            var out = $q.defer();
+            this.post('submit', {
+              jobType: jobType
+            }).then(function(response){
+              console.log(response);
+            }, function(){ out.reject(); });
+          },
+          'string, array': function(jobType, entityIds){
+            var out = $q.defer();
+            this.post('submit', {
+              jobType: jobType,
+              entityIds: entityIds
+            }).then(function(response){
+              console.log(response);
+            }, function(){ out.reject(); });
+          },
+          'string, array, object': function(jobType, entityIds, jobOptions){
+            var out = $q.defer();
+            this.post('submit', {
+              jobType: jobType,
+              entityIds: entityIds,
+              jobOptions: JSON.stringify(jobOptions)
+            }).then(function(response){
+              console.log(response);
+            }, function(){ out.reject(); });
+          }
+                  });
+
         if (facility.config().ijpUrl == undefined) console.error('ijpUrl is undefined for facility ' + facility.config().title);
     		helpers.generateRestMethods(this, facility.config().ijpUrl + 'ijp/');
     	}
