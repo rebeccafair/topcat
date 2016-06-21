@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('MyJobsController', function($translate, $q, $scope, $rootScope, $timeout, $templateCache, $state, $uibModal, tc, helpers, uiGridConstants){
+    app.controller('MyJobsController', function($q, $scope, $rootScope, $templateCache, $state, $uibModal, tc, helpers, uiGridConstants){
 
         var that = this;
         var pagingConfig = tc.config().paging;
@@ -12,7 +12,6 @@
         var pageSize = isScroll ? pagingConfig.scrollPageSize : pagingConfig.paginationNumberOfRows;
         var page = 1;
         var gridApi;
-        var canceler = $q.defer();
         var facility = tc.facility($state.params.facilityName);
         var facilityName = $state.params.facilityName;
 
@@ -28,7 +27,23 @@
         var gridOptions = _.merge({
             data: [],
             appScopeProvider: this
-        }, facility.config().myJobs.gridOptions);
+            }, {
+            "enableFiltering": true,
+                "columnDefs": [
+                    {
+                        "field": "jobId"
+                    },
+                    {
+                        "field": "name"
+                    },
+                    {
+                        "field": "date"
+                    },
+                    {
+                        "field": "status"
+                    }
+                ]
+            });
 
         setUpGridOptions();
         this.gridOptions = gridOptions;
@@ -96,7 +111,7 @@
         this.showJobDetails = function (row) {
             var modal = $uibModal.open({
                 templateUrl : 'views/job-details.html',
-                windowClass : 'job-details',
+                size: 'lg',
                 controller: 'JobDetailsController as jobDetailsController',
                 resolve: {
                     jobId : function() {
