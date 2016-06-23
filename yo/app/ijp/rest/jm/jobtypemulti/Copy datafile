@@ -1,0 +1,1 @@
+{"name":"Copy datafile","executable":"copy_datafile.py","multiple":true,"type":"batch","datasetTypes":["TestDatasetType"],"jobOptions":[]}

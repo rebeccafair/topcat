@@ -541,11 +541,6 @@
                             {
                                 "field": "investigationType.name"
                             }
-                        ],
-                        "externalFilters": [
-                            {
-                                "field": "investigationType.name"
-                            }
                         ]
                     },
                     "metaTabs": [
@@ -623,12 +618,6 @@
                         "externalFilters": [
                             {
                                 "field": "datasetType.name"
-                            },
-                            {
-                                "field": "datasetSample.name"
-                            },
-                            {
-                                "field": "complete"
                             }
                         ]
                     },

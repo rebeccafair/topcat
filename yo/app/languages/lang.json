@@ -251,6 +251,7 @@
         "TITLE" : "My Jobs",
         "NO_RESULTS" : "You do not have any jobs",
         "LOADING" : "Loading - please wait",
+        "NO_IJP" : "There is no ICAT Job Portal defined for this facility",
         "COLUMN": {
             "JOB_ID": "Job Id",
             "NAME": "Job Type",
@@ -335,6 +336,9 @@
         "CONFIGURE_JOB" : {
             "MODAL" : {
                 "TITLE" : "Configure Job",
+                "SINGLE_JOB_TYPE" : {
+                    "TITLE" : "Job Type: {{jobName}}"
+                },
                 "JOB_TYPES_LOADING_MESSAGE" : "Finding compatible job types...",
                 "NO_JOB_TYPES_MESSAGE" : "There are no job types compatible with this cart",
                 "NO_JOB_OPTIONS_MESSAGE" : "There are no configuration options for this job type",
@@ -349,8 +353,31 @@
                     "SUBMIT_JOB" : {
                         "TEXT" : "Submit Job"
                     },
+                    "SUBMIT_MULTIPLE_JOBS" : {
+                        "TEXT" : "Submit Multiple Jobs",
+                        "TOOLTIP" : {
+                            "TEXT" : "NOTE: This will submit {{numJobs}} jobs, one for each cart item. "
+                        }
+                    },
                     "CANCEL" : {
                         "TEXT" : "Cancel"
+                    }
+                }
+            }
+        },
+        "CONFIRM_JOB" : {
+            "MODAL" : {
+                "TITLE" : "Confirm Submission",
+                "JOBS_CHOICE_MESSAGE" : "Please select whether you would like to submit a single job for all cart items or {{numJobs}} separate jobs (one for each cart item).",
+                "BUTTON" : {
+                    "SUBMIT_MULTIPLE_JOBS" : {
+                        "TEXT" : "Submit multiple jobs"
+                    },
+                    "SUBMIT_SINGLE_JOB" :  {
+                        "TEXT" : "Submit single job"
+                    },
+                    "BACK" : {
+                        "TEXT" : "Back"
                     }
                 }
             }
@@ -590,6 +617,9 @@
         "DATASET" : {
             "DATASET_TYPE" : "dataset type",
             "NAME" : "dataset name"
+        },
+        "JOB_TYPE" : {
+            "NAME" : "job type"
         }
 
         },

@@ -1,0 +1,1 @@
+{"name":"Sleepcount","executable":"sleepcount.bash","multiple":false,"type":"batch","datasetTypes":[],"jobOptions":[{"name":"Count","type":"enumeration","programParameter":"--count","values":["5","10"]},{"name":"Sleep Time","type":"enumeration","programParameter":"--sleep","values":["15","30","60","180"]}]}

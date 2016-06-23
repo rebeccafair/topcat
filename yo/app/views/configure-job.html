@@ -11,10 +11,11 @@
                 <select ng-model="configureJobController.selectedJobType" ng-options="jobType as jobType.name for jobType in configureJobController.compatibleJobTypes" ng-change="configureJobController.jobTypeSelected()" class="form-control" id="jobtype">
                 </select >
             </div>
-            <div ng-if="configureJobController.compatibleJobTypes.length === 1"><h4>Job Type: {{configureJobController.compatibleJobTypes[0].name}}</h4></div>
-            <div ng-if="configureJobController.compatibleJobTypes.length === 0 && configureJobController.loadingJobTypes"><p>{{'CART.CONFIGURE_JOB.MODAL.JOB_TYPES_LOADING_MESSAGE' | translate}}</p></div>
-            <div ng-if="configureJobController.compatibleJobTypes.length === 0 && !configureJobController.loadingJobTypes"><p>{{'CART.CONFIGURE_JOB.MODAL.NO_JOB_TYPES_MESSAGE' | translate}}</p></div>
         </div>
+
+        <div ng-if="configureJobController.compatibleJobTypes.length === 1"><h4 translate="CART.CONFIGURE_JOB.MODAL.SINGLE_JOB_TYPE.TITLE" translate-values="{ jobName: configureJobController.compatibleJobTypes[0].name }"></h4></div>
+        <div ng-if="configureJobController.compatibleJobTypes.length === 0 && configureJobController.loadingJobTypes" translate="CART.CONFIGURE_JOB.MODAL.JOB_TYPES_LOADING_MESSAGE"></div>
+        <div ng-if="configureJobController.compatibleJobTypes.length === 0 && !configureJobController.loadingJobTypes" translate="CART.CONFIGURE_JOB.MODAL.NO_JOB_TYPES_MESSAGE"></div>
 
         <form novalidate name="configureJobController.form">
             <div class="form-group" ng-repeat="option in configureJobController.selectedJobType.jobOptions" ng-class="{'has-error' : configureJobController.form.$submitted && configureJobController.form['{{option.name}}'].$invalid }" >
@@ -31,24 +32,25 @@
                 <input type="number" name="{{option.name}}" class="form-control" ng-if="option.type === 'float'" id="{{option.name}}" ng-model="option.value" max="{{option.maxValue}}" min="{{option.minValue}}" required></input>
                 <input type="number" name="{{option.name}}" class="form-control" ng-if="option.type === 'integer'" id="{{option.name}}" ng-model="option.value" max="{{option.maxValue}}" min="{{option.minValue}}" pattern="^[^\.]*$" required></input>
 
-                <div ng-show="configureJobController.form.$submitted">
-                    <p ng-show="configureJobController.form['{{option.name}}'].$error.required" class="bg-danger">{{'CART.CONFIGURE_JOB.MODAL.ERROR.REQUIRED' | translate}}</p>
-                    <p ng-show="configureJobController.form['{{option.name}}'].$error.pattern" class="bg-danger">{{'CART.CONFIGURE_JOB.MODAL.ERROR.INTEGER' | translate}}</p>
-                    <p ng-show="configureJobController.form['{{option.name}}'].$error.number" class="bg-danger">{{'CART.CONFIGURE_JOB.MODAL.ERROR.FLOAT' | translate}}</p>
-                    <p ng-show="configureJobController.form['{{option.name}}'].$error.max && !configureJobController.form['{{option.name}}'].$error.pattern" class="bg-danger">{{'CART.CONFIGURE_JOB.MODAL.ERROR.MAX' | translate : { min: option.minValue, max: option.maxValue} }}</p>
-                    <p ng-show="configureJobController.form['{{option.name}}'].$error.min && !configureJobController.form['{{option.name}}'].$error.pattern" class="bg-danger">{{'CART.CONFIGURE_JOB.MODAL.ERROR.MIN' | translate : { min: option.minValue, max: option.maxValue} }}</p>
+                <div ng-if="configureJobController.form.$submitted">
+                    <p ng-show="configureJobController.form['{{option.name}}'].$error.required" class="bg-danger" translate="CART.CONFIGURE_JOB.MODAL.ERROR.REQUIRED"></p>
+                    <p ng-show="configureJobController.form['{{option.name}}'].$error.pattern" class="bg-danger" translate="CART.CONFIGURE_JOB.MODAL.ERROR.INTEGER"></p>
+                    <p ng-show="configureJobController.form['{{option.name}}'].$error.number" class="bg-danger" translate="CART.CONFIGURE_JOB.MODAL.ERROR.FLOAT"></p>
+                    <p ng-show="configureJobController.form['{{option.name}}'].$error.max && !configureJobController.form['{{option.name}}'].$error.pattern" class="bg-danger" translate="CART.CONFIGURE_JOB.MODAL.ERROR.MAX" translate-values="{ min: option.minValue, max: option.maxValue}"></p>
+                    <p ng-show="configureJobController.form['{{option.name}}'].$error.min && !configureJobController.form['{{option.name}}'].$error.pattern" class="bg-danger" translate="CART.CONFIGURE_JOB.MODAL.ERROR.MIN" translate-values="{ min: option.minValue, max: option.maxValue}"></p>
                 </div>
 
 
             </div>
         </form>
 
-        <div ng-if="!configureJobController.selectedJobType.jobOptions"><p>{{'CART.CONFIGURE_JOB.MODAL.NO_JOB_OPTIONS_MESSAGE' | translate}}</p></div>
+        <div ng-if="configureJobController.compatibleJobTypes.length > 0 && !(configureJobController.selectedJobType.jobOptions.length > 0)" translate="CART.CONFIGURE_JOB.MODAL.NO_JOB_OPTIONS_MESSAGE"></div>
 
     </div>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="configureJobController.submitJob()" translate="CART.CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_JOB.TEXT"></button>
+    <button class="btn btn-primary" ng-if="configureJobController.selectedJobType.multiple === true" ng-click="configureJobController.submit()" translate="CART.CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_JOB.TEXT"></button>
+    <button class="btn btn-primary" ng-if="selectedJobType && configureJobController.selectedJobType.multiple !== true && configureJobController.numCartItems > 1" ng-click="configureJobController.submit()" translate="CART.CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TEXT" uib-tooltip="{{'CART.CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TOOLTIP.TEXT' | translate : { numJobs: configureJobController.numCartItems } }}" tooltip-append-to-body="true" tooltip-placement="top"></button>
     <button class="btn btn-warning" ng-click="configureJobController.cancel()" translate="CART.CONFIGURE_JOB.MODAL.BUTTON.CANCEL.TEXT"></button>
 </div>

@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h3 class="modal-title" translate="CART.CONFIRM_JOB.MODAL.TITLE"></h3>
+</div>
+<div class="modal-body">
+
+    <p translate="CART.CONFIRM_JOB.MODAL.JOBS_CHOICE_MESSAGE" translate-values="{ numJobs: configureJobController.numCartItems }"></p>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="configureJobController.submitSingleJob()" translate="CART.CONFIRM_JOB.MODAL.BUTTON.SUBMIT_SINGLE_JOB.TEXT"></button>
+    <button class="btn btn-primary" ng-click="configureJobController.submitMultipleJobs()" translate="CART.CONFIRM_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TEXT"></button>
+    <button class="btn btn-warning" ng-click="configureJobController.back()" translate="CART.CONFIRM_JOB.MODAL.BUTTON.BACK.TEXT"></button>
+</div>

@@ -1,0 +1,1 @@
+{"name":"Create datafile","executable":"create_datafile.py","multiple":false,"type":"batch","datasetTypes":["TestDatasetType"],"jobOptions":[{"name":"Filename","type":"string","programParameter":"--filename","values":[]},{"name":"Contents","type":"string","programParameter":"--contents","values":[]}]}

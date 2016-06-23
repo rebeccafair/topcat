@@ -1,0 +1,61 @@
+{"name":"Test args - datasets only","executable":"test_args.py","multiple":true,"type":"batch","datasetTypes":["TestDatasetType","TestDatasetType2","gainexact","ordinarywould","atemon","readycent","expressionwish"],"jobOptions":[   
+    {
+    "name":"Option 1 enumeration",
+    "groupName":"",
+    "type":"enumeration",
+    "programParameter":"--option-one",
+    "values":["5","30","60"],
+    "defaultValue":"60",
+    "minValue":"",
+    "maxValue":"",
+    "condition":"",
+    "tip":"option 1 tooltip"
+    },
+    {
+    "name":"Option 2 string",
+    "groupName":"",
+    "type":"string",
+    "programParameter":"--option-two",
+    "values":[],
+    "defaultValue":"",
+    "minValue":"",
+    "maxValue":"",
+    "condition":"",
+    "tip":"option 2 tooltip"
+    },
+    {
+    "name":"Option 3 boolean",
+    "groupName":"",
+    "type":"boolean",
+    "programParameter":"--option-three=true",
+    "values":[],
+    "defaultValue":"true",
+    "minValue":"",
+    "maxValue":"",
+    "condition":"",
+    "tip":""
+    },
+    {
+    "name":"Option 4 int",
+    "groupName":"",
+    "type":"integer",
+    "programParameter":"--option-four",
+    "values":[],
+    "defaultValue":"3",
+    "minValue":"0",
+    "maxValue":"10",
+    "condition":"",
+    "tip":""
+    },
+    {
+    "name":"Option 5 float",
+    "groupName":"",
+    "type":"float",
+    "programParameter":"--option-five",
+    "values":[],
+    "defaultValue":"-4.5",
+    "minValue":"-10",
+    "maxValue":"0",
+    "condition":"",
+    "tip":""
+    }]}
