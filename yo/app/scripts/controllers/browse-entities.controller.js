@@ -83,15 +83,24 @@
             });
 
             if (typeof facility.config().ijpUrl !== 'undefined' && entityType === 'dataset') {
-                tc.ijp(facilityName).getJobType().then(function(jobTypes){
-                    gridOptions.jobTypes = jobTypes;
+                tc.ijp(facilityName).getJobType().then(function(jobTypeNames) {
+
                     var filterConfig = {
+                        isJobTypeFilter: true,
                         label: "FILTERS.JOB_TYPE.NAME",
-                        options: _.map(jobTypes, 'name')
+                        options: jobTypeNames,
+                        datasetTypes: {}
                     };
                     gridOptions.externalFilters.push(filterConfig);
+
+                    _.each(jobTypeNames, function(jobTypeName){
+                        tc.ijp(facilityName).getJobType(jobTypeName).then(function(jobType){
+                            _.find(gridOptions.externalFilters, function(filter){ return filter.isJobTypeFilter }).datasetTypes[jobTypeName] = jobType.datasetTypes;
+                        });
+                    })
+
                 }, function(error){
-                    var errorMessage = "Failed to load external filter: " + filter.field + "\n";
+                    var errorMessage = "Failed to load job type filter\n";
                     console.error(errorMessage.concat(JSON.stringify(error) || ""));
                 });
             }
@@ -173,7 +182,7 @@
                     } else if (filter.fieldName) {
                         out.where(['?.? = ?', entityType.safe(), filter.fieldName.safe(), filter.selectedOption]);
                     } else {
-                        out.where(['dataset.type.name in (?)', ("'" + _.find(gridOptions.jobTypes, 'name', filter.selectedOption).datasetTypes.join("','") + "'").safe()]);
+                        out.where(['dataset.type.name in (?)', ("'" + filter.datasetTypes[filter.selectedOption].join("','") + "'").safe()]);
                     }
                 }
             });

@@ -29,23 +29,18 @@
     		};
 
         this.getJobType = helpers.overload({
-          'array': function(jobTypeNamesArray){
+          'string': function(jobTypeName){
             var out = $q.defer();
-            this.get('jobtype', {
-              jobTypes: jobTypeNamesArray
-            }).then(function(jobTypeArray){
-              out.resolve(jobTypeArray);
+            this.get('jobtype/' + jobTypeName).then(function(allJobTypes){
+              out.resolve(allJobTypes);
             }, function(){ out.reject(); });
 
             return out.promise;
           },
-          'string': function(jobTypeName){
-            return this.getJobType([jobTypeName]);
-          },
           '': function(){
             var out = $q.defer();
-            this.get('jobtypes').then(function(allJobTypes){
-              out.resolve(allJobTypes);
+            this.get('jobtype').then(function(jobTypeNameArray){
+              out.resolve(jobTypeNameArray);
             }, function(){ out.reject(); });
 
             return out.promise;
@@ -54,22 +49,21 @@
         });
 
         this.getJob = helpers.overload({
-          'array': function(jobIdArray){
+          'string': function(jobId){
             var out = $q.defer();
-            this.get('job', {
-              jobIds: jobIdArray
-            }).then(function(jobArray){
-              out.resolve(jobArray);
+            this.get('status/' + jobId, {
+             sessionId: facility.icat().session().sessionId
+            }).then(function(job){
+              out.resolve(job);
             }, function(){ out.reject(); });
 
             return out.promise;
           },
-          'string': function(jobId){
-            return this.getJob([jobId]);
-          },
           '': function(){
             var out = $q.defer();
-            this.get('jobs').then(function(allJobs){
+            this.get('status', {
+              sessionId: facility.icat().session().sessionId
+            }).then(function(allJobs){
               out.resolve(allJobs);
             }, function(){ out.reject(); });
 
@@ -82,34 +76,26 @@
           'string': function(jobType){
             var out = $q.defer();
             this.post('submit', {
-              jobType: jobType
+              jobName: jobType,
+              sessionId: facility.icat().session().sessionId
             }).then(function(response){
               console.log(response);
             }, function(){ out.reject(); });
           },
-          'string, array': function(jobType, entityIds){
+          'string, array': function(jobType, jobParameters){
             var out = $q.defer();
             this.post('submit', {
-              jobType: jobType,
-              entityIds: entityIds
-            }).then(function(response){
-              console.log(response);
-            }, function(){ out.reject(); });
-          },
-          'string, array, object': function(jobType, entityIds, jobOptions){
-            var out = $q.defer();
-            this.post('submit', {
-              jobType: jobType,
-              entityIds: entityIds,
-              jobOptions: JSON.stringify(jobOptions)
+              jobName: jobType,
+              parameter: jobParameters,
+              sessionId: facility.icat().session().sessionId
             }).then(function(response){
               console.log(response);
             }, function(){ out.reject(); });
           }
-                  });
+        });
 
         if (facility.config().ijpUrl == undefined) console.error('ijpUrl is undefined for facility ' + facility.config().title);
-    		helpers.generateRestMethods(this, facility.config().ijpUrl + 'ijp/');
+        helpers.generateRestMethods(this, facility.config().ijpUrl + '/ijp/rest/jm/');
     	}
 		
 
