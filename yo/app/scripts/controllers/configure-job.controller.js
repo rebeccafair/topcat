@@ -204,7 +204,7 @@
                         break;
                     case "integer":
                     case "float":
-                        option.value = parseFloat(option.defaultValue) || "";
+                        option.value = isNaN(parseFloat(option.defaultValue)) ? "" : parseFloat(option.defaultValue);
                         break;
                     case "string":
                         option.value = option.defaultValue || "";
