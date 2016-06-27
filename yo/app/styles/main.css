@@ -310,10 +310,13 @@ a[ng-click]{
   padding: 0px;
 }
 
-.job-details .modal-dialog {
-  width: 700px;
+.job-details-panel {
+  margin-bottom: 0px;
+  margin-top: 15px;
+  height: 100%;
+  overflow-y: scroll;
 }
 
-.job-details .modal-body {
-  height: 700px;
+.job-details-tab-content {
+  height: calc(100% - 57px) !important;
 }

@@ -1,28 +1,38 @@
 <div class="modal-content">
 
     <div class="modal-header">
-        <h3>Job Details For Job {{jobDetailsController.jobId}}</h3> 
+        <h3 translate="MY_JOBS.JOB_DETAILS.MODAL.TITLE" translate-values="{ jobId: myJobsController.selectedJobId }"></h3>
     </div>
 
     <div class="modal-body">
-        <ul class="nav nav-tabs nav-tabs-head" role="tablist">
-            <li class="active"><a data-target="#data-output" role="tab" data-toggle="tab">Input/output Data</a></li>
-            <li><a data-target="#job-output" role="tab" data-toggle="tab">Standard Output</a></li>
-            <li><a data-target="#error-output" role="tab"  data-toggle="tab">Error Output</a></li>
-        </ul>
+        <div take-up-remaining-height>
+            <ul class="nav nav-tabs nav-tabs-head" role="tablist">
+                <li class="active"><a data-target="#job-output" role="tab" data-toggle="tab" translate="MY_JOBS.JOB_DETAILS.MODAL.TABS.STANDARD_OUTPUT"></a></li>
+                <li><a ng-show="myJobsController.errorOutput.length > 0" data-target="#error-output" role="tab"  data-toggle="tab" translate="MY_JOBS.JOB_DETAILS.MODAL.TABS.ERROR_OUTPUT"></a></li>
+            </ul>
 
-        <div class="tab-content" take-up-remaining-height>
-            <div role="tabpanel" class="tab-pane active" id="data-output">
-                <p>Input data: </p>
-                <p>Output data: </p>
+            <div id="jobDetailsTab" class="tab-content job-details-tab-content" take-up-remaining-height>
+
+                <div role="tabpanel" class="tab-pane active" id="job-output" ng-style="{ 'height': '100%' }">
+                    <div class="panel panel-default job-details-panel">
+                        <div ng-show="myJobsController.standardOutput.length > 0" class="panel-body" ng-bind-html="myJobsController.standardOutput"></div>
+                        <div ng-show="myJobsController.standardOutput.length === 0 && myJobsController.isLoadingStandardOutput" class="panel-body" ng-bind-html="myJobsController.standardOutput" translate="MY_JOBS.JOB_DETAILS.MODAL.IS_LOADING"></div>
+                        <div ng-show="myJobsController.standardOutput.length === 0 && !myJobsController.isLoadingStandardOutput" class="panel-body" ng-bind-html="myJobsController.standardOutput" translate="MY_JOBS.JOB_DETAILS.MODAL.NO_OUTPUT"></div>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="error-output" ng-style="{ 'height': '100%' }">
+                    <div class="panel panel-default job-details-panel">
+                        <div class="panel-body" ng-bind-html="myJobsController.errorOutput"></div>
+                    </div>
+                </div>
+
             </div>
-            <div role="tabpanel" class="tab-pane" id="job-output"><p>job output for job {{jobOutputController.jobId}}</p></div>
-            <div role="tabpanel" class="tab-pane" id="error-output"><p>error output for job {{jobOutputController.jobId}}</p></div>
         </div>
     </div>
 
     <div class="modal-footer">
-        <div><button class="btn btn-warning pull-right" ng-click="jobDetailsController.close()">Close</button></div>
+        <button class="btn btn-warning pull-right" ng-click="myJobsController.close()" translate="MY_JOBS.JOB_DETAILS.MODAL.BUTTON.CLOSE.TEXT"></button>
     </div>
 
 </div>

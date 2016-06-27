@@ -69,7 +69,32 @@
 
             return out.promise;
           }
- 
+        });
+
+        this.getJobOutput = helpers.overload({
+          'string': function(jobId){
+            var out = $q.defer();
+            this.get('output/' + jobId, {
+              sessionId: facility.icat().session().sessionId
+            }).then(function(jobOutput){
+              out.resolve(jobOutput);
+            }, function(){ out.reject(); });
+
+            return out.promise
+          }
+        });
+
+        this.getErrorOutput = helpers.overload({
+          'string': function(jobId){
+            var out = $q.defer();
+            this.get('error/' + jobId, {
+              sessionId: facility.icat().session().sessionId
+            }).then(function(jobOutput){
+              out.resolve(jobOutput);
+            }, function(){ out.reject(); });
+
+            return out.promise
+          }
         });
 
         this.submitJob = helpers.overload({

@@ -257,6 +257,22 @@
             "NAME": "Job Type",
             "DATE": "Submitted",
             "STATUS": "Status"
+        },
+        "JOB_DETAILS" : {
+            "MODAL" : {
+                "TITLE" : "Job Details For Job {{jobId}}",
+                "IS_LOADING": "Loading standard output...",
+                "NO_OUTPUT": "There is no standard output for this job",
+                "TABS" : {
+                    "STANDARD_OUTPUT": "Standard Output",
+                    "ERROR_OUTPUT": "Error Output"
+                },
+                "BUTTON" : {
+                    "CLOSE" : {
+                        "TEXT" : "Close"
+                    }
+                }
+            }
         }
     },
     "CART" : {
@@ -371,10 +387,10 @@
                 "JOBS_CHOICE_MESSAGE" : "Please select whether you would like to submit a single job for all cart items or {{numJobs}} separate jobs (one for each cart item).",
                 "BUTTON" : {
                     "SUBMIT_MULTIPLE_JOBS" : {
-                        "TEXT" : "Submit multiple jobs"
+                        "TEXT" : "Submit Multiple Jobs"
                     },
                     "SUBMIT_SINGLE_JOB" :  {
-                        "TEXT" : "Submit single job"
+                        "TEXT" : "Submit Single Job"
                     },
                     "BACK" : {
                         "TEXT" : "Back"

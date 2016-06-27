@@ -14,7 +14,12 @@
         var gridApi;
         var facility = tc.facility($state.params.facilityName);
         var facilityName = $state.params.facilityName;
+        var selectedJobId;
+        var standardOutput;
+        var errorOutput;
 
+        this.isLoadingStandardOutput = true;
+        this.isLoadingErrorOutput = true;
         this.ijpFacilities = tc.ijpFacilities();
 
         if($state.params.facilityName == ''){
@@ -59,7 +64,7 @@
             gridOptions.paginationPageSizes =  pagingConfig.paginationPageSizes;
             gridOptions.paginationNumberOfRows =  pagingConfig.paginationNumberOfRows;
             gridOptions.enableFiltering = true;
-            gridOptions.rowTemplate = '<div ng-click="grid.appScope.showJobDetails(row)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div>';
+            gridOptions.rowTemplate = '<div ng-click="grid.appScope.showJobDetailsModal(row)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div>';
 
             _.each(gridOptions.columnDefs, function(columnDef){
                 columnDef.enableHiding = false;
@@ -108,18 +113,44 @@
             });
         }
 
-        this.showJobDetails = function (row) {
-            var modal = $uibModal.open({
+        function getStandardOutput() {
+            tc.ijp(facilityName).getJobOutput(that.selectedJobId).then(function(standardOutput){
+                that.standardOutput = standardOutput.output.replace(/\n/g,"<br />");
+                console.log(that.standardOutput);
+                that.isLoadingStandardOutput = false;
+            }, function(error){
+                console.error('Failed to get standard output for job ' + that.selectedJobId);
+                console.error(error);
+            })
+        };
+
+        function getErrorOutput() {
+            tc.ijp(facilityName).getErrorOutput(that.selectedJobId).then(function(errorOutput){
+                that.errorOutput = errorOutput.output.replace(/\n/g,"<br />");
+                that.isLoadingErrorOutput = false;
+            }, function(error){
+                console.error('Failed to get error output for job ' + that.selectedJobId);
+                console.error(error);
+            })
+        };
+
+        this.showJobDetailsModal = function (row) {
+            that.selectedJobId = String(row.entity.jobId);
+            getStandardOutput();
+            getErrorOutput();
+            this.modal = $uibModal.open({
                 templateUrl : 'views/job-details.html',
                 size: 'lg',
-                controller: 'JobDetailsController as jobDetailsController',
-                resolve: {
-                    jobId : function() {
-                        return row.entity.jobId;
-                    }
-                }
+                scope: $scope
             });
         }
+
+        this.close = function (){
+            this.modal.close();
+            that.standardOutput = "";
+            that.errorOutput = "";
+        };
+
 
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;
