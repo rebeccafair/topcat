@@ -6,16 +6,16 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('ConfigureJobController', function($q, $uibModalInstance, $uibModal, $scope, $rootScope, $uibModalStack, tc, cartItems, facilityName){
+    app.controller('ConfigureJobController', function($q, $uibModalInstance, $uibModal, $scope, $rootScope, $uibModalStack, tc, inputEntities, facilityName){
 
         var that = this;
-        var cartEntityTypes = _.uniq(_.map(cartItems, 'entityType'));
-        var cartContainsDatasets = _.includes(cartEntityTypes, 'dataset');
-        var cartContainsDatafiles = _.includes(cartEntityTypes, 'datafile');
-        var multipleCartItems = cartItems.length > 1;
-        var cartDatasetTypes = [];
+        var inputEntityTypes = _.uniq(_.map(inputEntities, 'entityType'));
+        var inputContainsDatasets = _.includes(inputEntityTypes, 'dataset');
+        var inputContainsDatafiles = _.includes(inputEntityTypes, 'datafile');
+        var multipleInputEntities = inputEntities.length > 1;
+        var inputDatasetTypes = [];
         var booleanGroupNames = [];
-        this.numCartItems = cartItems.length;
+        this.numInputEntities = inputEntities.length;
         this.loadingJobTypes = true;
         this.loadingJobOptions = true;
         this.form = {};
@@ -25,8 +25,8 @@
 
             that.form.$setSubmitted();
             if (that.form.$valid) {
-                if (!multipleCartItems || this.selectedJobType.multiple !== true ) {
-                    //If there is only one item in the cart, submitMultipleJobs() and submitSingleJob() will have the same effect
+                if (!multipleInputEntities || this.selectedJobType.multiple !== true ) {
+                    //If there is only one input entity, submitMultipleJobs() and submitSingleJob() will have the same effect
                     this.submitMultipleJobs();
                     $uibModalInstance.close('job submitted');
                 } else {
@@ -42,8 +42,8 @@
         this.submitSingleJob = function() {
             var jobParameters = [];
 
-            if (cartContainsDatafiles) jobParameters.push('--datafileIds=' + _.map(cartItems, 'entityId').join(','));
-            if (cartContainsDatasets) jobParameters.push('--datasetIds=' + _.map(cartItems, 'entityId').join(','));
+            if (inputContainsDatafiles) jobParameters.push('--datafileIds=' + _.map(inputEntities, 'entityId').join(','));
+            if (inputContainsDatasets) jobParameters.push('--datasetIds=' + _.map(inputEntities, 'entityId').join(','));
 
             _.each(that.selectedJobType.jobOptions, function (jobOption){
                 switch (jobOption.type) {
@@ -69,11 +69,11 @@
 
         this.submitMultipleJobs = function() {
 
-            _.each(cartItems, function(cartItem) {
+            _.each(inputEntities, function(inputEntity) {
                 var jobParameters = [];
 
-                if (cartItem.entityType === 'datafile') jobParameters.push('--datafileIds=' + cartItem.entityId);
-                if (cartItem.entityType === 'dataset') jobParameters.push('--datasetIds=' + cartItem.entityId);
+                if (inputEntity.entityType === 'datafile') jobParameters.push('--datafileIds=' + inputEntity.entityId);
+                if (inputEntity.entityType === 'dataset') jobParameters.push('--datasetIds=' + inputEntity.entityId);
 
                 _.each(that.selectedJobType.jobOptions, function (jobOption){
                     switch (jobOption.type) {
@@ -134,23 +134,23 @@
         function getCompatibleJobTypes(){
 
             getAllJobTypes().then(function(allJobTypes){
-                if (cartContainsDatasets) { 
-                    getCartDatasetTypes().then(function(cartDatasetTypes){
+                if (inputContainsDatasets) {
+                    getInputDatasetTypes().then(function(inputDatasetTypes){
 
-                        //Filters the list of job types to only contain jobs that are compatible with all the dataset types in the cart. Do not need to check
+                        //Filters the list of job types to only contain jobs that are compatible with all the input entity dataset types. Do not need to check
                         //if the job type has acceptsDatasets = true because if a job has specified dataset types, it is implied it accepts datasets.
                         var compatibleJobTypes = _.filter(allJobTypes, function(jobType){
-                            return _.every(cartDatasetTypes, function(cartDatasetType){
-                                return _.includes(jobType.datasetTypes, cartDatasetType);
+                            return _.every(inputDatasetTypes, function(inputDatasetType){
+                                return _.includes(jobType.datasetTypes, inputDatasetType);
                             });
                         });
 
-                        //If there is more than one item in the cart, only includes jobs that have multiple = true
-                        //EDIT: commented out for now, might want to run a job for each item in the cart, so don't need to filter by multiple
-                        //if (multipleCartItems) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.multiple) });
+                        //If there is more than one input entity, only includes jobs that have multiple = true
+                        //EDIT: commented out for now, might want to run a job for each input entity, so don't need to filter by multiple
+                        //if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.multiple) });
 
-                        //If the cart also contains datafiles, only includes jobs that have acceptsDatafiles = true
-                        if (cartContainsDatafiles) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.acceptsDatafiles)});
+                        //If the input entities include datafiles, only includes jobs that have acceptsDatafiles = true
+                        if (inputContainsDatafiles) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.acceptsDatafiles)});
 
                         that.compatibleJobTypes = compatibleJobTypes;
                         that.selectedJobType = that.compatibleJobTypes[0] || "";
@@ -158,12 +158,12 @@
                         setupJobOptions();
                     });
 
-                } else if (cartContainsDatafiles) {
-                    //If the cart doesn't contain datasets, it must contain datafiles. The job type must have acceptsDatafiles = true
+                } else if (inputContainsDatafiles) {
+                    //If the input entities include datafiles, the job type must have acceptsDatafiles = true
                     var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return stringToBoolean(jobType.acceptsDatafiles) });
-                    //EDIT: commented out for now, might want to run a job for each item in the cart, so don't need to filter by multiple
-                    //If there is more than one datafile in the cart, the job type must have multiple = true
-                    if (multipleCartItems) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.multiple) });
+                    //EDIT: commented out for now, might want to run a job for each input entity, so don't need to filter by multiple
+                    //If there is more than one input datafile, the job type must have multiple = true
+                    if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.multiple) });
 
                     that.compatibleJobTypes = compatibleJobTypes;
                     that.selectedJobType = compatibleJobTypes[0] || "";
@@ -184,15 +184,15 @@
 
         }
 
-        function getCartDatasetTypes(){
-            var cartDatasets = _.filter(cartItems, function(dataItem){
-                if (dataItem.entityType === 'dataset') return true;
+        function getInputDatasetTypes(){
+            var inputDatasets = _.filter(inputEntities, function(inputEntity){
+                if (inputEntity.entityType === 'dataset') return true;
             });
-            var cartDatasetIds = _.map(cartDatasets, 'entityId');
+            var inputDatasetIds = _.map(inputDatasets, 'entityId');
 
             var deferred = $q.defer();
 
-            tc.icat(facilityName).query("select distinct dataset.type.name from Dataset dataset where dataset.id in ('" + cartDatasetIds.join("','") + "')").then(function(datasetTypes) {
+            tc.icat(facilityName).query("select distinct dataset.type.name from Dataset dataset where dataset.id in ('" + inputDatasetIds.join("','") + "')").then(function(datasetTypes) {
                 deferred.resolve(datasetTypes);
             }, function(error){
                 deferred.reject(error);
