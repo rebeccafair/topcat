@@ -54,6 +54,23 @@
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
 
+        this.showJobDetailsModal = function(row){
+            that.selectedJobId = String(row.entity.jobId);
+            getStandardOutput();
+            getErrorOutput();
+            this.modal = $uibModal.open({
+                templateUrl : 'views/job-details.html',
+                size: 'lg',
+                scope: $scope
+            });
+        }
+
+        this.close = function (){
+            this.modal.close();
+            that.standardOutput = "";
+            that.errorOutput = "";
+        };
+
         function setUpGridOptions(){
 
             gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
@@ -116,7 +133,6 @@
         function getStandardOutput() {
             tc.ijp(facilityName).getJobOutput(that.selectedJobId).then(function(standardOutput){
                 that.standardOutput = standardOutput.output.replace(/\n/g,"<br />");
-                console.log(that.standardOutput);
                 that.isLoadingStandardOutput = false;
             }, function(error){
                 console.error('Failed to get standard output for job ' + that.selectedJobId);
@@ -133,24 +149,6 @@
                 console.error(error);
             })
         };
-
-        this.showJobDetailsModal = function (row) {
-            that.selectedJobId = String(row.entity.jobId);
-            getStandardOutput();
-            getErrorOutput();
-            this.modal = $uibModal.open({
-                templateUrl : 'views/job-details.html',
-                size: 'lg',
-                scope: $scope
-            });
-        }
-
-        this.close = function (){
-            this.modal.close();
-            that.standardOutput = "";
-            that.errorOutput = "";
-        };
-
 
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;

@@ -6,7 +6,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('ConfigureJobController', function($q, $uibModalInstance, $uibModal, $scope, $rootScope, $uibModalStack, tc, cartItems){
+    app.controller('ConfigureJobController', function($q, $uibModalInstance, $uibModal, $scope, $rootScope, $uibModalStack, tc, cartItems, facilityName){
 
         var that = this;
         var cartEntityTypes = _.uniq(_.map(cartItems, 'entityType'));
@@ -19,13 +19,11 @@
         this.loadingJobTypes = true;
         this.loadingJobOptions = true;
         this.form = {};
-
         getCompatibleJobTypes();
 
         this.submit = function() {
 
             that.form.$setSubmitted();
-
             if (that.form.$valid) {
                 if (!multipleCartItems || this.selectedJobType.multiple !== true ) {
                     //If there is only one item in the cart, submitMultipleJobs() and submitSingleJob() will have the same effect
@@ -62,7 +60,7 @@
                         }
                 }
             });
-            tc.ijp(cartItems[0].facilityName).submitJob(this.selectedJobType.name, jobParameters);
+            tc.ijp(facilityName).submitJob(this.selectedJobType.name, jobParameters);
 
             this.confirmModal.close('job submitted');
             $uibModalInstance.close('job submitted');
@@ -92,8 +90,7 @@
                             }
                     }
                 });
-                console.log(jobParameters);
-                tc.ijp(cartItem.facilityName).submitJob(that.selectedJobType.name, jobParameters);
+                tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters);
             });
 
             if (this.confirmModal) this.confirmModal.close('job submitted');
@@ -115,10 +112,10 @@
         function getAllJobTypes(){
             var promises = [];
             var allJobTypes = [];
-            return tc.ijp(cartItems[0].facilityName).getJobType().then(function(jobTypeNames){
+            return tc.ijp(facilityName).getJobType().then(function(jobTypeNames){
                 _.each(jobTypeNames, function(jobTypeName){
                     promises.push(
-                        tc.ijp(cartItems[0].facilityName).getJobType(jobTypeName).then(function (jobType){
+                        tc.ijp(facilityName).getJobType(jobTypeName).then(function (jobType){
                             allJobTypes.push(jobType);
                         }, function(){
                             console.error("Failed to get job type data for " + jobTypeName);
@@ -195,7 +192,7 @@
 
             var deferred = $q.defer();
 
-            tc.icat(cartItems[0].facilityName).query("select distinct dataset.type.name from Dataset dataset where dataset.id in ('" + cartDatasetIds.join("','") + "')").then(function(datasetTypes) {
+            tc.icat(facilityName).query("select distinct dataset.type.name from Dataset dataset where dataset.id in ('" + cartDatasetIds.join("','") + "')").then(function(datasetTypes) {
                 deferred.resolve(datasetTypes);
             }, function(error){
                 deferred.reject(error);

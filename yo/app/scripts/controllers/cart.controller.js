@@ -41,7 +41,8 @@
                 controller: "ConfigureJobController as configureJobController",
                 size : 'lg',
                 resolve: {
-                    cartItems: getCartItems()
+                    cartItems: getCartItems(),
+                    facilityName: function() { return that.ijpFacilities[0].config().facilityName }
                 }
             })
         };
