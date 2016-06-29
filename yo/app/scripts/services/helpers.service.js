@@ -501,6 +501,9 @@
 		    		'string, promise, object': function(offset, timeout, params){
 		    			return this[methodName].call(this, offset, params, {timeout: timeout});
 		    		},
+                    'string, string': function(offset, params){
+                        return this[methodName].call(this, offset, params, {});
+                    },
 		    		'string, object': function(offset, params){
 		    			return this[methodName].call(this, offset, params, {});
 		    		},

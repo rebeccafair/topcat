@@ -109,11 +109,12 @@
           },
           'string, array': function(jobType, jobParameters){
             var out = $q.defer();
-            this.post('submit', {
+            var params = $.param({
               jobName: jobType,
               parameter: jobParameters,
               sessionId: facility.icat().session().sessionId
-            }).then(function(response){
+            }, true);
+            this.post('submit', params).then(function(response){
               console.log(response);
             }, function(){ out.reject(); });
           }
