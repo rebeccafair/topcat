@@ -137,9 +137,11 @@
                 if (inputContainsDatasets) {
                     getInputDatasetTypes().then(function(inputDatasetTypes){
 
-                        //Filters the list of job types to only contain jobs that are compatible with all the input entity dataset types. Do not need to check
-                        //if the job type has acceptsDatasets = true because if a job has specified dataset types, it is implied it accepts datasets.
-                        var compatibleJobTypes = _.filter(allJobTypes, function(jobType){
+                        //Only include jobs that explicitly accept datasets
+                        var compatibleJobTypes = _.filter(allJobTypes, function(jobType){ return jobType.acceptsDatasets});
+
+                        //Filters the list of job types to only contain jobs that are compatible with all the input entity dataset types
+                        compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){
                             return _.every(inputDatasetTypes, function(inputDatasetType){
                                 return _.includes(jobType.datasetTypes, inputDatasetType);
                             });
@@ -147,10 +149,10 @@
 
                         //If there is more than one input entity, only includes jobs that have multiple = true
                         //EDIT: commented out for now, might want to run a job for each input entity, so don't need to filter by multiple
-                        //if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.multiple) });
+                        //if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.multiple });
 
-                        //If the input entities include datafiles, only includes jobs that have acceptsDatafiles = true
-                        if (inputContainsDatafiles) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.acceptsDatafiles)});
+                        //Only include jobs that explicitly accept datafiles
+                        if (inputContainsDatafiles) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.acceptsDatafiles});
 
                         that.compatibleJobTypes = compatibleJobTypes;
                         that.selectedJobType = that.compatibleJobTypes[0] || "";
@@ -159,11 +161,13 @@
                     });
 
                 } else if (inputContainsDatafiles) {
-                    //If the input entities include datafiles, the job type must have acceptsDatafiles = true
-                    var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return stringToBoolean(jobType.acceptsDatafiles) });
+
+                    //If the input entities include datafiles, the job type must explicitly accept datafiles
+                    var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return jobType.acceptsDatafiles });
+
                     //EDIT: commented out for now, might want to run a job for each input entity, so don't need to filter by multiple
                     //If there is more than one input datafile, the job type must have multiple = true
-                    if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return stringToBoolean(jobType.multiple) });
+                    if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.multiple });
 
                     that.compatibleJobTypes = compatibleJobTypes;
                     that.selectedJobType = compatibleJobTypes[0] || "";
@@ -171,8 +175,9 @@
                     setupJobOptions();
 
                 } else {
-                    //If there is no input, show job-only jobs, where datasetTypes = []
-                    var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return !(jobType.datasetTypes.length > 0) });
+
+                    //If there is no input, show 'job-only' jobs, where neither datasets or datafiles are accepted
+                    var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return jobType.acceptsDatafiles !== true && jobType.acceptsDatasets !== true });
 
                     that.compatibleJobTypes = compatibleJobTypes;
                     that.selectedJobType = compatibleJobTypes[0] || "";
@@ -238,7 +243,7 @@
                     //Set up default values
                     switch (option.type) {
                         case "boolean":
-                            option.value = stringToBoolean(option.defaultValue) || false;
+                            option.value = option.defaultValue || false;
                             break;
                         case "integer":
                         case "float":
