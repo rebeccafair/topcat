@@ -258,6 +258,11 @@
             "DATE": "Submitted",
             "STATUS": "Status"
         },
+        "BUTTON" : {
+            "CONFIGURE_JOB" : {
+                "TEXT" : "Configure New Job"
+            }
+        },
         "JOB_DETAILS" : {
             "MODAL" : {
                 "TITLE" : "Job Details For Job {{jobId}}",

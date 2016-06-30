@@ -65,6 +65,18 @@
             });
         }
 
+        this.configureJob = function(){
+            $uibModal.open({
+                templateUrl : 'views/configure-job.html',
+                controller: "ConfigureJobController as configureJobController",
+                size : 'lg',
+                resolve: {
+                    inputEntities: function() { return [] },
+                    facilityName: function() { return facilityName }
+                }
+            })
+        }
+
         this.close = function (){
             this.modal.close();
             that.standardOutput = "";

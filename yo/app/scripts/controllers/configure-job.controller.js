@@ -25,8 +25,10 @@
 
             that.form.$setSubmitted();
             if (that.form.$valid) {
-                if (!multipleInputEntities || this.selectedJobType.multiple !== true ) {
-                    //If there is only one input entity, submitMultipleJobs() and submitSingleJob() will have the same effect
+                if (!multipleInputEntities){
+                    this.submitSingleJob();
+                    $uibModalInstance.close('job submitted');
+                }  else if (this.selectedJobType.multiple !== true){
                     this.submitMultipleJobs();
                     $uibModalInstance.close('job submitted');
                 } else {
@@ -62,7 +64,7 @@
             });
             tc.ijp(facilityName).submitJob(this.selectedJobType.name, jobParameters);
 
-            this.confirmModal.close('job submitted');
+            if (this.confirmModal) this.confirmModal.close('job submitted');
             $uibModalInstance.close('job submitted');
 
         };
@@ -175,10 +177,8 @@
                     setupJobOptions();
 
                 } else {
-
-                    //If there is no input, show 'job-only' jobs, where neither datasets or datafiles are accepted
-                    var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return jobType.acceptsDatafiles !== true && jobType.acceptsDatasets !== true });
-
+                    //If there is no input, show 'job-only' jobs, where neither datasets nor datafiles are accepted
+                    var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return !(jobType.acceptsDatafiles || jobType.acceptsDatasets) });
                     that.compatibleJobTypes = compatibleJobTypes;
                     that.selectedJobType = compatibleJobTypes[0] || "";
                     that.loadingJobTypes = false;
@@ -205,13 +205,6 @@
             return deferred.promise;
         }
 
-        function stringToBoolean(string) {
-            switch(string){
-                case "true": return true;
-                default: return false;
-            }
-        }
-
         function setupJobOptions(){
             _.each(that.compatibleJobTypes, function(jobType){
                 //Change structure of any 'boolean group' job options so they are more easily constructible in html
@@ -219,7 +212,7 @@
                 var groupNames = _.uniq(_.filter(_.map(jobType.jobOptions, 'groupName'), undefined));
                 _.each(groupNames, function(groupName){
                     //Find first option associated with that group, replace it with a single object containing all option information for that group,
-                    //and remove all following objects associated with that group.
+                    //and remove all following objects associated with that group
                     var firstGroupMember = _.findIndex(jobType.jobOptions, function(option) { return option.groupName === groupName});
                     var newJobOption = {
                         groupName: groupName,

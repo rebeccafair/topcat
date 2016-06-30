@@ -1,4 +1,9 @@
-<h1 translate="MY_JOBS.TITLE"></h1>
+<div class="row">
+    <div class="col-xs-10"><h1 translate="MY_JOBS.TITLE"></h1></div>
+    <div class="col-xs-2">
+        <button class="btn btn-success pull-right configure-job-btn" ng-click="myJobsController.configureJob()" translate="MY_JOBS.BUTTON.CONFIGURE_JOB.TEXT"></button>
+    </div>
+</div>
 
 
 <div ng-show="myJobsController.ijpFacilities.length > 1">
@@ -9,6 +14,7 @@
     </ul>
     <br>
 </div>
+
 <div ng-if="myJobsController.ijpFacilities.length > 0">
     <div ng-if="myJobsController.isScroll" ui-grid="myJobsController.gridOptions" ui-grid-infinite-scroll ui-grid-selection ui-grid-selection ui-grid-resize-columns  class="my-jobs-grid" take-up-remaining-height>
         <div class="no-rows row" ng-show="!myJobsController.isLoading && myJobsController.gridOptions.data.length == 0">
