@@ -42,8 +42,8 @@
         this.submitSingleJob = function() {
             var jobParameters = [];
 
-            if (inputContainsDatafiles) jobParameters.push('--datafileIds=' + _.map(inputEntities, 'entityId').join(','));
-            if (inputContainsDatasets) jobParameters.push('--datasetIds=' + _.map(inputEntities, 'entityId').join(','));
+            if (inputContainsDatafiles) jobParameters.push('--datafileIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'datafile'}), 'entityId').join(','));
+            if (inputContainsDatasets) jobParameters.push('--datasetIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'dataset'}), 'entityId').join(','));
 
             _.each(that.selectedJobType.jobOptions, function (jobOption){
                 switch (jobOption.type) {
