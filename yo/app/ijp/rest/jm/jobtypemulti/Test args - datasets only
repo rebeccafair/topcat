@@ -1,4 +1,4 @@
-{"name":"Test args - datasets only","executable":"test_args.py","multiple":true,"type":"batch","datasetTypes":["TestDatasetType","TestDatasetType2","gainexact","ordinarywould","atemon","readycent","expressionwish"],"jobOptions":[   
+{"name":"Test args - datasets only","executable":"test_args.py","multiple":true,"type":"batch","acceptsDatasets":true,"datasetTypes":["TestDatasetType","TestDatasetType2","gainexact","ordinarywould","atemon","readycent","expressionwish"],"jobOptions":[   
     {
     "name":"Option 1 enumeration",
     "groupName":"",
