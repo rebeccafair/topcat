@@ -286,7 +286,7 @@
             "SINGLE_JOB_TYPE" : {
                 "TITLE" : "Job Type: {{jobName}}"
             },
-            "JOB_TYPES_LOADING_MESSAGE" : "Finding compatible job types...",
+            "JOB_TYPES_LOADING_MESSAGE" : "Loading compatible job types...",
             "NO_JOB_TYPES_MESSAGE" : "There are no job types compatible with this cart",
             "NO_JOB_OPTIONS_MESSAGE" : "There are no configuration options for this job type",
             "ERROR" : {
@@ -295,6 +295,9 @@
                 "FLOAT" : "This field must be a number",
                 "MAX" : "This field must be between {{min}} and {{max}}",
                 "MIN" : "This field must be between {{min}} and {{max}}"
+            },
+            "SELECT_LABEL" : {
+                "JOB_TYPE" : "Job Type"
             },
             "BUTTON" : {
                 "SUBMIT_JOB" : {

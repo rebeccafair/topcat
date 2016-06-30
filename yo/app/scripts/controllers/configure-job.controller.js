@@ -17,7 +17,6 @@
         var booleanGroupNames = [];
         this.numInputEntities = inputEntities.length;
         this.loadingJobTypes = true;
-        this.loadingJobOptions = true;
         this.form = {};
         getCompatibleJobTypes();
 

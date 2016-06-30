@@ -7,14 +7,14 @@
 
         <div class="row">
             <div ng-if="configureJobController.compatibleJobTypes.length > 1" class="col-md-4 form-group">
-                <label ng-if="configureJobController.compatibleJobTypes.length > 1" class="control-label" for="jobtype">Job Type</label>
+                <label ng-if="configureJobController.compatibleJobTypes.length > 1" class="control-label" for="jobtype" translate="CONFIGURE_JOB.MODAL.SELECT_LABEL.JOB_TYPE"></label>
                 <select ng-model="configureJobController.selectedJobType" ng-options="jobType as jobType.name for jobType in configureJobController.compatibleJobTypes" ng-change="configureJobController.jobTypeSelected()" class="form-control" id="jobtype">
                 </select >
             </div>
         </div>
 
         <div ng-if="configureJobController.compatibleJobTypes.length === 1"><h4 translate="CONFIGURE_JOB.MODAL.SINGLE_JOB_TYPE.TITLE" translate-values="{ jobName: configureJobController.compatibleJobTypes[0].name }"></h4></div>
-        <div ng-if="configureJobController.compatibleJobTypes.length === 0 && configureJobController.loadingJobTypes" translate="CONFIGURE_JOB.MODAL.JOB_TYPES_LOADING_MESSAGE"></div>
+        <div ng-if="configureJobController.loadingJobTypes" translate="CONFIGURE_JOB.MODAL.JOB_TYPES_LOADING_MESSAGE"></div>
         <div ng-if="configureJobController.compatibleJobTypes.length === 0 && !configureJobController.loadingJobTypes" translate="CONFIGURE_JOB.MODAL.NO_JOB_TYPES_MESSAGE"></div>
 
         <form novalidate name="configureJobController.form">
