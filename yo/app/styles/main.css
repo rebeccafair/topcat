@@ -325,3 +325,14 @@ a[ng-click]{
   margin-top: 17px;
   margin-bottom: 17px;
 }
+
+.radio-well {
+  padding: 3px;
+  margin: 3px;
+}
+
+.job-options-checkbox {
+  position: relative;
+  left: 5px;
+  top: 2px;
+}

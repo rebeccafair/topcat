@@ -21,9 +21,10 @@
             <div class="form-group" ng-repeat="option in configureJobController.selectedJobType.jobOptions" ng-class="{'has-error' : configureJobController.form.$submitted && configureJobController.form['{{option.name}}'].$invalid }">
 
                 <div ng-if="option.type !== 'booleanGroup'">
-                    <div class="form-horizontal row" ng-if="option.type === 'boolean' && !option.groupName">
-                        <label class="col-lg-1 col-md-2 control-label" for="{{option.name}}" uib-tooltip="{{option.tip}}" tooltip-placement="top-left" ng-style="{ 'text-align' : 'left'}" >{{option.name}}</label>
-                        <div class="col-lg-1 col-md-1"><input type="checkbox" name="{{option.name}}" class="form-control" ng-if="option.type === 'boolean'" ng-model="option.value"></input></div>
+
+                    <div ng-if="option.type === 'boolean'">
+                        <label class="control-label" for="{{option.name}}" uib-tooltip="{{option.tip}}" tooltip-placement="top-left">{{option.name}}</label>
+                        <input class="job-options-checkbox" type="checkbox" name="{{option.name}}" ng-model="option.value">
                     </div>
 
                     <label class="control-label" ng-if="option.type !== 'boolean'" for="{{option.name}}" uib-tooltip="{{option.tip}}" tooltip-placement="top-left">{{option.name}}</label>
@@ -44,7 +45,7 @@
 
                 <div ng-if="option.type === 'booleanGroup'">
                     <label class="control-label" for="{{option.groupName}}">{{option.groupName}}</label>
-                    <label ng-repeat="value in option.values" class="radio-inline"><input type="radio" name="{{option.groupName}}" ng-model="option.value" value="{{value.programParameter}}">{{value.name}}</label>
+                    <span ng-repeat="value in option.values" class="well radio-well"><label class="radio-inline"><input type="radio" name="{{option.groupName}}" ng-model="option.value" value="{{value.programParameter}}">{{value.name}}</label></span>
                 </div>
 
             </div>
