@@ -104,8 +104,9 @@
               jobName: jobType,
               sessionId: facility.icat().session().sessionId
             }).then(function(response){
-              console.log(response);
+              out.resolve(response);
             }, function(){ out.reject(); });
+            return out.promise
           },
           'string, array': function(jobType, jobParameters){
             var out = $q.defer();
@@ -115,8 +116,9 @@
               sessionId: facility.icat().session().sessionId
             }, true);
             this.post('submit', params).then(function(response){
-              console.log(response);
+              out.resolve(response);
             }, function(){ out.reject(); });
+            return out.promise
           }
         });
 

@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h3 class="modal-title" translate="SUBMITTING_JOB.MODAL.TITLE"></h3>
+</div>
+<div class="modal-body">
+
+    <div ng-if="configureJobController.isSubmitting">
+        <div>
+            <p><span us-spinner="{radius:2, width:2, length: 2}" class="grid-cell-spinner"></span>{{ 'SUBMITTING_JOB.MODAL.SUBMITTING_JOB_MESSAGE' | translate }}</p>
+        </div>
+    </div>
+
+    <div ng-if="!configureJobController.isSubmitting">
+
+        <div>
+            <p ng-if="configureJobController.jobIds.length === 1" ><span translate="SUBMITTING_JOB.MODAL.SUBMISSION_SUCCESSFUL_MESSAGE"></span><span>{{ configureJobController.jobIds.join(", ")}}</span></p>
+            <p ng-if="configureJobController.jobIds.length > 1" ><span translate="SUBMITTING_JOB.MODAL.SUBMISSIONS_SUCCESSFUL_MESSAGE"></span><span>{{ configureJobController.jobIds.join(", ") }}</span></p>
+        </div>
+
+        <div ng-if="configureJobController.failedSubmissions.length > 0">
+            <p translate="SUBMITTING_JOB.MODAL.SUBMISSION_FAILED_MESSAGE"></p>
+        	<table class="table-bordered table-condensed" width="100%">
+                <tr>
+                    <th ng-if="configureJobController.numInputEntities > 0" translate="SUBMITTING_JOB.MODAL.COLUMN.INPUT_ENTITY_IDS"></th>
+                    <th translate="SUBMITTING_JOB.MODAL.COLUMN.ERROR_MESSAGE"></th>
+                </tr>
+                <tr ng-repeat="failedSubmission in configureJobController.failedSubmissions">
+                    <td ng-if="configureJobController.numInputEntities > 0">
+                        <span>{{failedSubmission.inputEntityIds}}</span>
+                    </td>
+                    <td>
+                        <span>{{failedSubmission.error}}</sparn>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="configureJobController.close(this)" translate="SUBMITTING_JOB.MODAL.BUTTON.CLOSE.TEXT"></button>
+</div>

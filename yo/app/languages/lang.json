@@ -309,8 +309,8 @@
                         "TEXT" : "NOTE: This will submit {{numJobs}} jobs, one for each cart item. "
                     }
                 },
-                "CANCEL" : {
-                    "TEXT" : "Cancel"
+                "CLOSE" : {
+                    "TEXT" : "Back"
                 }
             }
         }
@@ -326,7 +326,25 @@
                 "SUBMIT_SINGLE_JOB" :  {
                     "TEXT" : "Submit Single Job"
                 },
-                "BACK" : {
+                "CLOSE" : {
+                    "TEXT" : "Cancel"
+                }
+            }
+        }
+    },
+    "SUBMITTING_JOB" : {
+        "MODAL" : {
+            "TITLE" : "Job Submission",
+            "SUBMITTING_JOB_MESSAGE" : "Submitting - please wait...",
+            "SUBMISSION_SUCCESSFUL_MESSAGE" : "Job submitted successfully with job ID ",
+            "SUBMISSIONS_SUCCESSFUL_MESSAGE" : "Jobs submitted successfully with job IDs ",
+            "SUBMISSION_FAILED_MESSAGE" : "One or more job submissions failed: ",
+            "COLUMN" : {
+                "INPUT_ENTITY_IDS" : "Input Entity Ids",
+                "ERROR_MESSAGE" : "Error response"
+            },
+            "BUTTON" : {
+                "CLOSE" : {
                     "TEXT" : "Back"
                 }
             }

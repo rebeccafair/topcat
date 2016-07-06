@@ -23,13 +23,12 @@
         this.submit = function() {
 
             that.form.$setSubmitted();
+
             if (that.form.$valid) {
                 if (!multipleInputEntities){
-                    this.submitSingleJob();
-                    $uibModalInstance.close('job submitted');
+                    that.submitSingleJob();
                 }  else if (this.selectedJobType.multiple !== true){
-                    this.submitMultipleJobs();
-                    $uibModalInstance.close('job submitted');
+                    that.submitMultipleJobs();
                 } else {
                     this.confirmModal = $uibModal.open({
                         templateUrl : 'views/confirm-job-modal.html',
@@ -41,6 +40,8 @@
         };
 
         this.submitSingleJob = function() {
+            that.jobIds = [];
+            that.failedSubmissions = [];
             var jobParameters = [];
 
             if (inputContainsDatafiles) jobParameters.push('--datafileIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'datafile'}), 'entityId').join(','));
@@ -61,15 +62,34 @@
                         }
                 }
             });
-            tc.ijp(facilityName).submitJob(this.selectedJobType.name, jobParameters);
 
-            if (this.confirmModal) this.confirmModal.close('job submitted');
-            $uibModalInstance.close('job submitted');
+            that.isSubmitting = true;
+            tc.ijp(facilityName).submitJob(this.selectedJobType.name, jobParameters).then(function(response){
+                    that.jobIds.push(response.jobId);
+                    that.isSubmitting = false;
+            }, function(response){
+                that.failedSubmissions.push({
+                    inputEntityIds: _.map(inputEntities, 'entityId').join(', '),
+                    error: response || "No error response"
+                });
+                that.isSubmitting = false;
+            });
+
+            if (this.confirmModal) this.confirmModal.close();
+            this.submittingModal = $uibModal.open({
+                        templateUrl : 'views/submitting-job-modal.html',
+                        scope: $scope,
+                        size : 'med',
+                        backdrop: 'static'
+            })
+            //$uibModalInstance.close('job submitted');
 
         };
 
         this.submitMultipleJobs = function() {
-
+            var promises = [];
+            that.jobIds = [];
+            that.failedSubmissions = [];
             _.each(inputEntities, function(inputEntity) {
                 var jobParameters = [];
 
@@ -91,20 +111,34 @@
                             }
                     }
                 });
-                tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters);
+
+                promises.push(tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters).then(function(response){
+                    that.jobIds.push(response.jobId);
+                }, function(response){
+                    that.failedSubmissions.push({
+                        inputEntityIds: inputEntity.entityId,
+                        error: response || "No error response"
+                    });
+                }));
             });
 
-            if (this.confirmModal) this.confirmModal.close('job submitted');
-            $uibModalInstance.close('job submitted');
+            $q.all(promises).finally(function(){
+                that.isSubmitting = false;
+            });
+
+            if (this.confirmModal) this.confirmModal.close();
+            that.isSubmitting = true;
+            this.submittingModal = $uibModal.open({
+                        templateUrl : 'views/submitting-job-modal.html',
+                        scope: $scope,
+                        size : 'med',
+                        backdrop: 'static'
+            })
         };
 
-        this.cancel = function(){
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        this.back = function(){
-            this.confirmModal.dismiss('back');
-        };
+        this.close = function(thisModal){
+            thisModal.$parent.$close();
+        }
 
         this.jobTypeSelected = function(){
             that.form.$setPristine();
