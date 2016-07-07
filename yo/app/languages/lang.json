@@ -277,6 +277,23 @@
                     }
                 }
             }
+        },
+        "CHOOSE_JOB_INPUTS" : {
+            "MODAL" : {
+                "TITLE" : "Choose Job Inputs",
+                "INPUT_CHOICE_MESSAGE" : "You have {{numCartItems}} items in your cart, do you want to run a job on these items or run a job with no inputs?",
+                "BUTTON" : {
+                    "CLOSE" : {
+                        "TEXT" : "Close"
+                    },
+                    "CART_INPUT" : {
+                        "TEXT" : "Run Job On Cart Items"
+                    },
+                    "NO_INPUT" : {
+                        "TEXT" : "Run Job With No Inputs"
+                    }
+                }
+            }
         }
     },
     "CONFIGURE_JOB" : {

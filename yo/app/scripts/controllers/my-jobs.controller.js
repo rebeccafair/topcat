@@ -58,14 +58,32 @@
             that.isLoadingStandardOutput = true;
             getStandardOutput();
             getErrorOutput();
-            this.modal = $uibModal.open({
+            $uibModal.open({
                 templateUrl : 'views/job-details.html',
                 size: 'lg',
                 scope: $scope
             });
-        }
+        };
 
         this.configureJob = function(){
+            this.ijpFacilities[0].user().cart().then(function(cart){
+                that.cartItems = cart.cartItems
+                if(that.cartItems.length > 0) {
+                    that.chooseInputModal = $uibModal.open({
+                        templateUrl : 'views/choose-job-inputs-modal.html',
+                        size : 'med',
+                        scope: $scope
+                    });
+                } else {
+                    that.configureWithNoInputs();
+                }
+
+
+            })
+        };
+
+        this.configureWithNoInputs = function(){
+            if(this.chooseInputModal) { this.chooseInputModal.close() }
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
                 controller: "ConfigureJobController as configureJobController",
@@ -74,12 +92,26 @@
                     inputEntities: function() { return [] },
                     facilityName: function() { return facilityName }
                 }
-            })
+            });
         }
 
-        this.close = function (){
-            this.modal.close();
-        };
+        this.configureWithCartInputs = function(){
+            if(this.chooseInputModal) { this.chooseInputModal.close() }
+            $uibModal.open({
+                templateUrl : 'views/configure-job.html',
+                controller: "ConfigureJobController as configureJobController",
+                size : 'lg',
+                resolve: {
+                    inputEntities: function() { return that.cartItems },
+                    facilityName: function() { return facilityName }
+                }
+            });
+
+        }
+
+        this.close = function(thisModal){
+            thisModal.$parent.$close();
+        }
 
         function setUpGridOptions(){
 
