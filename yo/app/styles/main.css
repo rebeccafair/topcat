@@ -336,3 +336,9 @@ a[ng-click]{
   left: 5px;
   top: 2px;
 }
+
+.configure-job-box {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 15px;
+}
