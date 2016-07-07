@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('BrowseEntitiesController', function($state, $q, $scope, $rootScope, $translate, $timeout, $templateCache, tc, helpers){
+    app.controller('BrowseEntitiesController', function($state, $q, $scope, $rootScope, $translate, $timeout, $templateCache, $uibModal, tc, helpers){
         var that = this; 
         var stateFromTo = $state.current.name.replace(/^.*?(\w+-\w+)$/, '$1');
         var entityType = stateFromTo.replace(/^.*-/, '');
@@ -307,7 +307,22 @@
                 '&zip=false' +
                 '&outfile=' + encodeURIComponent(name);
         };
-        
+
+        this.configureJob = function(rowEntity){
+            $uibModal.open({
+                templateUrl : 'views/configure-job.html',
+                controller: "ConfigureJobController as configureJobController",
+                size : 'lg',
+                resolve: {
+                    inputEntities: function() { return [{
+                        entityType: rowEntity.entityType.toLowerCase(),
+                        entityId: rowEntity.id
+                    }]},
+                    facilityName: function() { return facilityName }
+                }
+            });
+        };
+
         this.selectTooltip = $translate.instant('BROWSE.SELECTOR.ADD_REMOVE_TOOLTIP.TEXT');
 
         $templateCache.put('ui-grid/selectionRowHeaderButtons', '<div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{\'ui-grid-row-selected\': row.isSelected}" ng-click="selectButtonClick(row, $event)" uib-tooltip="{{grid.appScope.selectTooltip}}" tooltip-placement="right" tooltip-append-to-body="true">&nbsp;</div>');

@@ -594,6 +594,7 @@
                     "gridOptions": {
                         "enableFiltering": true,
                         "enableSelection": true,
+                        "enableConfigureJob": true,
                         "columnDefs": [
                             {
                                 "field": "name",
@@ -657,6 +658,7 @@
                         "enableFiltering": true,
                         "enableSelection": true,
                         "enableDownload": true,
+                        "enableConfigureJob": true,
                         "columnDefs": [
                             {
                                 "field": "name"

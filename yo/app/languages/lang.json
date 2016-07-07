@@ -162,6 +162,12 @@
                         "TOOLTIP": {
                             "TEXT": "Click to download"
                         }
+                    },
+                    "CONFIGURE_JOB":{
+                        "TEXT": "Configure Job",
+                        "TOOLTIP": {
+                            "TEXT": "Click to configure a job on this entity"
+                        }
                     }
                 }
             }
@@ -303,7 +309,7 @@
                 "TITLE" : "Job Type: {{jobName}}"
             },
             "JOB_TYPES_LOADING_MESSAGE" : "Loading compatible job types...",
-            "NO_JOB_TYPES_MESSAGE" : "There are no job types compatible with this cart",
+            "NO_JOB_TYPES_MESSAGE" : "There are no job types compatible with this input",
             "NO_JOB_OPTIONS_MESSAGE" : "There are no configuration options for this job type",
             "ERROR" : {
                 "REQUIRED" : "This field is required",
