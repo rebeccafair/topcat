@@ -15,9 +15,8 @@
 
                 <div role="tabpanel" class="tab-pane active" id="job-output" ng-style="{ 'height': '100%' }">
                     <div class="panel panel-default job-details-panel">
-                        <div ng-show="myJobsController.standardOutput.length > 0" class="panel-body" ng-bind-html="myJobsController.standardOutput"></div>
-                        <div ng-show="myJobsController.standardOutput.length === 0 && myJobsController.isLoadingStandardOutput" class="panel-body" ng-bind-html="myJobsController.standardOutput" translate="MY_JOBS.JOB_DETAILS.MODAL.IS_LOADING"></div>
-                        <div ng-show="myJobsController.standardOutput.length === 0 && !myJobsController.isLoadingStandardOutput" class="panel-body" ng-bind-html="myJobsController.standardOutput" translate="MY_JOBS.JOB_DETAILS.MODAL.NO_OUTPUT"></div>
+                        <div ng-show="!myJobsController.isLoadingStandardOutput" class="panel-body" ng-bind-html="myJobsController.standardOutput"></div>
+                        <div ng-show="myJobsController.isLoadingStandardOutput" class="panel-body" translate="MY_JOBS.JOB_DETAILS.MODAL.IS_LOADING"></div>
                     </div>
                 </div>
 

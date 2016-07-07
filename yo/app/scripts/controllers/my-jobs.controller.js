@@ -15,11 +15,8 @@
         var facility = tc.facility($state.params.facilityName);
         var facilityName = $state.params.facilityName;
         var selectedJobId;
-        var standardOutput;
-        var errorOutput;
 
         this.isLoadingStandardOutput = true;
-        this.isLoadingErrorOutput = true;
         this.ijpFacilities = tc.ijpFacilities();
 
         if($state.params.facilityName == ''){
@@ -56,6 +53,9 @@
 
         this.showJobDetailsModal = function(row){
             that.selectedJobId = String(row.entity.jobId);
+            that.standardOutput = "";
+            that.errorOutput = "";
+            that.isLoadingStandardOutput = true;
             getStandardOutput();
             getErrorOutput();
             this.modal = $uibModal.open({
@@ -79,8 +79,6 @@
 
         this.close = function (){
             this.modal.close();
-            that.standardOutput = "";
-            that.errorOutput = "";
         };
 
         function setUpGridOptions(){
@@ -145,21 +143,15 @@
         function getStandardOutput() {
             tc.ijp(facilityName).getJobOutput(that.selectedJobId).then(function(standardOutput){
                 that.standardOutput = standardOutput.output.replace(/\n/g,"<br />");
+            }).finally(function(){
                 that.isLoadingStandardOutput = false;
-            }, function(error){
-                console.error('Failed to get standard output for job ' + that.selectedJobId);
-                console.error(error);
-            })
+            });
         };
 
         function getErrorOutput() {
             tc.ijp(facilityName).getErrorOutput(that.selectedJobId).then(function(errorOutput){
                 that.errorOutput = errorOutput.output.replace(/\n/g,"<br />");
-                that.isLoadingErrorOutput = false;
-            }, function(error){
-                console.error('Failed to get error output for job ' + that.selectedJobId);
-                console.error(error);
-            })
+            });
         };
 
         gridOptions.onRegisterApi = function(_gridApi) {
