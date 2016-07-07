@@ -113,6 +113,13 @@
             thisModal.$parent.$close();
         }
 
+        this.deleteJob = function(clickEvent, job){
+            clickEvent.stopPropagation();
+            tc.ijp(facilityName).deleteJob(String(job.jobId)).finally(function(){
+                refresh();
+            });
+        }
+
         function setUpGridOptions(){
 
             gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
@@ -162,6 +169,20 @@
 
             });
 
+            var actionButtons = '';
+            actionButtons += '<button ng-if="row.entity.status === (\'Completed\' || \'Cancelled\')" class="btn btn-danger btn-xs" translate="MY_JOBS.COLUMN.ACTIONS.BUTTON.DELETE_JOB.TEXT" uib-tooltip="{{\'MY_JOBS.COLUMN.ACTIONS.BUTTON.DELETE_JOB.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" ng-click="grid.appScope.deleteJob($event, row.entity)" ng-style="{ \'margin-right\':\'3px\' }"></button>';
+            gridOptions.columnDefs.push({
+                name : 'actions',
+                visible: true,
+                title: 'MY_JOBS.COLUMN.ACTIONS.NAME',
+                enableFiltering: false,
+                enable: false,
+                enableColumnMenu: false,
+                enableSorting: false,
+                enableHiding: false,
+                cellTemplate : '<div class="ui-grid-cell-contents">' + actionButtons + '</div>'
+            });
+
         }
 
         function getJobs() {
@@ -185,6 +206,12 @@
                 that.errorOutput = errorOutput.output.replace(/\n/g,"<br />");
             });
         };
+
+        function refresh() {
+            getJobs().then(function(results){
+                gridOptions.data = results;
+            });
+        }
 
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;

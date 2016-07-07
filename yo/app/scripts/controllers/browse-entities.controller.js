@@ -308,7 +308,8 @@
                 '&outfile=' + encodeURIComponent(name);
         };
 
-        this.configureJob = function(rowEntity){
+        this.configureJob = function(clickEvent, rowEntity){
+            clickEvent.stopPropagation();
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
                 controller: "ConfigureJobController as configureJobController",

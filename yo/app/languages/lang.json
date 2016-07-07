@@ -162,7 +162,9 @@
                         "TOOLTIP": {
                             "TEXT": "Click to download"
                         }
-                    },
+                    }
+                },
+                "BUTTON":{
                     "CONFIGURE_JOB":{
                         "TEXT": "Configure Job",
                         "TOOLTIP": {
@@ -262,7 +264,18 @@
             "JOB_ID": "Job Id",
             "NAME": "Job Type",
             "DATE": "Submitted",
-            "STATUS": "Status"
+            "STATUS": "Status",
+            "ACTIONS": {
+                "NAME": "Actions",
+                "BUTTON" : {
+                    "DELETE_JOB" : {
+                        "TEXT" : "Delete Job",
+                        "TOOLTIP" : {
+                            "TEXT": "WARNING: This will permanently delete this job"
+                        }
+                    }
+                }
+            }
         },
         "BUTTON" : {
             "CONFIGURE_JOB" : {

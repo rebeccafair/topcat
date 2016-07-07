@@ -302,7 +302,7 @@
 	        if(gridOptions.enableDownload || gridOptions.enableConfigureJob) {
                 var actionButtons = '';
                 if (gridOptions.enableDownload) { actionButtons += '<a type="button" class="btn btn-primary btn-xs" translate="BROWSE.COLUMN.ACTIONS.LINK.DOWNLOAD.TEXT" uib-tooltip="{{\'BROWSE.COLUMN.ACTIONS.LINK.DOWNLOAD.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" href="{{grid.appScope.downloadUrl(row.entity)}}" target="_blank" ng-style="{ \'margin-right\':\'3px\' }"></a>' };
-                if (gridOptions.enableConfigureJob) { actionButtons += '<button class="btn btn-success btn-xs" translate="BROWSE.COLUMN.ACTIONS.LINK.CONFIGURE_JOB.TEXT" uib-tooltip="{{\'BROWSE.COLUMN.ACTIONS.LINK.CONFIGURE_JOB.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" ng-click="grid.appScope.configureJob(row.entity)" ng-style="{ \'margin-right\':\'3px\' }"></button>' };
+                if (gridOptions.enableConfigureJob) { actionButtons += '<button class="btn btn-success btn-xs" translate="BROWSE.COLUMN.ACTIONS.BUTTON.CONFIGURE_JOB.TEXT" uib-tooltip="{{\'BROWSE.COLUMN.ACTIONS.BUTTON.CONFIGURE_JOB.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" ng-click="grid.appScope.configureJob($event, row.entity)" ng-style="{ \'margin-right\':\'3px\' }"></button>' };
 	            gridOptions.columnDefs.push({
 	                name : 'actions',
 	                visible: true,
