@@ -6,7 +6,7 @@
     <p translate="CONFIRM_JOB.MODAL.JOBS_CHOICE_MESSAGE" translate-values="{ numJobs: configureJobController.numInputEntities }"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="configureJobController.submitSingleJob()" translate="CONFIRM_JOB.MODAL.BUTTON.SUBMIT_SINGLE_JOB.TEXT"></button>
-    <button class="btn btn-primary" ng-click="configureJobController.submitMultipleJobs()" translate="CONFIRM_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TEXT"></button>
+    <button class="btn btn-primary" ng-click="configureJobController.submitJob(false)" translate="CONFIRM_JOB.MODAL.BUTTON.SUBMIT_SINGLE_JOB.TEXT"></button>
+    <button class="btn btn-primary" ng-click="configureJobController.submitJob(true)" translate="CONFIRM_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TEXT"></button>
     <button class="btn btn-warning" ng-click="configureJobController.close(this)" translate="CONFIRM_JOB.MODAL.BUTTON.CLOSE.TEXT"></button>
 </div>

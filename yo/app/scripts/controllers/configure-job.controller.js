@@ -26,9 +26,9 @@
 
             if (that.form.$valid) {
                 if (!multipleInputEntities){
-                    that.submitSingleJob();
+                    that.submitJob(false);
                 }  else if (this.selectedJobType.multiple !== true){
-                    that.submitMultipleJobs();
+                    that.submitJob(true);
                 } else {
                     this.confirmModal = $uibModal.open({
                         templateUrl : 'views/confirm-job-modal.html',
@@ -39,64 +39,23 @@
             }
         };
 
-        this.submitSingleJob = function() {
+        this.submitJob = function(submitMultipleJobs) {
+            var promises = [];
+            var jobParameters = [];
             that.jobIds = [];
             that.failedSubmissions = [];
-            var jobParameters = [];
-
-            if (inputContainsDatafiles) jobParameters.push('--datafileIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'datafile'}), 'entityId').join(','));
-            if (inputContainsDatasets) jobParameters.push('--datasetIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'dataset'}), 'entityId').join(','));
-
-            _.each(that.selectedJobType.jobOptions, function (jobOption){
-                switch (jobOption.type) {
-                    case "boolean":
-                            if (jobOption.value === true) { jobParameters.push(String(jobOption.programParameter)) }
-                        break;
-                    case "booleanGroup":
-                        if (jobOption.value !== "") { jobParameters.push(jobOption.value) }
-                        break;
-                    default:
-                        if (jobOption.value !== "") {
-                            jobParameters.push(jobOption.programParameter);
-                            jobParameters.push(String(jobOption.value));
-                        }
-                }
-            });
-
-            that.isSubmitting = true;
-            tc.ijp(facilityName).submitJob(this.selectedJobType.name, jobParameters).then(function(response){
-                    that.jobIds.push(response.jobId);
-                    that.isSubmitting = false;
-            }, function(response){
-                that.failedSubmissions.push({
-                    inputEntityIds: _.map(inputEntities, 'entityId').join(', '),
-                    error: response || "No error response"
-                });
-                that.isSubmitting = false;
-            });
 
             if (this.confirmModal) this.confirmModal.close();
+            that.isSubmitting = true;
             this.submittingModal = $uibModal.open({
                         templateUrl : 'views/submitting-job-modal.html',
                         scope: $scope,
                         size : 'med',
                         backdrop: 'static'
-            })
-            //$uibModalInstance.close('job submitted');
+            });
 
-        };
-
-        this.submitMultipleJobs = function() {
-            var promises = [];
-            that.jobIds = [];
-            that.failedSubmissions = [];
-            _.each(inputEntities, function(inputEntity) {
-                var jobParameters = [];
-
-                if (inputEntity.entityType === 'datafile') jobParameters.push('--datafileIds=' + inputEntity.entityId);
-                if (inputEntity.entityType === 'dataset') jobParameters.push('--datasetIds=' + inputEntity.entityId);
-
-                _.each(that.selectedJobType.jobOptions, function (jobOption){
+            //Build all the job parameters from the configure job form
+            _.each(that.selectedJobType.jobOptions, function (jobOption){
                     switch (jobOption.type) {
                         case "boolean":
                             if (jobOption.value === true) { jobParameters.push(jobOption.programParameter) }
@@ -110,30 +69,45 @@
                                 jobParameters.push(jobOption.value);
                             }
                     }
+            });
+
+            if (submitMultipleJobs === true) {
+                //If multiple jobs are to be submitted, the datasetIds and datafileIds params must be added for each submit
+                _.each(inputEntities, function(inputEntity){
+                    _.remove(jobParameters, function(jobParameter){
+                            return String(jobParameter).match(/^--datafileIds=|^--datasetIds/);
+                    });
+                    if (inputEntity.entityType === 'datafile') jobParameters.unshift('--datafileIds=' + inputEntity.entityId);
+                    if (inputEntity.entityType === 'dataset') jobParameters.unshift('--datasetIds=' + inputEntity.entityId);
+                    promises.push(tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters).then(function(response){
+                        that.jobIds.push(response.jobId);
+                    }, function(response){
+                        that.failedSubmissions.push({
+                            inputEntityIds: inputEntity.entityId,
+                            error: response || "No error response"
+                        });
+                    }));
                 });
 
+            } else {
+                //If only one job is to be submitted, the datasetIds and datafileIds params are all added at once
+                if (inputContainsDatafiles) jobParameters.unshift('--datafileIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'datafile'}), 'entityId').join(','));
+                if (inputContainsDatasets) jobParameters.unshift('--datasetIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'dataset'}), 'entityId').join(','));
                 promises.push(tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters).then(function(response){
                     that.jobIds.push(response.jobId);
                 }, function(response){
                     that.failedSubmissions.push({
-                        inputEntityIds: inputEntity.entityId,
+                        inputEntityIds: _.map(inputEntities, 'entityId').join(', '),
                         error: response || "No error response"
                     });
                 }));
-            });
+            }
 
+            //Wait for all submits to resolve/reject before displaying results to user
             $q.all(promises).finally(function(){
                 that.isSubmitting = false;
             });
 
-            if (this.confirmModal) this.confirmModal.close();
-            that.isSubmitting = true;
-            this.submittingModal = $uibModal.open({
-                        templateUrl : 'views/submitting-job-modal.html',
-                        scope: $scope,
-                        size : 'med',
-                        backdrop: 'static'
-            })
         };
 
         this.close = function(thisModal){
