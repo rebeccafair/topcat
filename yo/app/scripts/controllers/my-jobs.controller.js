@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('MyJobsController', function($q, $scope, $rootScope, $templateCache, $state, $uibModal, tc, helpers, uiGridConstants){
+    app.controller('MyJobsController', function($q, $scope, $rootScope,$state, $uibModal, tc, helpers, uiGridConstants){
 
         var that = this;
         var pagingConfig = tc.config().paging;
@@ -14,9 +14,7 @@
         var gridApi;
         var facility = tc.facility($state.params.facilityName);
         var facilityName = $state.params.facilityName;
-        var selectedJobId;
 
-        this.isLoadingStandardOutput = true;
         this.ijpFacilities = tc.ijpFacilities();
 
         if($state.params.facilityName == ''){
@@ -45,7 +43,7 @@
                         "field": "status"
                     }
                 ]
-            });
+        });
 
         setUpGridOptions();
         this.gridOptions = gridOptions;
@@ -69,11 +67,13 @@
             if (!job.status.match(/Completed|Cancelled/)){
 
                 var refreshJobOutputInterval = window.setInterval(refreshJobOutput, 1000 * 5);
-                //Checks to see if the job is completed yet or has been cancelled, stops refreshing job output if true
+                //Checks to see if the job is completed yet or has been cancelled, and stops refreshing job output if true
                 var checkJobStatusInterval = window.setInterval(function(){
-                    if (_.find(gridOptions.data, function(j){ return j.jobId === job.jobId }).status.match(/Completed|Cancelled/)) { window.clearInterval(refreshJobOutputInterval) }
+                    if (_.find(gridOptions.data, function(j){ return j.jobId === job.jobId }).status.match(/Completed|Cancelled/)) {
+                        window.clearInterval(refreshJobOutputInterval);
+                        window.clearInterval(checkJobStatusInterval);
+                    }
                 }, 1000 * 5);
-
 
                 jobDetailsModal.result.finally(function(){
                     window.clearInterval(refreshJobOutputInterval);
@@ -92,38 +92,23 @@
                         scope: $scope
                     });
                 } else {
-                    that.configureWithNoInputs();
+                    that.openConfigureJobModal([]);
                 }
-
-
             })
         };
 
-        this.configureWithNoInputs = function(){
+        this.openConfigureJobModal = function(jobInputs) {
             if(this.chooseInputModal) { this.chooseInputModal.close() }
+            console.log(jobInputs);
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
                 controller: "ConfigureJobController as configureJobController",
                 size : 'lg',
                 resolve: {
-                    inputEntities: function() { return [] },
+                    inputEntities: function() { return jobInputs },
                     facilityName: function() { return facilityName }
                 }
             });
-        }
-
-        this.configureWithCartInputs = function(){
-            if(this.chooseInputModal) { this.chooseInputModal.close() }
-            $uibModal.open({
-                templateUrl : 'views/configure-job.html',
-                controller: "ConfigureJobController as configureJobController",
-                size : 'lg',
-                resolve: {
-                    inputEntities: function() { return that.cartItems },
-                    facilityName: function() { return facilityName }
-                }
-            });
-
         }
 
         this.close = function(thisModal){

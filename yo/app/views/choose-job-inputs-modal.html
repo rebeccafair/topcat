@@ -6,7 +6,7 @@
     <p translate="MY_JOBS.CHOOSE_JOB_INPUTS.MODAL.INPUT_CHOICE_MESSAGE" translate-values="{ numCartItems: myJobsController.cartItems.length }"></p>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="myJobsController.configureWithCartInputs()" translate="MY_JOBS.CHOOSE_JOB_INPUTS.MODAL.BUTTON.CART_INPUT.TEXT"></button>
-    <button class="btn btn-primary" ng-click="myJobsController.configureWithNoInputs()" translate="MY_JOBS.CHOOSE_JOB_INPUTS.MODAL.BUTTON.NO_INPUT.TEXT"></button>
+    <button class="btn btn-primary" ng-click="myJobsController.openConfigureJobModal(myJobsController.cartItems)" translate="MY_JOBS.CHOOSE_JOB_INPUTS.MODAL.BUTTON.CART_INPUT.TEXT"></button>
+    <button class="btn btn-primary" ng-click="myJobsController.openConfigureJobModal([])" translate="MY_JOBS.CHOOSE_JOB_INPUTS.MODAL.BUTTON.NO_INPUT.TEXT"></button>
     <button class="btn btn-warning" ng-click="myJobsController.close(this)" translate="MY_JOBS.CHOOSE_JOB_INPUTS.MODAL.BUTTON.CLOSE.TEXT"></button>
 </div>
