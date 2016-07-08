@@ -51,18 +51,35 @@
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
 
-        this.showJobDetailsModal = function(row){
-            that.selectedJobId = String(row.entity.jobId);
+        this.showJobDetailsModal = function(job){
+            that.selectedJob = job;
             that.standardOutput = "";
             that.errorOutput = "";
             that.isLoadingStandardOutput = true;
-            getStandardOutput();
-            getErrorOutput();
-            $uibModal.open({
+
+            refreshJobOutput();
+
+            var jobDetailsModal = $uibModal.open({
                 templateUrl : 'views/job-details.html',
                 size: 'lg',
                 scope: $scope
             });
+
+            //Doesn't refresh job output if job is already completed or cancelled
+            if (!job.status.match(/Completed|Cancelled/)){
+
+                var refreshJobOutputInterval = window.setInterval(refreshJobOutput, 1000 * 5);
+                //Checks to see if the job is completed yet or has been cancelled, stops refreshing job output if true
+                var checkJobStatusInterval = window.setInterval(function(){
+                    if (_.find(gridOptions.data, function(j){ return j.jobId === job.jobId }).status.match(/Completed|Cancelled/)) { window.clearInterval(refreshJobOutputInterval) }
+                }, 1000 * 5);
+
+
+                jobDetailsModal.result.finally(function(){
+                    window.clearInterval(refreshJobOutputInterval);
+                    window.clearInterval(checkJobStatusInterval);
+                });
+            }
         };
 
         this.configureJob = function(){
@@ -137,7 +154,7 @@
             gridOptions.paginationPageSizes =  pagingConfig.paginationPageSizes;
             gridOptions.paginationNumberOfRows =  pagingConfig.paginationNumberOfRows;
             gridOptions.enableFiltering = true;
-            gridOptions.rowTemplate = '<div ng-click="grid.appScope.showJobDetailsModal(row)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div>';
+            gridOptions.rowTemplate = '<div ng-click="grid.appScope.showJobDetailsModal(row.entity)" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div>';
 
             _.each(gridOptions.columnDefs, function(columnDef){
                 columnDef.enableHiding = false;
@@ -202,7 +219,7 @@
         }
 
         function getStandardOutput() {
-            tc.ijp(facilityName).getJobOutput(that.selectedJobId).then(function(standardOutput){
+            tc.ijp(facilityName).getJobOutput(String(that.selectedJob.jobId)).then(function(standardOutput){
                 that.standardOutput = standardOutput.output.replace(/\n/g,"<br />");
             }).finally(function(){
                 that.isLoadingStandardOutput = false;
@@ -210,7 +227,7 @@
         };
 
         function getErrorOutput() {
-            tc.ijp(facilityName).getErrorOutput(that.selectedJobId).then(function(errorOutput){
+            tc.ijp(facilityName).getErrorOutput(String(that.selectedJob.jobId)).then(function(errorOutput){
                 that.errorOutput = errorOutput.output.replace(/\n/g,"<br />");
             });
         };
@@ -221,10 +238,20 @@
             });
         }
 
+        function refreshJobOutput() {
+            getStandardOutput();
+            getErrorOutput();
+        }
+
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;
 
             refresh();
+
+            var refreshInterval = window.setInterval(refresh, 1000 * 10);
+            $scope.$on('$destroy', function(){
+                window.clearInterval(refreshInterval);
+            });
 
         };
 
