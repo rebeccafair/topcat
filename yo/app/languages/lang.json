@@ -292,6 +292,7 @@
             "MODAL" : {
                 "TITLE" : "Job Details For Job {{jobId}}",
                 "IS_LOADING": "Loading standard output...",
+                "NO_OUTPUT": "There is no standard output for this job",
                 "TABS" : {
                     "STANDARD_OUTPUT": "Standard Output",
                     "ERROR_OUTPUT": "Error Output"
