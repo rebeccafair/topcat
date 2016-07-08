@@ -120,6 +120,13 @@
             });
         }
 
+        this.cancelJob = function(clickEvent, job){
+            clickEvent.stopPropagation();
+            tc.ijp(facilityName).cancelJob(String(job.jobId)).finally(function(){
+                refresh();
+            });
+        }
+
         function setUpGridOptions(){
 
             gridOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.NEVER;
@@ -170,7 +177,8 @@
             });
 
             var actionButtons = '';
-            actionButtons += '<button ng-if="row.entity.status === (\'Completed\' || \'Cancelled\')" class="btn btn-danger btn-xs" translate="MY_JOBS.COLUMN.ACTIONS.BUTTON.DELETE_JOB.TEXT" uib-tooltip="{{\'MY_JOBS.COLUMN.ACTIONS.BUTTON.DELETE_JOB.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" ng-click="grid.appScope.deleteJob($event, row.entity)" ng-style="{ \'margin-right\':\'3px\' }"></button>';
+            actionButtons += '<button ng-if="row.entity.status === \'Completed\' || row.entity.status === \'Cancelled\'" class="btn btn-danger btn-xs" translate="MY_JOBS.COLUMN.ACTIONS.BUTTON.DELETE_JOB.TEXT" uib-tooltip="{{\'MY_JOBS.COLUMN.ACTIONS.BUTTON.DELETE_JOB.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" ng-click="grid.appScope.deleteJob($event, row.entity)" ng-style="{ \'margin-right\':\'3px\' }"></button>';
+            actionButtons += '<button ng-if="row.entity.status === \'Queued\' || row.entity.status === \'Executing\'" class="btn btn-warning btn-xs" translate="MY_JOBS.COLUMN.ACTIONS.BUTTON.CANCEL_JOB.TEXT" uib-tooltip="{{\'MY_JOBS.COLUMN.ACTIONS.BUTTON.CANCEL_JOB.TOOLTIP.TEXT\' | translate}}" tooltip-placement="right" tooltip-append-to-body="true" ng-click="grid.appScope.cancelJob($event, row.entity)" ng-style="{ \'margin-right\':\'3px\' }"></button>';
             gridOptions.columnDefs.push({
                 name : 'actions',
                 visible: true,
@@ -216,9 +224,7 @@
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;
 
-            getJobs().then(function(results){
-                gridOptions.data = results;
-            });
+            refresh();
 
         };
 

@@ -110,6 +110,19 @@
           }
         });
 
+        this.cancelJob = helpers.overload({
+          'string': function(jobId){
+            var out = $q.defer();
+            this.post('cancel/' + jobId, {
+              sessionId: facility.icat().session().sessionId
+            }).then(function(jobOutput){
+              out.resolve(jobOutput);
+            }, function(){ out.reject(); });
+
+            return out.promise
+          }
+        });
+
         this.submitJob = helpers.overload({
           'string': function(jobType){
             var out = $q.defer();

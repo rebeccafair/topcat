@@ -271,7 +271,13 @@
                     "DELETE_JOB" : {
                         "TEXT" : "Delete Job",
                         "TOOLTIP" : {
-                            "TEXT": "WARNING: This will permanently delete this job"
+                            "TEXT": "This will permanently delete this job"
+                        }
+                    },
+                    "CANCEL_JOB" : {
+                        "TEXT" : "Cancel Job",
+                        "TOOLTIP" : {
+                            "TEXT": "This will cancel this job, it cannot be restarted"
                         }
                     }
                 }
