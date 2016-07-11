@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('MyJobsController', function($q, $scope, $rootScope,$state, $uibModal, tc, helpers, uiGridConstants){
+    app.controller('MyJobsController', function($rootScope, $q, $scope, $state, $uibModal, tc, helpers, uiGridConstants){
 
         var that = this;
         var pagingConfig = tc.config().paging;
@@ -99,7 +99,6 @@
 
         this.openConfigureJobModal = function(jobInputs) {
             if(this.chooseInputModal) { this.chooseInputModal.close() }
-            console.log(jobInputs);
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
                 controller: "ConfigureJobController as configureJobController",
@@ -233,7 +232,10 @@
 
             refresh();
 
-            var refreshInterval = window.setInterval(refresh, 1000 * 10);
+            var refreshInterval = window.setInterval(refresh, 1000 * 30);
+
+            $rootScope.$on('jobSubmitted', refresh);
+
             $scope.$on('$destroy', function(){
                 window.clearInterval(refreshInterval);
             });

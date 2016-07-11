@@ -106,6 +106,7 @@
             //Wait for all submits to resolve/reject before displaying results to user
             $q.all(promises).finally(function(){
                 that.isSubmitting = false;
+                $rootScope.emit('jobSubmitted');
             });
 
         };
