@@ -326,6 +326,10 @@ a[ng-click]{
   margin-bottom: 17px;
 }
 
+.configure-job-dropdown {
+  margin-top: -17px;
+}
+
 .radio-well {
   padding: 3px;
   margin: 3px;

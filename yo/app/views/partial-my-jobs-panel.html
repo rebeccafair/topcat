@@ -1,7 +1,14 @@
 <div class="row">
     <div class="col-xs-10"><h1 translate="MY_JOBS.TITLE"></h1></div>
     <div class="col-xs-2">
-        <button class="btn btn-success pull-right configure-job-btn" ng-click="myJobsController.configureJob()" translate="MY_JOBS.BUTTON.CONFIGURE_JOB.TEXT"></button>
+        <button ng-if="myJobsController.ijpFacilities.length === 1" class="btn btn-success pull-right configure-job-btn" ng-click="myJobsController.configureJob(myJobsController.ijpFacility)" translate="MY_JOBS.BUTTON.CONFIGURE_JOB.TEXT"></button>
+        <div ng-if="myJobsController.ijpFacilities.length > 1" class="btn-group pull-right">
+            <button type="button" class="btn btn-success dropdown-toggle configure-job-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  uib-tooltip="{{'MY_JOBS.BUTTON.CONFIGURE_JOB_DROPDOWN.TOOLTIP.TEXT' | translate}}" tooltip-append-to-body="true" tooltip-placement="left">{{ 'MY_JOBS.BUTTON.CONFIGURE_JOB_DROPDOWN.TEXT' | translate }}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu configure-job-dropdown">
+                <li><a class="dropdown-item" href="" ng-repeat="ijpFacility in myJobsController.ijpFacilities" ng-click="myJobsController.configureJob(ijpFacility)">{{ ijpFacility.config().title }}</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 

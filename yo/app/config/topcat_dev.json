@@ -214,7 +214,7 @@
             "title": "TEST",
             "icatUrl": "https://sig-24.esc.rl.ac.uk:8181",
             "idsUrl": "https://localhost:8181",
-            "ijpUrl": "",
+            "ijpUrl": "https://sig-23.esc.rl.ac.uk:8181",
             "facilityId": 1,
             "hierarchy": [
                 "facility",
@@ -706,10 +706,10 @@
         },
         "lsf": {
             "name": "LSF",
-            "title": "Lasers for Science Facility",
-            "icatUrl": "https://data.octopus.clf.stfc.ac.uk:8181",
-            "idsUrl": "https://data.octopus.clf.stfc.ac.uk:8181",
-            "ijpUrl": "",
+            "title": "Octopus",
+            "icatUrl": "https://vm47.nubes.stfc.ac.uk:8181",
+            "idsUrl": "https://vm47.nubes.stfc.ac.uk:8181",
+            "ijpUrl": "https://vm190.nubes.stfc.ac.uk:8181",
             "hierarchy": [
                 "facility",
                 "dataset",
@@ -723,6 +723,10 @@
                 {
                     "title": "Username/Password (LDAP)",
                     "plugin": "ldap"
+                },
+                {
+                    "title": "Simple",
+                    "plugin": "simple"
                 }
             ],
             "downloadTransportTypes": [
@@ -892,6 +896,7 @@
                 "dataset": {
                     "gridOptions": {
                         "enableSelection": true,
+                        "enableConfigureJob": true,
                         "columnDefs": [
                             {
                                 "field": "name",
@@ -952,6 +957,7 @@
                     "gridOptions": {
                         "enableSelection": true,
                         "enableDownload": true,
+                        "enableConfigureJob": true,
                         "columnDefs": [
                             {
                                 "field": "name"
@@ -1295,7 +1301,6 @@
             "title": "ISIS",
             "icatUrl": "https://icat-dev.isis.stfc.ac.uk",
             "idsUrl": "https://idsdev.isis.cclrc.ac.uk",
-            "ijpUrl": "",
             "hierarchy": [
                 "facility",
                 "instrument",

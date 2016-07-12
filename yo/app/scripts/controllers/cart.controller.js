@@ -35,14 +35,20 @@
         this.gridOptions = gridOptions;
         this.totalSize = undefined;
 
-        this.configureJob = function() {
+        this.configureJob = function(facilityName) {
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
                 controller: "ConfigureJobController as configureJobController",
                 size : 'lg',
                 resolve: {
-                    inputEntities: getCartItems(),
-                    facilityName: function() { return that.ijpFacilities[0].config().facilityName }
+                    inputEntities: function() {
+                        return getCartItems().then(function(cartItems){
+                            return _.filter(cartItems, function(cartItem){
+                                return cartItem.facilityName === facilityName
+                            })
+                        })
+                    },
+                    facilityName: function() { return facilityName }
                 }
             })
         };

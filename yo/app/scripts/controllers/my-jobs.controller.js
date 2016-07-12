@@ -16,6 +16,7 @@
         var facilityName = $state.params.facilityName;
 
         this.ijpFacilities = tc.ijpFacilities();
+        this.ijpFacility = this.ijpFacilities[0];
 
         if($state.params.facilityName == ''){
             if (this.ijpFacilities.length > 0) {
@@ -82,8 +83,9 @@
             }
         };
 
-        this.configureJob = function(){
-            this.ijpFacilities[0].user().cart().then(function(cart){
+        this.configureJob = function(ijpFacility){
+            that.ijpFacility = ijpFacility;
+            ijpFacility.user().cart().then(function(cart){
                 that.cartItems = cart.cartItems
                 if(that.cartItems.length > 0) {
                     that.chooseInputModal = $uibModal.open({
@@ -105,7 +107,7 @@
                 size : 'lg',
                 resolve: {
                     inputEntities: function() { return jobInputs },
-                    facilityName: function() { return facilityName }
+                    facilityName: function() { return that.ijpFacility.config().facilityName }
                 }
             });
         }

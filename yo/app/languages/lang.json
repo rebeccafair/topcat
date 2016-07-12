@@ -286,6 +286,12 @@
         "BUTTON" : {
             "CONFIGURE_JOB" : {
                 "TEXT" : "Configure New Job"
+            },
+            "CONFIGURE_JOB_DROPDOWN" : {
+                "TEXT" : "Configure New Job ",
+                "TOOLTIP" : {
+                    "TEXT" : "Click to configure a job for a certain facility"
+                }
             }
         },
         "JOB_DETAILS" : {
@@ -421,6 +427,12 @@
                 "TEXT" : "Configure Job",
                 "TOOLTIP" : {
                     "TEXT" : "Click to configure and run a job on the cart items"
+                }
+            },
+            "CONFIGURE_JOB_DROPDOWN" : {
+                "TEXT" : "Configure Job ",
+                "TOOLTIP" : {
+                    "TEXT" : "Click to configure and run a job on the cart items for a certain facility"
                 }
             }
         },
