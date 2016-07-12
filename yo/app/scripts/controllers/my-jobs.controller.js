@@ -232,9 +232,9 @@
 
             refresh();
 
-            var refreshInterval = window.setInterval(refresh, 1000 * 30);
-
             $rootScope.$on('jobSubmitted', refresh);
+
+            var refreshInterval = window.setInterval(refresh, 1000 * 30);
 
             $scope.$on('$destroy', function(){
                 window.clearInterval(refreshInterval);
