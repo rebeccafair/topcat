@@ -102,8 +102,8 @@
             var out = $q.defer();
             this.delete('delete/' + jobId, {
               sessionId: facility.icat().session().sessionId
-            }).then(function(jobOutput){
-              out.resolve(jobOutput);
+            }).then(function(){
+              out.resolve();
             }, function(){ out.reject(); });
 
             return out.promise
@@ -115,8 +115,8 @@
             var out = $q.defer();
             this.post('cancel/' + jobId, {
               sessionId: facility.icat().session().sessionId
-            }).then(function(jobOutput){
-              out.resolve(jobOutput);
+            }).then(function(){
+              out.resolve();
             }, function(){ out.reject(); });
 
             return out.promise
