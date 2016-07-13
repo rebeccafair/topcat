@@ -24,7 +24,7 @@
             that.form.$setSubmitted();
             if (that.form.$valid){
                 var promises = [];
-                 var jobParameters = [];
+                var jobParameters = [];
                 that.jobIds = [];
                 that.failedSubmissions = [];
 
