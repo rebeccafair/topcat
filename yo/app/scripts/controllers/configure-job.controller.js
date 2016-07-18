@@ -6,7 +6,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('ConfigureJobController', function($q, $uibModalInstance, $uibModal, $scope, $rootScope, $uibModalStack, tc, inputEntities, facilityName){
+    app.controller('ConfigureJobController', function($q, $uibModal, $scope, $rootScope, $uibModalStack, tc, inputEntities, facilityName){
 
         var that = this;
         var inputEntityTypes = _.uniq(_.map(inputEntities, 'entityType'));
@@ -31,10 +31,9 @@
             var jobParameters = [];
             that.jobIds = [];
             that.failedSubmissions = [];
-
             if (this.confirmModal) this.confirmModal.close();
             that.isSubmitting = true;
-            this.submittingModal = $uibModal.open({
+            that.submittingModal = $uibModal.open({
                         templateUrl : 'views/submitting-job-modal.html',
                         scope: $scope,
                         size : 'med',
@@ -61,12 +60,11 @@
             if (submitMultipleJobs === true) {
                 //If multiple jobs are to be submitted, the datasetIds and datafileIds params must be added for each submit
                 _.each(inputEntities, function(inputEntity){
-                    _.remove(jobParameters, function(jobParameter){
-                            return String(jobParameter).match(/^--datafileIds=|^--datasetIds/);
-                    });
-                    if (inputEntity.entityType === 'datafile') jobParameters.unshift('--datafileIds=' + inputEntity.entityId);
-                    if (inputEntity.entityType === 'dataset') jobParameters.unshift('--datasetIds=' + inputEntity.entityId);
-                    promises.push(tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters).then(function(response){
+
+                    var jobParameters_ = _.clone(jobParameters);
+                    if (inputEntity.entityType === 'datafile') jobParameters_.unshift('--datafileIds=' + inputEntity.entityId);
+                    if (inputEntity.entityType === 'dataset') jobParameters_.unshift('--datasetIds=' + inputEntity.entityId);
+                    promises.push(tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters_).then(function(response){
                         that.jobIds.push(response.jobId);
                     }, function(response){
                         that.failedSubmissions.push({
@@ -140,7 +138,6 @@
         }
 
         function getCompatibleJobTypes(){
-
             getAllJobTypes().then(function(allJobTypes){
                 if (inputContainsDatasets) {
                     getInputDatasetTypes().then(function(inputDatasetTypes){
@@ -202,7 +199,6 @@
             var inputDatasetIds = _.map(inputDatasets, 'entityId');
 
             var deferred = $q.defer();
-
             tc.icat(facilityName).query("select distinct dataset.type.name from Dataset dataset where dataset.id in ('" + inputDatasetIds.join("','") + "')").then(function(datasetTypes) {
                 deferred.resolve(datasetTypes);
             }, function(error){

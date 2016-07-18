@@ -1,0 +1,22 @@
+[
+    {
+    "entityId":1,
+    "entityType":"dataset",
+    "name":"mock dataset 1",
+    "datasetType":"dataset type 1",
+    "facilityName":"test"
+    },
+    {
+    "entityId":2,
+    "entityType":"dataset",
+    "name":"mock dataset 2",
+    "datasetType":"dataset type 2",
+    "facilityName":"test"
+    },
+    {
+    "entityId":3,
+    "entityType":"datafile",
+    "name":"mock datafile",
+    "facilityName":"test"
+    }
+]

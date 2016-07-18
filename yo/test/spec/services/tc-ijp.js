@@ -78,7 +78,7 @@ describe('tc ijp service', function () {
     });
 
     describe('submitJob(jobTypeName, jobParameters[])', function(){
-        it('submit a job with parameters', function(){
+        it('should submit a job with parameters', function(){
             ijpServer.expectPOST('https://localhost:8181/ijp/rest/jm/submit','jobName=Test+Options&parameter=--datasetIds%3D100,101&parameter=datafileIds%3D200&parameter=--option-one&parameter=Option+1+string&parameter=--option-two&parameter=Default+for+option+2&parameter=--mode%3Dverbose&parameter=--silent%3Dtrue&parameter=--viewtype&parameter=flata-fullframe&parameter=--index&parameter=1&parameter=--origin&parameter=0&sessionId=').respond({"jobId":1234});
             var jobParameters = ['--datasetIds=100,101','datafileIds=200','--option-one','Option 1 string','--option-two','Default for option 2','--mode=verbose','--silent=true','--viewtype','flata-fullframe','--index',1,'--origin',0];
             ijpService.submitJob('Test Options', jobParameters);
