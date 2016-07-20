@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('MyJobsController', function($rootScope, $q, $scope, $state, $uibModal, tc, helpers, uiGridConstants){
+    app.controller('MyJobsController', function($rootScope, $q, $scope, $state, $uibModal, $interval, tc, helpers, uiGridConstants){
 
         var that = this;
         var pagingConfig = tc.config().paging;
@@ -12,9 +12,7 @@
         var pageSize = isScroll ? pagingConfig.scrollPageSize : pagingConfig.paginationNumberOfRows;
         var page = 1;
         var gridApi;
-        var facility = tc.facility($state.params.facilityName);
         var facilityName = $state.params.facilityName;
-
         this.ijpFacilities = tc.ijpFacilities();
         this.ijpFacility = this.ijpFacilities[0];
 
@@ -50,35 +48,40 @@
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
 
+        refresh();
+        var refreshInterval = $interval(refresh, 1000 * 30);
+        $scope.$on('$destroy', function(){
+            $interval.cancel(refreshInterval);
+        });
+
+        $rootScope.$on('jobSubmitted', refresh);
+
         this.showJobDetailsModal = function(job){
-            that.selectedJob = job;
             that.standardOutput = "";
             that.errorOutput = "";
             that.isLoadingStandardOutput = true;
 
-            refreshJobOutput();
-
-            var jobDetailsModal = $uibModal.open({
-                templateUrl : 'views/job-details.html',
+            refreshJobOutput(job.jobId);
+            that.jobDetailsModal = $uibModal.open({
+                templateUrl : 'views/job-details-modal.html',
                 size: 'lg',
                 scope: $scope
             });
 
             //Doesn't refresh job output if job is already completed or cancelled
             if (!job.status.match(/Completed|Cancelled/)){
-
-                var refreshJobOutputInterval = window.setInterval(refreshJobOutput, 1000 * 5);
+                var refreshJobOutputInterval = $interval(refreshJobOutput, 1000 * 5);
                 //Checks to see if the job is completed yet or has been cancelled, and stops refreshing job output if true
-                var checkJobStatusInterval = window.setInterval(function(){
+                var checkJobStatusInterval = $interval(function(){
                     if (_.find(gridOptions.data, function(j){ return j.jobId === job.jobId }).status.match(/Completed|Cancelled/)) {
-                        window.clearInterval(refreshJobOutputInterval);
-                        window.clearInterval(checkJobStatusInterval);
+                        $interval.cancel(refreshJobOutputInterval);
+                        $interval.cancel(checkJobStatusInterval);
                     }
                 }, 1000 * 5);
 
-                jobDetailsModal.result.finally(function(){
-                    window.clearInterval(refreshJobOutputInterval);
-                    window.clearInterval(checkJobStatusInterval);
+                that.jobDetailsModal.result.finally(function(){
+                    $interval.cancel(refreshJobOutputInterval);
+                    $interval.cancel(checkJobStatusInterval);
                 });
             }
         };
@@ -88,7 +91,7 @@
             ijpFacility.user().cart().then(function(cart){
                 that.cartItems = cart.cartItems
                 if(that.cartItems.length > 0) {
-                    that.chooseInputModal = $uibModal.open({
+                    that.chooseJobInputsModal = $uibModal.open({
                         templateUrl : 'views/choose-job-inputs-modal.html',
                         size : 'med',
                         scope: $scope
@@ -100,7 +103,7 @@
         };
 
         this.openConfigureJobModal = function(jobInputs) {
-            if(this.chooseInputModal) { this.chooseInputModal.close() }
+            if(this.chooseJobInputsModal) { this.chooseJobInputsModal.close() }
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
                 controller: "ConfigureJobController as configureJobController",
@@ -112,8 +115,8 @@
             });
         }
 
-        this.close = function(thisModal){
-            thisModal.$parent.$close();
+        this.close = function(modal){
+            modal.close();
         }
 
         this.deleteJob = function(clickEvent, job){
@@ -204,16 +207,16 @@
             });
         }
 
-        function getStandardOutput() {
-            tc.ijp(facilityName).getJobOutput(String(that.selectedJob.jobId)).then(function(standardOutput){
+        function getStandardOutput(jobId) {
+            tc.ijp(facilityName).getJobOutput(String(jobId)).then(function(standardOutput){
                 that.standardOutput = standardOutput.output.replace(/\n/g,"<br />");
             }).finally(function(){
                 that.isLoadingStandardOutput = false;
             });
         };
 
-        function getErrorOutput() {
-            tc.ijp(facilityName).getErrorOutput(String(that.selectedJob.jobId)).then(function(errorOutput){
+        function getErrorOutput(jobId) {
+            tc.ijp(facilityName).getErrorOutput(String(jobId)).then(function(errorOutput){
                 that.errorOutput = errorOutput.output.replace(/\n/g,"<br />");
             });
         };
@@ -224,25 +227,10 @@
             });
         }
 
-        function refreshJobOutput() {
-            getStandardOutput();
-            getErrorOutput();
+        function refreshJobOutput(jobId) {
+            getStandardOutput(jobId);
+            getErrorOutput(jobId);
         }
-
-        gridOptions.onRegisterApi = function(_gridApi) {
-            gridApi = _gridApi;
-
-            refresh();
-
-            $rootScope.$on('jobSubmitted', refresh);
-
-            var refreshInterval = window.setInterval(refresh, 1000 * 30);
-
-            $scope.$on('$destroy', function(){
-                window.clearInterval(refreshInterval);
-            });
-
-        };
 
     });
 

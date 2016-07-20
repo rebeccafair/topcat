@@ -6,7 +6,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('ConfigureJobController', function($q, $uibModal, $scope, $rootScope, $uibModalStack, tc, inputEntities, facilityName){
+    app.controller('ConfigureJobController', function($q, $scope, $rootScope, $uibModal, $uibModalInstance, tc, inputEntities, facilityName){
 
         var that = this;
         var inputEntityTypes = _.uniq(_.map(inputEntities, 'entityType'));
@@ -107,8 +107,12 @@
             }
         };
 
-        this.close = function(thisModal){
-            thisModal.$parent.$close();
+        this.close = function(modal){
+            if (modal === undefined) {
+                $uibModalInstance.close()
+            } else {
+                modal.close();
+            }
         };
 
         this.jobTypeSelected = function(){

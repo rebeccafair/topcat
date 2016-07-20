@@ -2,7 +2,7 @@
 
 describe('configure job controller', function () {
     
-    var controller, configureJobController, inputEntities, scope, tcServiceMock, ijpServiceMock, icatServiceMock, mockJobTypes, mockInputEntities, mockModal;
+    var configureJobController, controller, scope, uibModal, mockJobTypes, mockInputEntities, inputEntities, ijpServiceMock, icatServiceMock, tcServiceMock, uibModalInstanceMock;
 
     var facilityName = 'test';
 
@@ -10,17 +10,19 @@ describe('configure job controller', function () {
         module(function($provide) {
             $provide.constant('LANG', {});
             $provide.constant('APP_CONFIG', readJSON('app/config/topcat_dev.json'));
-            $provide.constant('mockJobTypes', readJSON('test/mock/data/job-types.json'));
-            $provide.constant('mockInputEntities', readJSON('test/mock/data/job-input-entities.json'));
+            $provide.constant('mockJobTypes', readJSON('test/mock/data/mock-job-types.json'));
+            $provide.constant('mockInputEntities', readJSON('test/mock/data/mock-job-input-entities.json'));
         });
     });
 
     beforeEach(module('angularApp'));
 
-    beforeEach(inject(function($controller,$rootScope, $q, _mockJobTypes_, _mockInputEntities_){
+    beforeEach(inject(function($controller,$rootScope, $q, $uibModal,  _mockJobTypes_, _mockInputEntities_){
 
         controller = $controller;
         scope = $rootScope.$new();
+        uibModal = $uibModal;
+        //uibModalInstance = $uibModalInstance
         mockJobTypes = _mockJobTypes_;
         mockInputEntities = _mockInputEntities_;
 
@@ -60,10 +62,10 @@ describe('configure job controller', function () {
             }
         };
 
-        mockModal = {
-            open: function() {},
-            close: function() {}
-        };
+        uibModalInstanceMock = {
+            open: function(){},
+            close: function(){}
+        }
 
     }));
     
@@ -74,7 +76,8 @@ describe('configure job controller', function () {
                 tc: tcServiceMock,
                 inputEntities: mockInputEntities, 
                 facilityName: facilityName,
-                $uibModal: mockModal
+                $uibModal: uibModal,
+                $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
         });
@@ -112,9 +115,9 @@ describe('configure job controller', function () {
         });
 
         it('should open a modal', function(){
-            spyOn(mockModal, 'open');
+            spyOn(uibModal, 'open').and.callThrough();
             configureJobController.submitJob(false);
-            expect(mockModal.open).toHaveBeenCalled();
+            expect(uibModal.open).toHaveBeenCalled();
         })
 
 
@@ -127,7 +130,8 @@ describe('configure job controller', function () {
                 tc: tcServiceMock,
                 inputEntities: mockInputEntities, 
                 facilityName: facilityName,
-                $uibModal: mockModal
+                $uibModal: uibModal,
+                $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
             expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - multiple datasets or datafiles','Test args - single dataset or datafile']);
@@ -139,7 +143,8 @@ describe('configure job controller', function () {
                 tc: tcServiceMock,
                 inputEntities: [mockInputEntities[0]], 
                 facilityName: facilityName,
-                $uibModal: mockModal
+                $uibModal: uibModal,
+                $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
             expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - datasets only','Test args - multiple datasets or datafiles','Test args - single dataset or datafile','Test args - dataset type 1 only']);
@@ -151,7 +156,8 @@ describe('configure job controller', function () {
                 tc: tcServiceMock,
                 inputEntities: [mockInputEntities[2]], 
                 facilityName: facilityName,
-                $uibModal: mockModal
+                $uibModal: uibModal,
+                $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
             expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - datafiles only','Test args - multiple datasets or datafiles','Test args - single dataset or datafile']);
@@ -163,7 +169,8 @@ describe('configure job controller', function () {
                 tc: tcServiceMock,
                 inputEntities: [], 
                 facilityName: facilityName,
-                $uibModal: mockModal
+                $uibModal: uibModal,
+                $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
             expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Create datafile','Sleepcount']);

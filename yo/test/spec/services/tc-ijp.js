@@ -17,7 +17,6 @@ describe('tc ijp service', function () {
         ijpService = tc.ijp('test');
         ijpServer = $httpBackend;
     }));
-    
 
     describe('getJobType()', function () {
         it('should fetch a list of job type names', function(){
