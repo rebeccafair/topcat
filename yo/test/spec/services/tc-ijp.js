@@ -7,7 +7,7 @@ describe('tc ijp service', function () {
     beforeEach(function() {
         module(function($provide) {
             $provide.constant('LANG', {});
-            $provide.constant('APP_CONFIG', readJSON('test/mock/data/config.json'));
+            $provide.constant('APP_CONFIG', readJSON('test/mock/data/mock-config.json'));
         });
     });
 

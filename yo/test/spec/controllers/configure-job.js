@@ -2,29 +2,28 @@
 
 describe('configure job controller', function () {
     
-    var configureJobController, controller, scope, uibModal, mockJobTypes, mockInputEntities, inputEntities, ijpServiceMock, icatServiceMock, tcServiceMock, uibModalInstanceMock;
+    var configureJobController, controller, scope, uibModal, mockJobTypes, mockCartItems, inputEntities, ijpServiceMock, icatServiceMock, tcServiceMock, uibModalInstanceMock;
 
     var facilityName = 'test';
 
     beforeEach(function() {
         module(function($provide) {
             $provide.constant('LANG', {});
-            $provide.constant('APP_CONFIG', readJSON('app/config/topcat_dev.json'));
+            $provide.constant('APP_CONFIG', readJSON('test/mock/data/mock-config.json'));
             $provide.constant('mockJobTypes', readJSON('test/mock/data/mock-job-types.json'));
-            $provide.constant('mockInputEntities', readJSON('test/mock/data/mock-job-input-entities.json'));
+            $provide.constant('mockCartItems', readJSON('test/mock/data/mock-cart-items.json'));
         });
     });
 
     beforeEach(module('angularApp'));
 
-    beforeEach(inject(function($controller,$rootScope, $q, $uibModal,  _mockJobTypes_, _mockInputEntities_){
+    beforeEach(inject(function($controller,$rootScope, $q, $uibModal,  _mockJobTypes_, _mockCartItems_){
 
         controller = $controller;
         scope = $rootScope.$new();
         uibModal = $uibModal;
-        //uibModalInstance = $uibModalInstance
         mockJobTypes = _mockJobTypes_;
-        mockInputEntities = _mockInputEntities_;
+        mockCartItems = _mockCartItems_;
 
         ijpServiceMock = {
             submitJob : function(jobType, jobParameters) {
@@ -74,7 +73,7 @@ describe('configure job controller', function () {
             configureJobController = controller('ConfigureJobController', { 
                 $scope: scope,
                 tc: tcServiceMock,
-                inputEntities: mockInputEntities, 
+                inputEntities: mockCartItems,
                 facilityName: facilityName,
                 $uibModal: uibModal,
                 $uibModalInstance: uibModalInstanceMock
@@ -91,7 +90,7 @@ describe('configure job controller', function () {
         it('should submit jobs equal to the number of input entities when submitJob(true)', function(){
             spyOn(ijpServiceMock, 'submitJob').and.callThrough();
             configureJobController.submitJob(true);
-            expect(ijpServiceMock.submitJob.calls.count()).toEqual(mockInputEntities.length);
+            expect(ijpServiceMock.submitJob.calls.count()).toEqual(mockCartItems.length);
         });
 
         it('should submit a single job with correct parameters when submitJob(false)', function(){
@@ -128,7 +127,7 @@ describe('configure job controller', function () {
             configureJobController = controller('ConfigureJobController', {
                 $scope: scope,
                 tc: tcServiceMock,
-                inputEntities: mockInputEntities, 
+                inputEntities: mockCartItems,
                 facilityName: facilityName,
                 $uibModal: uibModal,
                 $uibModalInstance: uibModalInstanceMock
@@ -141,7 +140,7 @@ describe('configure job controller', function () {
             configureJobController = controller('ConfigureJobController', {
                 $scope: scope,
                 tc: tcServiceMock,
-                inputEntities: [mockInputEntities[0]], 
+                inputEntities: [mockCartItems[0]],
                 facilityName: facilityName,
                 $uibModal: uibModal,
                 $uibModalInstance: uibModalInstanceMock
@@ -154,7 +153,7 @@ describe('configure job controller', function () {
             configureJobController = controller('ConfigureJobController', {
                 $scope: scope,
                 tc: tcServiceMock,
-                inputEntities: [mockInputEntities[2]], 
+                inputEntities: [mockCartItems[2]],
                 facilityName: facilityName,
                 $uibModal: uibModal,
                 $uibModalInstance: uibModalInstanceMock
@@ -167,7 +166,7 @@ describe('configure job controller', function () {
             configureJobController = controller('ConfigureJobController', {
                 $scope: scope,
                 tc: tcServiceMock,
-                inputEntities: [], 
+                inputEntities: [],
                 facilityName: facilityName,
                 $uibModal: uibModal,
                 $uibModalInstance: uibModalInstanceMock

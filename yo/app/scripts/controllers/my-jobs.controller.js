@@ -57,6 +57,7 @@
         $rootScope.$on('jobSubmitted', refresh);
 
         this.showJobDetailsModal = function(job){
+            that.selectedJob = job;
             that.standardOutput = "";
             that.errorOutput = "";
             that.isLoadingStandardOutput = true;
@@ -78,7 +79,7 @@
                         $interval.cancel(checkJobStatusInterval);
                     }
                 }, 1000 * 5);
-
+                //Stops refreshing job output on modal close
                 that.jobDetailsModal.result.finally(function(){
                     $interval.cancel(refreshJobOutputInterval);
                     $interval.cancel(checkJobStatusInterval);

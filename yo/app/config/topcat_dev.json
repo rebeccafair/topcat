@@ -616,11 +616,14 @@
                                 "field": "datasetSample.name"
                             }
                         ],
-                        "externalFilters": [
-                            {
-                                "field": "datasetType.name"
-                            }
-                        ]
+                        "externalFilters": {
+                            "enableJobTypeFilter": true,
+                            "filters": [
+                                {
+                                    "field": "datasetType.name"
+                                }
+                            ]
+                        }
                     },
                     "metaTabs": [
                         {

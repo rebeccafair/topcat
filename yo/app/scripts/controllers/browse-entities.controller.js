@@ -31,9 +31,13 @@
         });
 
         helpers.setupIcatGridOptions(gridOptions, entityType);
-
-        gridOptions.externalFilters = gridOptions.externalFilters || [];
-        helpers.setupExternalFilters(gridOptions.externalFilters, entityType);
+        if (gridOptions.externalFilters) {
+            gridOptions.externalFilters.filters = gridOptions.externalFilters.filters || [];
+        } else {
+            gridOptions.externalFilters = { filters: [] };
+        }
+        helpers.setupExternalFilters(gridOptions.externalFilters.filters, entityType);
+        getExternalFilterOptions();
 
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
@@ -57,7 +61,7 @@
         };
 
         function getExternalFilterOptions(){
-            _.each(gridOptions.externalFilters, function(filter){
+            _.each(gridOptions.externalFilters.filters, function(filter){
                 var out = icat.queryBuilder(filter.entityType || entityType);
                 _.each($state.params, function(id, name){
                     var matches;
@@ -82,7 +86,7 @@
                 });
             });
 
-            if (typeof facility.config().ijpUrl !== 'undefined' && entityType === 'dataset') {
+            if (gridOptions.externalFilters.enableJobTypeFilter) {
                 tc.ijp(facilityName).getJobType().then(function(jobTypeNames) {
 
                     var filterConfig = {
@@ -91,11 +95,11 @@
                         options: jobTypeNames,
                         datasetTypes: {}
                     };
-                    gridOptions.externalFilters.push(filterConfig);
+                    gridOptions.externalFilters.filters.push(filterConfig);
 
                     _.each(jobTypeNames, function(jobTypeName){
                         tc.ijp(facilityName).getJobType(jobTypeName).then(function(jobType){
-                            _.find(gridOptions.externalFilters, function(filter){ return filter.isJobTypeFilter }).datasetTypes[jobTypeName] = jobType.datasetTypes;
+                            _.last(gridOptions.externalFilters.filters).datasetTypes[jobTypeName] = jobType.datasetTypes;
                         });
                     })
 
@@ -175,7 +179,7 @@
                 
             });
 
-            _.each(gridOptions.externalFilters, function(filter){
+            _.each(gridOptions.externalFilters.filters, function(filter){
                 if (filter.selectedOption) {
                     if (filter.variablePath) {
                         out.where(['?.? = ?', filter.variablePath.safe(), filter.fieldName.safe(), filter.selectedOption]);
@@ -338,7 +342,6 @@
         gridOptions.onRegisterApi = function(_gridApi) {
             gridApi = _gridApi;
             restoreState();
-            getExternalFilterOptions();
 
             getPage().then(function(results){
                 gridOptions.data = results;

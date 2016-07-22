@@ -2,22 +2,22 @@
 
 describe('my jobs controller', function () {
     
-    var myJobsController, controller, scope, $q, interval, uibModal, httpBackend, mockJobs, mockInputEntities, ijpServiceMock, ijpFacilityUserMock, ijpFacilityMock, tcServiceMock;
+    var myJobsController, controller, scope, $q, interval, uibModal, httpBackend, mockJobs, mockCartItems,  ijpFacilityMock, ijpFacilityUserMock, ijpServiceMock, tcServiceMock;
 
     var facilityName = 'test';
 
     beforeEach(function() {
         module(function($provide) {
             $provide.constant('LANG', {});
-            $provide.constant('APP_CONFIG', readJSON('app/config/topcat_dev.json'));
+            $provide.constant('APP_CONFIG', readJSON('test/mock/data/mock-config.json'));
             $provide.constant('mockJobs', readJSON('test/mock/data/mock-jobs.json'));
-            $provide.constant('mockInputEntities', readJSON('test/mock/data/mock-job-input-entities.json'));
+            $provide.constant('mockCartItems', readJSON('test/mock/data/mock-cart-items.json'));
         });
     });
 
     beforeEach(module('angularApp'));
 
-    beforeEach(inject(function($controller, $rootScope, _$q_, $interval, $uibModal, $httpBackend, _mockJobs_, _mockInputEntities_, APP_CONFIG){
+    beforeEach(inject(function($controller, $rootScope, _$q_, $interval, $uibModal, $httpBackend, _mockJobs_, _mockCartItems_, APP_CONFIG){
 
         controller = $controller;
         scope = $rootScope.$new();
@@ -26,7 +26,21 @@ describe('my jobs controller', function () {
         uibModal = $uibModal;
         httpBackend = $httpBackend;
         mockJobs = _mockJobs_;
-        mockInputEntities = _mockInputEntities_;
+        mockCartItems = _mockCartItems_;
+
+        ijpFacilityMock = {
+            user: function() {
+                return ijpFacilityUserMock;
+            }
+        };
+
+        ijpFacilityUserMock = {
+            cart: function() {
+                var deferred = $q.defer();
+                deferred.resolve({ "cartItems": mockCartItems });
+                return deferred.promise;
+            }
+        };
 
         ijpServiceMock = {
             getJob: function() {
@@ -55,20 +69,6 @@ describe('my jobs controller', function () {
                 return deferred.promise;
             }
 
-        };
-
-        ijpFacilityUserMock = {
-            cart: function() {
-                var deferred = $q.defer();
-                deferred.resolve({ "cartItems": mockInputEntities });
-                return deferred.promise;
-            }
-        };
-
-        ijpFacilityMock = {
-            user: function() {
-                return ijpFacilityUserMock;
-            }
         };
 
         tcServiceMock = {
