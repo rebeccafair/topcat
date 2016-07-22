@@ -57,8 +57,14 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-if="configureJobController.compatibleJobTypes.length > 0 && configureJobController.numInputEntities <= 1" ng-click="configureJobController.checkFormValidity() ? configureJobController.submitJob(false) : null" translate="CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_JOB.TEXT"></button>
-    <button class="btn btn-primary" ng-if="configureJobController.compatibleJobTypes.length > 0 && configureJobController.selectedJobType.multiple === true && configureJobController.numInputEntities > 1" ng-click="configureJobController.checkFormValidity() ? configureJobController.openConfirmJobModal() : null" translate="CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_JOB.TEXT"></button>
-    <button class="btn btn-primary" ng-if="configureJobController.compatibleJobTypes.length > 0 && configureJobController.selectedJobType.multiple !== true && configureJobController.numInputEntities > 1" ng-click="configureJobController.checkFormValidity() ? configureJobController.submitJob(true) : null" translate="CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TEXT" uib-tooltip="{{'CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TOOLTIP.TEXT' | translate : { numJobs: configureJobController.numInputEntities } }}" tooltip-append-to-body="true" tooltip-placement="top"></button>
-    <button class="btn btn-warning" ng-click="configureJobController.close()" translate="CONFIGURE_JOB.MODAL.BUTTON.CLOSE.TEXT"></button>
+    <div ng-if="configureJobController.compatibleJobTypes.length > 0">
+        <button class="btn btn-primary" ng-if="configureJobController.selectedJobType.type === 'interactive' || configureJobController.numInputEntities <= 1" ng-click="configureJobController.checkFormValidity() ? configureJobController.submitJob(false) : null" translate="CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_JOB.TEXT"></button>
+        <button class="btn btn-primary" ng-if="configureJobController.selectedJobType.type === 'batch' && configureJobController.selectedJobType.multiple === true && configureJobController.numInputEntities > 1" ng-click="configureJobController.checkFormValidity() ? configureJobController.openConfirmJobModal() : null" translate="CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_JOB.TEXT"></button>
+        <button class="btn btn-primary" ng-if="configureJobController.selectedJobType.type === 'batch' && configureJobController.selectedJobType.multiple !== true && configureJobController.numInputEntities > 1" ng-click="configureJobController.checkFormValidity() ? configureJobController.submitJob(true) : null" translate="CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TEXT" uib-tooltip="{{'CONFIGURE_JOB.MODAL.BUTTON.SUBMIT_MULTIPLE_JOBS.TOOLTIP.TEXT' | translate : { numJobs: configureJobController.numInputEntities } }}" tooltip-append-to-body="true" tooltip-placement="top"></button>
+        <button class="btn btn-warning" ng-click="configureJobController.close()" translate="CONFIGURE_JOB.MODAL.BUTTON.CLOSE.TEXT"></button>
+    </div>
+
+    <div ng-if="configureJobController.compatibleJobTypes.length === 0">
+        <button class="btn btn-warning" ng-click="configureJobController.close()" translate="CONFIGURE_JOB.MODAL.BUTTON.CLOSE.TEXT"></button>
+    </div>
 </div>

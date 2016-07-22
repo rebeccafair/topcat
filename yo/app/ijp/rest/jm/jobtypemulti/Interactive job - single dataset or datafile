@@ -1,0 +1,10 @@
+     {
+     "name":"Interactive job - single dataset or file",
+     "executable":"interactive_test.py",
+     "multiple":false,
+     "type":"interactive",
+     "acceptsDatafiles":true,
+     "acceptsDatasets":true,
+     "datasetTypes":["gainexact","ordinarywould","atemon","readycent","expressionwish"],
+     "jobOptions":[]
+     }

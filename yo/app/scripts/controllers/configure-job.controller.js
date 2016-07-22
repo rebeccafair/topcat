@@ -30,6 +30,8 @@
             var promises = [];
             var jobParameters = [];
             that.jobIds = [];
+            that.interactiveSessionDetails = undefined;
+            that.platformIsWin = navigator.platform.match(/Win/);
             that.failedSubmissions = [];
             if (this.confirmModal) this.confirmModal.close();
             that.isSubmitting = true;
@@ -79,7 +81,12 @@
                 if (inputContainsDatafiles) jobParameters.unshift('--datafileIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'datafile'}), 'entityId').join(','));
                 if (inputContainsDatasets) jobParameters.unshift('--datasetIds=' + _.map(_.filter(inputEntities, function(o) { return o.entityType === 'dataset'}), 'entityId').join(','));
                 promises.push(tc.ijp(facilityName).submitJob(that.selectedJobType.name, jobParameters).then(function(response){
-                    that.jobIds.push(response.jobId);
+                    if (response.jobId) {
+                        that.jobIds.push(response.jobId);
+                    } else if (response.rdp) {
+                        that.interactiveSessionDetails = response.rdp;
+                    }
+
                 }, function(response){
                     that.failedSubmissions.push({
                         inputEntityIds: _.map(inputEntities, 'entityId').join(', '),
@@ -156,9 +163,8 @@
                             });
                         });
 
-                        //If there is more than one input entity, only includes jobs that have multiple = true
-                        //EDIT: commented out for now, might want to run a job for each input entity, so don't need to filter by multiple
-                        //if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.multiple });
+                        //If there is more than one input entity, filters out interactive jobs that don't accept multiple inputs
+                        if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return (jobType.type === "batch" || jobType.multiple) });
 
                         //Only include jobs that explicitly accept datafiles
                         if (inputContainsDatafiles) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.acceptsDatafiles});
@@ -174,9 +180,8 @@
                     //If the input entities include datafiles, the job type must explicitly accept datafiles
                     var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return jobType.acceptsDatafiles });
 
-                    //EDIT: commented out for now, might want to run a job for each input entity, so don't need to filter by multiple
-                    //If there is more than one input datafile, the job type must have multiple = true
-                    if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.multiple });
+                    //If there is more than one input entity, filters out interactive jobs that don't accept multiple inputs
+                    if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return (jobType.type === "batch" || jobType.multiple) });
 
                     that.compatibleJobTypes = compatibleJobTypes;
                     that.selectedJobType = compatibleJobTypes[0] || "";

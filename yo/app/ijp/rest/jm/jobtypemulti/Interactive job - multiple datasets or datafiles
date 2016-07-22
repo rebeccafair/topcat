@@ -1,0 +1,10 @@
+     {
+     "name":"Interactive job - multiple datasets or files",
+     "executable":"interactive_test.py",
+     "multiple":true,
+     "type":"interactive",
+     "acceptsDatafiles":true,
+     "acceptsDatasets":true,
+     "datasetTypes":["gainexact","ordinarywould","atemon","readycent","expressionwish"],
+     "jobOptions":[]
+     }

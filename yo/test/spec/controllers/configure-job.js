@@ -133,7 +133,7 @@ describe('configure job controller', function () {
                 $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
-            expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - multiple datasets or datafiles','Test args - single dataset or datafile']);
+            expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - multiple datasets or datafiles','Test args - single dataset or datafile','Interactive job - multiple datasets or files']);
         })
 
         it('should get the correct compatible job types when given 1 dataset of dataset type "dataset type 1"', function(){
@@ -146,7 +146,7 @@ describe('configure job controller', function () {
                 $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
-            expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - datasets only','Test args - multiple datasets or datafiles','Test args - single dataset or datafile','Test args - dataset type 1 only']);
+            expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - datasets only','Test args - multiple datasets or datafiles','Test args - single dataset or datafile','Test args - dataset type 1 only','Interactive job - multiple datasets or files','Interactive job - single dataset or file']);
         })
 
         it('should get the correct compatible job types when given 1 datafile"', function(){
@@ -159,7 +159,7 @@ describe('configure job controller', function () {
                 $uibModalInstance: uibModalInstanceMock
             });
             scope.$apply();
-            expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - datafiles only','Test args - multiple datasets or datafiles','Test args - single dataset or datafile']);
+            expect(_.map(configureJobController.compatibleJobTypes, 'name')).toEqual(['Test Options','Test args - datafiles only','Test args - multiple datasets or datafiles','Test args - single dataset or datafile','Interactive job - multiple datasets or files','Interactive job - single dataset or file']);
         })
 
         it('should get the correct compatible job types when given no input entities"', function(){
