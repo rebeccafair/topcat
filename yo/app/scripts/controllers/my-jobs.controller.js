@@ -62,7 +62,7 @@
             that.errorOutput = "";
             that.isLoadingStandardOutput = true;
 
-            refreshJobOutput(job.jobId);
+            refreshJobOutput();
             that.jobDetailsModal = $uibModal.open({
                 templateUrl : 'views/job-details-modal.html',
                 size: 'lg',
@@ -74,7 +74,7 @@
                 var refreshJobOutputInterval = $interval(refreshJobOutput, 1000 * 5);
                 //Checks to see if the job is completed yet or has been cancelled, and stops refreshing job output if true
                 var checkJobStatusInterval = $interval(function(){
-                    if (_.find(gridOptions.data, function(j){ return j.jobId === job.jobId }).status.match(/Completed|Cancelled/)) {
+                    if (_.find(gridOptions.data, function(j){ return j.jobId === that.selectedJob.jobId }).status.match(/Completed|Cancelled/)) {
                         $interval.cancel(refreshJobOutputInterval);
                         $interval.cancel(checkJobStatusInterval);
                     }
@@ -208,16 +208,16 @@
             });
         }
 
-        function getStandardOutput(jobId) {
-            tc.ijp(facilityName).getJobOutput(String(jobId)).then(function(standardOutput){
+        function getStandardOutput() {
+            tc.ijp(facilityName).getJobOutput(String(that.selectedJob.jobId)).then(function(standardOutput){
                 that.standardOutput = standardOutput.output.replace(/\n/g,"<br />");
             }).finally(function(){
                 that.isLoadingStandardOutput = false;
             });
         };
 
-        function getErrorOutput(jobId) {
-            tc.ijp(facilityName).getErrorOutput(String(jobId)).then(function(errorOutput){
+        function getErrorOutput() {
+            tc.ijp(facilityName).getErrorOutput(String(that.selectedJob.jobId)).then(function(errorOutput){
                 that.errorOutput = errorOutput.output.replace(/\n/g,"<br />");
             });
         };
@@ -228,9 +228,9 @@
             });
         }
 
-        function refreshJobOutput(jobId) {
-            getStandardOutput(jobId);
-            getErrorOutput(jobId);
+        function refreshJobOutput() {
+            getStandardOutput();
+            getErrorOutput();
         }
 
     });
