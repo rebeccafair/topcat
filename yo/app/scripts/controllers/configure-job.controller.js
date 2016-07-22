@@ -31,7 +31,7 @@
             var jobParameters = [];
             that.jobIds = [];
             that.interactiveSessionDetails = undefined;
-            that.platformIsWin = navigator.platform.match(/Win/);
+            that.platformIsWindows = navigator.platform.match(/Win/);
             that.failedSubmissions = [];
             if (this.confirmModal) this.confirmModal.close();
             that.isSubmitting = true;
@@ -85,6 +85,7 @@
                         that.jobIds.push(response.jobId);
                     } else if (response.rdp) {
                         that.interactiveSessionDetails = response.rdp;
+                        tc.ijp(facilityName).remoteDesktop().openSession(response.rdp);
                     }
 
                 }, function(response){

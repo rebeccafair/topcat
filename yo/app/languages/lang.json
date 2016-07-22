@@ -386,7 +386,7 @@
             "SUBMITTING_JOB_MESSAGE" : "Submitting - please wait...",
             "BATCH_SUBMISSION_SUCCESSFUL_MESSAGE" : "Job submitted successfully with job ID {{jobId}}",
             "BATCH_SUBMISSIONS_SUCCESSFUL_MESSAGE" : "Jobs submitted successfully with job IDs {{jobIds}}",
-            "WIN_INTERACTIVE_SUBMISSION_SUCCESSFUL_MESSAGE" : "Interactive job submitted successfully. Please start Remote Desktop with the following values:",
+            "WIN_INTERACTIVE_SUBMISSION_SUCCESSFUL_MESSAGE" : "Interactive job submitted successfully, opening Remote Desktop session. If a Remote Desktop session doesn't begin automatically, please start Remote Desktop manually with the following values:",
             "UNIX_INTERACTIVE_SUBMISSION_SUCCESSFUL_MESSAGE" : "Interactive job submitted successfully. Please paste the following into a terminal:",
             "SUBMISSION_FAILED_MESSAGE" : "One or more job submissions failed: ",
             "COLUMN" : {

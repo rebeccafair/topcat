@@ -5,7 +5,7 @@
 
     var app = angular.module('angularApp');
 
-    app.service('tcIjp', function($q, helpers, tcCache){
+    app.service('tcIjp', function($q, $http, helpers, tcCache, tcIjpRemoteDesktop){
 
     	this.create = function(facility){
     		return new Ijp(facility);
@@ -18,6 +18,10 @@
         this.cache = function(){
           if(!cache) cache = tcCache.create('ijp:' + facility.config().facilityName);
           return cache;
+        };
+
+        this.facility = function(){
+          return facility;
         };
 
     		this.version = function(){
@@ -147,6 +151,10 @@
             return out.promise
           }
         });
+
+        this.remoteDesktop = function(){
+            return tcIjpRemoteDesktop.create(this);
+        };
 
         if (facility.config().ijpUrl == undefined) console.error('ijpUrl is undefined for facility ' + facility.config().title);
         helpers.generateRestMethods(this, facility.config().ijpUrl + '/ijp/rest/jm/');
