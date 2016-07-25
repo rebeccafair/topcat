@@ -18,9 +18,9 @@
         this.openSession = function(sessionDetails){
           var out = $q.defer();
           this.get('/rdp', {
-            username: sessionDetails.username,
+            accountName: sessionDetails.username,
             password: sessionDetails.password,
-            host: sessionDetails.host
+            hostName: sessionDetails.host
           }).then(function(response){
             out.resolve(response);
           }, function(){ out.reject(); });
