@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-xs-10"><h1 translate="MY_JOBS.TITLE"></h1></div>
     <div class="col-xs-2">
-        <button ng-if="myJobsController.ijpFacilities.length === 1" class="btn btn-success pull-right configure-job-btn" ng-click="myJobsController.configureJob(myJobsController.ijpFacility)" translate="MY_JOBS.BUTTON.CONFIGURE_JOB.TEXT"></button>
-        <div ng-if="myJobsController.ijpFacilities.length > 1" class="btn-group pull-right">
+        <button ng-if="myJobsController.ijpFacilities.length === 1 && myJobsController.userFacilities.length === 1" class="btn btn-success pull-right configure-job-btn" ng-click="myJobsController.configureJob(myJobsController.ijpFacilities[0])" translate="MY_JOBS.BUTTON.CONFIGURE_JOB.TEXT"></button>
+        <div ng-if="myJobsController.ijpFacilities.length > 0 && myJobsController.userFacilities.length > 1" class="btn-group pull-right">
             <button type="button" class="btn btn-success dropdown-toggle configure-job-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  uib-tooltip="{{'MY_JOBS.BUTTON.CONFIGURE_JOB_DROPDOWN.TOOLTIP.TEXT' | translate}}" tooltip-append-to-body="true" tooltip-placement="left">{{ 'MY_JOBS.BUTTON.CONFIGURE_JOB_DROPDOWN.TEXT' | translate }}<span class="caret"></span>
             </button>
             <ul class="dropdown-menu configure-job-dropdown">
@@ -13,7 +13,7 @@
 </div>
 
 
-<div ng-show="myJobsController.ijpFacilities.length > 1">
+<div ng-show="myJobsController.userFacilities.length > 1">
     <ul class="nav nav-tabs nav-tabs-head">
         <li ng-repeat="facility in myJobsController.ijpFacilities" ng-class="{active: facility.config().facilityName == $state.params.facilityName}">
             <a ui-sref="home.my-jobs({facilityName: facility.config().facilityName})">{{facility.config().title}}</a>

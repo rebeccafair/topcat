@@ -346,3 +346,12 @@ a[ng-click]{
   overflow-x: hidden;
   padding-right: 15px;
 }
+
+.cart-configure-job-btn {
+  margin-right: 5px;
+}
+
+.cart-configure-job-dropup {
+  min-width: 0px;
+  width: calc(100% - 5px);
+}

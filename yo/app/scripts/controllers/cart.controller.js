@@ -20,7 +20,13 @@
         var filter = function(){ return true; };
         var sorter = function(){ return true; };
 
-        this.ijpFacilities = tc.ijpFacilities();
+        this.ijpFacilitiesInCart = [];
+        _.each(tc.ijpFacilities(), function(ijpFacility){
+            ijpFacility.user().cart().then(function(cart){
+                if (cart.cartItems.length > 0){ that.ijpFacilitiesInCart.push(ijpFacility); }
+            });
+        });
+        this.userFacilities = tc.userFacilities();
 
         helpers.setupTopcatGridOptions(gridOptions, 'cartItem');
         gridOptions.columnDefs.push({
