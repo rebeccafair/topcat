@@ -1,5 +1,16 @@
 #Release Notes
 
+## 2.0.1
+
+* Bug fixes.
+* Improved documentation.
+* The topcat.json (Please refer to the installation docs for more details)
+	* "topcatApiPath" -> "topcatUrl" (for "site")
+	* "facilities" attribute is now an array of facility objects rather that an index of facility objects.
+	* "url" -> "idsUrl" (for "facilities" > [facility] > authenticationTypes > [authenticationType])
+	* Now gets validated making it less prone to erroneous configuration.
+    * "jpqlExpression" attribute (for "facilities" > [facility] > "browse" > [entity type] > "gridOptions" > "columnDefs" > [columnDef]) no longer exists; instead it has been replaced by "jpqlFilter" and "jpqlSort". 
+
 ## 2.0.0
 
 * Complete rewrite.

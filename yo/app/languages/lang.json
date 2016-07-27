@@ -10,7 +10,7 @@
         "LANGUAGE": "Language",
         "LOGIN": "Login",
         "LOGOUT": "Logout",
-        "LOGOUT_FACILITY" : "Logout ({{userName}})",
+        "LOGOUT_FACILITY" : "Logout ({{fullName}})",
         "LOGOUT_ALL": "Logout All",
         "MAIN_TAB" : {
             "MY_DATA" : "My Data",
@@ -152,7 +152,8 @@
                 "FILE_SIZE": "File Size",
                 "CHECKSUM": "Checksum",
                 "DATAFILE_CREATE_TIME": "Create Time",
-                "DATAFILE_MOD_TIME": "Modified Time"
+                "DATAFILE_MOD_TIME": "Modified Time",
+                "MOD_TIME": "Modified Time"
             },
             "DATASET_TYPE": {
                 "NAME": "Dataset Type"
@@ -516,6 +517,7 @@
         "TITLE" : "Downloads",
         "NEW_MESSAGE": "A new download has been added",
         "COLUMN" : {
+            "FULL_NAME": "Name",
             "USER_NAME": "Username",
             "PREPARED_ID": "Prepared Id",
             "SIZE": "Size",

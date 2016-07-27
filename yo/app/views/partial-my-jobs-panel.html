@@ -15,8 +15,8 @@
 
 <div ng-show="myJobsController.userFacilities.length > 1">
     <ul class="nav nav-tabs nav-tabs-head">
-        <li ng-repeat="facility in myJobsController.ijpFacilities" ng-class="{active: facility.config().facilityName == $state.params.facilityName}">
-            <a ui-sref="home.my-jobs({facilityName: facility.config().facilityName})">{{facility.config().title}}</a>
+        <li ng-repeat="facility in myJobsController.ijpFacilities" ng-class="{active: facility.config().name == $state.params.facilityName}">
+            <a ui-sref="home.my-jobs({facilityName: facility.config().name})">{{facility.config().title}}</a>
         </li>
     </ul>
     <br>

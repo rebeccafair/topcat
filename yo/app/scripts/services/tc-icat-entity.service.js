@@ -16,7 +16,7 @@
 			_.merge(this, attributes);
 			var that = this;
 			var icat = facility.icat();
-			var facilityName = facility.config().facilityName;
+			var facilityName = facility.config().name;
 
 			if(this.investigationInstruments && this.investigationInstruments.length > 0){
 				this.firstInstrumentName = this.investigationInstruments[0].instrument.fullName;
@@ -105,7 +105,7 @@
 						icat.entity('facilityCycle', [
 							', facilityCycle.facility facility,',
 							'facility.investigations investigation',
-							'where facility.id = ?', facility.config().facilityId,
+							'where facility.id = ?', facility.config().id,
 							'and investigation.id = ?', investigation.id,
 							'and investigation.startDate BETWEEN facilityCycle.startDate AND facilityCycle.endDate'
 						], options).then(function(facilityCycle){
@@ -131,7 +131,7 @@
 								', instrument.investigationInstruments investigationInstrument,',
 								'investigationInstrument.investigation investigation,',
 								'instrument.facility facility',
-								'where facility.id = ?', facility.config().facilityId,
+								'where facility.id = ?', facility.config().id,
 								'and investigation.id = ?', investigation.id,
 							], options).then(function(instrument){
 								facilityCycle.instrument = instrument;
@@ -310,33 +310,39 @@
 
 				var out = [];
 				var matches;
-				var entityType;
+				var variable;
 				var predicate;
 				var entityField;
 
 				if(matches = expression.match(/^([^\[]+)\[(.*)\]\.([^\.]+)$/)){
-					entityType = matches[1];
+					variable = matches[1];
 					predicate = matches[2];
 					entityField = matches[3];
-				} if(matches = expression.match(/^([^\[]+)\[(.*)\]$/)){
-					entityType = matches[1];
+				} else if(matches = expression.match(/^([^\[]+)\[(.*)\]$/)){
+					variable = matches[1];
 					predicate = matches[2];
 				} else if(matches = expression.match(/^([^\.]+)\.([^\.]+)$/)){
-					entityType = matches[1];
+					variable = matches[1];
 					entityField = matches[2];
 				} else {
-					entityType = helpers.uncapitalize(this.entityType);
 					entityField = expression;
 				}
 
+				
+
+				var that = this;
 				var variablePath = [];
 
-				if(entityType != this.entityType){
+				if(variable !== undefined && icatSchema.variableEntityTypes[variable] != this.entityType){
 					var variablePaths = icatSchema.entityTypes[this.entityType].variablePaths;
-					if(!variablePaths) throw "Unknown expression for find(): " + expression;
+					if(!variablePaths){
+						throw "Unknown expression for find(): " + expression;
+					}
 
-					var variablePath = _.clone(variablePaths[entityType]);
-					if(!variablePath) throw "Unknown expression for find(): " + expression;
+					variablePath = _.clone(variablePaths[variable]);
+					if(!variablePath){
+						throw "Unknown expression for find(): " + expression;
+					}
 				}
 
 				traverse(this);
@@ -349,6 +355,7 @@
 									out.push(value);
 								}
 							} else {
+
 								out.push(entity);
 							}
 						}
@@ -362,7 +369,7 @@
 						} else {
 							traverse(entity);
 						}
-						variablePath.push(fieldName);
+						variablePath.unshift(fieldName);
 					}
 				}
 

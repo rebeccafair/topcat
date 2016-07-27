@@ -14,13 +14,13 @@
         element : document.documentElement,
         module : 'angularApp',
         resolve : {
-            APP_CONFIG : ['$http', '$q', function($http, $q) {
+            APP_CONFIG : ['$http', '$q',  function($http, $q) {
                 var port = parseInt(window.location.port);
                 var url;
-                if(port === 10080 || port === 9000){
-                    url = 'config/topcat_dev.json';
+                if(port === 10080 || port === 9000 || port === 8080){
+                    url = './config/topcat_dev.json';
                 } else {
-                    url = 'config/topcat.json';
+                    url = './config/topcat.json';
                 }
                 return $http({
                     url: url,
@@ -29,7 +29,7 @@
                         try {
                             return jsonlint.parse(json);
                         } catch(e){
-                            alert(url + "\n\n" + e.message);
+                            alert("Invalid topcat.json\n\n" + e.message);
                         }
                         return {};
                     }
@@ -37,7 +37,7 @@
                     var config = response.data;
                     var defered = $q.defer();
                     var promises = [];
-                    _.each(config.facilities, function(facility, facilityName){
+                    _.each(config.facilities, function(facility){
                         if(!facility.icatUrl){
                             promises.push($.get(facility.idsUrl + "/ids/getIcatUrl").then(function(icatUrl){
                                 facility.icatUrl = icatUrl;
@@ -51,7 +51,7 @@
                 }).then(function(config){
                     var defered = $q.defer();
                     var promises = [];
-                    _.each(config.facilities, function(facility, facilityName){
+                    _.each(config.facilities, function(facility){
                         if(!facility.authenticationTypes){
                             promises.push($.get(facility.icatUrl + "/icat/properties").then(function(properties){
                                 facility.authenticationTypes = _.map(properties.authenticators, function(authenticator){
@@ -70,7 +70,7 @@
                 });
             }],
             LANG : ['$http', function($http) {
-                var url = 'languages/lang.json';
+                var url = './languages/lang.json';
                 return $http({
                     url: url,
                     method: 'GET',
@@ -78,7 +78,7 @@
                         try {
                             return jsonlint.parse(json);
                         } catch(e){
-                            alert(url + "\n\n" + e.message);
+                            alert("Invalid lang.json:\n\n" + e.message);
                         }
                         return {};
                     }
@@ -122,8 +122,16 @@
             'emguo.poller',
             'angular-bind-html-compile',
             'angular-loading-bar',
-            'ipCookie'
+            'ipCookie',
+            'bootstrap'
         ])
+        .run(['APP_CONFIG', 'LANG', 'objectValidator', function(APP_CONFIG, LANG, objectValidator){
+            try {
+                objectValidator.createAppConfigValidator().validate(APP_CONFIG);
+            } catch(e){
+                alert("Invalid topcat.json: \n\n" + e);
+            }
+        }])
         .constant('_', window._)
         .constant('APP_CONSTANT', {
             smartClientUrl: 'https://localhost:8888'
@@ -361,6 +369,35 @@
         })
         .config(function (pollerConfig) {
             pollerConfig.neverOverwrite = true;
+        })
+        .config(function ($httpProvider) {
+            $httpProvider.interceptors.push(function($rootScope, $q) {
+              return {
+               'request': function(config) {
+                    $rootScope.requestCounter++;
+                    $rootScope.updateLoadingState();
+                    return config;
+                },
+
+                'requestError': function(config) {
+                    $rootScope.requestCounter--;
+                    $rootScope.updateLoadingState();
+                    return config;
+                },
+
+                'response': function(response) {
+                    $rootScope.requestCounter--;
+                    $rootScope.updateLoadingState();
+                    return response;
+                },
+
+                'responseError': function(rejection) {
+                    $rootScope.requestCounter--;
+                    $rootScope.updateLoadingState();
+                    return $q.reject(rejection);
+                }
+              };
+            });
         })
         .run(['$rootScope', '$state', '$stateParams', function ($rootScope, $state, $stateParams) {
             //make $state and $stateParams available at rootscope.

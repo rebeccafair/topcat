@@ -209,8 +209,8 @@
 
         ]
     },
-    "facilities": {
-        "lsf": {
+    "facilities": [
+        {
             "name": "LSF",
             "title": "Octopus",
             "icatUrl": "https://vm47.nubes.stfc.ac.uk:8181",
@@ -238,8 +238,7 @@
             "downloadTransportTypes": [
                 {
                     "type" : "https",
-                    "default" : true,
-                    "url": "https://data.octopus.clf.stfc.ac.uk"
+                    "idsUrl": "https://vm47.nubes.stfc.ac.uk:8181"
                 }
             ],
             "admin":{
@@ -299,22 +298,6 @@
                 }
             },
             "browse": {
-                "proposal": {
-                    "gridOptions": {
-                        "enableFiltering": true,
-                        "columnDefs": [
-                            {
-                                "field": "investigation.title",
-                                "link": true,
-                                "breadcrumb": true
-                            },
-                            {
-                                "field": "name",
-                                "link": true
-                            }
-                        ]
-                    }
-                },
                 "investigation": {
                     "gridOptions": {
                         "columnDefs": [
@@ -392,7 +375,7 @@
                             "title": "Publications",
                             "items": [
                                 {
-                                    "title": "Reference",
+                                    "label": "Reference",
                                     "field": "fullReference"
                                 }
                             ]
@@ -516,5 +499,5 @@
                 }
             }
         }
-    }
+    ]
 }

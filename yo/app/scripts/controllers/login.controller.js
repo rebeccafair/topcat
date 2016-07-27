@@ -10,7 +10,7 @@
         this.facilities = tc.facilities();
         this.userFacilities = tc.userFacilities();
         this.nonUserFacilities = tc.nonUserFacilities();
-        if(this.nonUserFacilities[0]) this.facilityName = this.nonUserFacilities[0].config().facilityName;
+        if(this.nonUserFacilities[0]) this.facilityName = this.nonUserFacilities[0].config().name;
         this.authenticationTypes = [];
         var facility;
 
@@ -35,7 +35,7 @@
 
             }, function(response){
                 inform.add(response.message != null ? response.message : $translate.instant('LOGIN.DEFAULT_LOGIN_ERROR_MESSAGE'), {
-                    'ttl': 4000,
+                    'ttl': 0,
                     'type': 'danger'
                 });
             });

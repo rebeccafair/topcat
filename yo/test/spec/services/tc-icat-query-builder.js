@@ -7,7 +7,7 @@ describe('tc icat query builder service', function () {
     beforeEach(function() {
         module(function($provide) {
             $provide.constant('LANG', {});
-            $provide.constant('APP_CONFIG', readJSON('app/config/topcat_dev.json'));
+            $provide.constant('APP_CONFIG', readJSON('test/mock/data/mock-config.json'));
         });
     });
 

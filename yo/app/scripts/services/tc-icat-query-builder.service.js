@@ -24,7 +24,7 @@
     	function IcatQueryBuilder(icat, entityType){
             var that = this;
     		var facility = icat.facility();
-    		var facilityName = facility.config().facilityName;
+    		var facilityName = facility.config().name;
     		var tc = facility.tc();
     		var user = tc.user(facilityName);
     		var cart = user.cart();
@@ -71,13 +71,15 @@
     		this.build = function(functionName, fieldName, investigationName){
     			var out = [];
 
+                var distinct = functionName == 'count' ? 'distinct ' : '';
+
                 if(entityType == 'proposal'){
                     if(investigationName){
                         if(functionName){
                             if(fieldName){
-                                out.push(["select ?(investigation.?)", functionName.safe(), fieldName.safe()]);
+                                out.push(["select ?(?investigation.?)", functionName.safe(), distinct.safe(), fieldName.safe()]);
                             } else {
-                                out.push(["select ?(investigation)", functionName.safe()]);
+                                out.push(["select ?(?investigation)", functionName.safe(), distinct.safe()]);
                             }
                         } else {
                             out.push(["select investigation"]);
@@ -100,9 +102,9 @@
                 } else {
                     if(functionName){
                         if(fieldName){
-                            out.push(["select ?(?.?)", functionName.safe(), entityType.safe(), fieldName.safe()]);
+                            out.push(["select ?(??.?)", functionName.safe(), distinct.safe(), entityType.safe(), fieldName.safe()]);
                         } else {
-                            out.push(["select ?(?)", functionName.safe(), entityType.safe()]);
+                            out.push(["select ?(??)", functionName.safe(), distinct.safe(), entityType.safe()]);
                         }
                     } else {
                         out.push(["select distinct ?", entityType.safe()]);

@@ -16,7 +16,7 @@
             var cache;
 
             this.cache = function(){
-              if(!cache) cache = tcCache.create('icat:' + facility.config().facilityName);
+              if(!cache) cache = tcCache.create('icat:' + facility.config().name);
               return cache;
             };
 
@@ -33,7 +33,7 @@
     		};
 
     		this.session = function(){
-    			var facilityName = facility.config().facilityName;
+    			var facilityName = facility.config().name;
     			if($sessionStorage.sessions && $sessionStorage.sessions[facilityName]){
     				return $sessionStorage.sessions[facilityName];
     			}
@@ -58,7 +58,7 @@
     			};
     			return this.post('session', params).then(function(response){
     				if(!$sessionStorage.sessions) $sessionStorage.sessions = {};
-    				var facilityName = facility.config().facilityName;
+    				var facilityName = facility.config().name;
 
     				$sessionStorage.sessions[facilityName] = {
     					sessionId: response.sessionId,
@@ -85,6 +85,14 @@
                         $sessionStorage.sessions[facilityName].isAdmin = isAdmin;
                     }));
 
+                    promises.push(that.entity('user', ["where user.name = ?", username]).then(function(user){
+                        if(user){
+                            $sessionStorage.sessions[facilityName].fullName = user.fullName;
+                        } else {
+                            $sessionStorage.sessions[facilityName].fullName = username;
+                        }
+                    }));
+
                     return $q.all(promises).then(function(){
                       $rootScope.$broadcast('session:change');
                     });
@@ -101,7 +109,7 @@
     		            }));
             		}
 
-            		delete $sessionStorage.sessions[facility.config().facilityName];
+            		delete $sessionStorage.sessions[facility.config().name];
     				    $sessionStorage.$apply();
 
             		return $q.all(promises).then(function(){
@@ -123,25 +131,25 @@
                     var key = "query:" + query;
 
     	        	this.cache().getPromise(key, 10 * 60 * 60, function(){
-                    return that.get('entityManager', {
-                        sessionId: that.session().sessionId,
-                        query: query,
-                        server: facility.config().icatUrl
-                    }, options);
-                }).then(function(results){
-                	defered.resolve(_.map(results, function(result){
-                		var type = _.keys(result)[0];
-                		if(helpers.typeOf(result) != 'object' || !type) return result;
-            				var out = result[type];
-            				out.entityType = helpers.uncapitalize(type);
-            				out = tcIcatEntity.create(out, facility);
-            				return out;
-            			}));
-                }, function(response){
-                	defered.reject(response);
-                });
+                        return that.get('entityManager', {
+                            sessionId: that.session().sessionId,
+                            query: query,
+                            server: facility.config().icatUrl
+                        }, options);
+                    }).then(function(results){
+                    	defered.resolve(_.map(results, function(result){
+                    		var type = _.keys(result)[0];
+                    		if(helpers.typeOf(result) != 'object' || !type) return result;
+                				var out = result[type];
+                				out.entityType = helpers.uncapitalize(type);
+                				out = tcIcatEntity.create(out, facility);
+                				return out;
+                			}));
+                    }, function(response){
+                    	defered.reject(response);
+                    });
 
-                return defered.promise;
+                    return defered.promise;
             	},
             	'promise, array': function(timeout, query){
     	        	return this.query(query, {timeout: timeout});

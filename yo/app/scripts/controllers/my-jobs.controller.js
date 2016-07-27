@@ -19,7 +19,9 @@
 
         if($state.params.facilityName == ''){
             if (this.ijpFacilities.length > 0) {
-                $state.go('home.my-jobs', {facilityName: this.ijpFacilities[0].config().facilityName});
+                $state.go('home.my-jobs', {facilityName: this.ijpFacilities[0].config().name});
+            } else {
+                $state.go('home.my-jobs', {facilityName: this.userFacilities[0].config().name});
             }
             return;
         }
@@ -48,9 +50,10 @@
         setUpGridOptions();
         this.gridOptions = gridOptions;
         this.isScroll = isScroll;
-
-        refresh();
-        var refreshInterval = $interval(refresh, 1000 * 30);
+        if (this.ijpFacilities.length > 0) {
+            refresh();
+            var refreshInterval = $interval(refresh, 1000 * 30);
+        }
         $scope.$on('$destroy', function(){
             $interval.cancel(refreshInterval);
         });
@@ -105,7 +108,6 @@
         };
 
         this.openConfigureJobModal = function(jobInputs) {
-            console.log(that.selectedIjpFacility.config().facilityName);
             if(this.chooseJobInputsModal) { this.chooseJobInputsModal.close() }
             $uibModal.open({
                 templateUrl : 'views/configure-job.html',
@@ -113,7 +115,7 @@
                 size : 'lg',
                 resolve: {
                     inputEntities: function() { return jobInputs },
-                    facilityName: function() { return that.selectedIjpFacility.config().facilityName }
+                    facilityName: function() { return that.selectedIjpFacility.config().name }
                 }
             });
         }

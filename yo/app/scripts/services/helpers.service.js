@@ -76,7 +76,7 @@
             var field = columnDef.field.replace(/^.*\./, '').replace(/\|.*$/, '');
 
             if(!columnDef.filter){
-                if(type == 'string'){
+                if(type == 'string' || type === undefined){
                     columnDef.filter = {
                         "condition": uiGridConstants.filter.CONTAINS,
                         "placeholder": "Containing...",
@@ -100,6 +100,20 @@
                         }
                     ];
                 }
+                //this is a hack to satify Isis
+                //todo: refactor to make more generic
+                if(type == 'number' && columnDef.field == "datafileParameter.numericValue"){
+                    columnDef.filters = [
+                        {
+                            "placeholder": "From...",
+                            "type": "input"
+                        },
+                        {
+                            "placeholder": "To...",
+                            "type": "input"
+                        }
+                    ];
+                }
             }
             if(!columnDef.cellFilter){
                 if(field.match(/Date$/)){
@@ -117,13 +131,13 @@
             var entityTypeNamespace = helpers.constantify(entityType);
 
             if(field === 'size' || field === 'fileSize') {
-                columnDef.cellTemplate = columnDef.cellTemplate || '<div class="ui-grid-cell-contents"><span us-spinner="{radius:2, width:2, length: 2}"  spinner-on="row.entity.size === undefined" class="grid-cell-spinner"></span><span>{{row.entity.size|bytes}}</span></div>';
+                columnDef.cellTemplate = columnDef.cellTemplate || '<div class="ui-grid-cell-contents"><span loading="row.entity.size === undefined"></span><span>{{row.entity.size|bytes}}</span></div>';
             	columnDef.enableSorting = false;
                 columnDef.enableFiltering = false;
             }
 
             if(field === 'status') {
-               columnDef.cellTemplate = columnDef.cellTemplate || '<div class="ui-grid-cell-contents"><span us-spinner="{radius:2, width:2, length: 2}"  spinner-on="row.entity.status === undefined" class="grid-cell-spinner"></span><span ng-if="row.entity.status">{{"' + entityTypeNamespace + '.STATUS." + row.entity.status | translate}}</span></div>';
+               columnDef.cellTemplate = columnDef.cellTemplate || '<div class="ui-grid-cell-contents"><span loading="row.entity.status === undefined"></span><span ng-if="row.entity.status">{{"' + entityTypeNamespace + '.STATUS." + row.entity.status | translate}}</span></div>';
             }
 
 
@@ -250,29 +264,31 @@
 	                });
 	            }
 
-	            if(!columnDef.jpqlExpression){
-	            	var _entityType = entityType;
-	            	if(_entityType == 'proposal') _entityType = 'investigation';
-	                if(!columnDef.field.match(/\./)){
-	                    columnDef.jpqlExpression =  _entityType + '.' + columnDef.field;
-	                } else {
-	                    columnDef.jpqlExpression = columnDef.field;
-	                }
-	            }
+                var jpqlExpression = columnDef.field;
+                if(!columnDef.field.match(/\./)){
+                    if(entityType == 'proposal'){
+                        jpqlExpression = 'investigation.' + jpqlExpression;
+                    } else {
+                        jpqlExpression = entityType + '.' + jpqlExpression;
+                    }
+                    
+                }
+                if(!columnDef.jpqlFilter) columnDef.jpqlFilter = jpqlExpression;
+                if(!columnDef.jpqlSort) columnDef.jpqlSort = jpqlExpression;
 
 	            var titleTemplate;
 	            var showCondition;
-	           
 	            if(columnDef.type == 'number' && columnDef.filters){
-	            	var pair = columnDef.jpqlExpression.split(/\./);
+	            	var pair = jpqlExpression.split(/\./);
                     var _entityType = pair[0];
                     var entityField = pair[1];
-	            	var fieldNameSuffix = helpers.capitalize(_entityType) + entityField;
+	            	var fieldNameSuffix = helpers.capitalize(_entityType) + helpers.capitalize(entityField);
 	            	var minFieldName = "min" + fieldNameSuffix;
 	            	var maxFieldName = "max" + fieldNameSuffix;
 	            	titleTemplate = '{{row.entity.find(&quot;' + minFieldName + '&quot;)[0]' + filters + '}} - {{row.entity.find(&quot;' + maxFieldName + '&quot;)[0]' + filters + '}}';
 	            	showCondition = 'row.entity.find(&quot;' + minFieldName + '&quot;).length > 0 && row.entity.find(&quot;' + maxFieldName + '&quot;).length > 0';
-	            } else {
+                    columnDef.enableSorting = false;
+                } else {
 					titleTemplate = '{{row.entity.find(&quot;' + columnDef.field + '&quot;)[0]' + filters + '}}';
 	            	showCondition = 'row.entity.find(&quot;' + columnDef.field + '&quot;).length > 0';
 	            }
@@ -289,7 +305,7 @@
 
 	            columnDef.cellTemplate = columnDef.cellTemplate || [
 	                '<div class="ui-grid-cell-contents">',
-	                    '<span us-spinner="{radius:2, width:2, length: 2}"  spinner-on="!(' + showCondition + ')" class="grid-cell-spinner"></span>',
+	                    '<span loading="!(' + showCondition + ')"></span>',
                         '<span ng-if="row.entity.find(&quot;' + columnDef.field + '&quot;).length > 1" uib-tooltip="{{row.entity.find(&quot;' + columnDef.field + '&quot;).join(&quot;\n&quot;)}}" tooltip-placement="' + tooltipPlacement + '" tooltip-append-to-body="true" class="glyphicon glyphicon-th-list"></span> ',
                         '<span ng-if="' + showCondition + '">',
 	                    	titleTemplate,
@@ -317,8 +333,79 @@
 	        }
     	};
 
+        this.generateEntitySorter = function(sortColumns){
+            var sorters = [];
+
+            _.each(sortColumns, function(sortColumn){
+                if(sortColumn.colDef){
+                    sorters.push(function(entityA, entityB){
+                        var field = sortColumn.colDef.field;
+                        var valueA = (((entityA.find ? entityA.find(field)[0] :  entityA[field]) || '') + '').toLowerCase();
+                        var valueB = (((entityB.find ? entityB.find(field)[0] :  entityB[field]) || '') + '').toLowerCase();
+
+                        var out = 0;
+                        if(valueA < valueB){
+                            out = -1
+                        } else if(valueA > valueB){
+                            out = 1
+                        }
+
+                        if(sortColumn.sort.direction == 'desc') out = out * -1;
+
+                        return out;
+                    });
+                }
+            });
+
+            return function(entityA, entityB){
+                var out = 0;
+                _.each(sorters, function(sorter){
+                    var current = sorter(entityA, entityB);
+                    if(current != 0){
+                        out = current;
+                        return false;
+                    }
+                });
+                return out;
+            };
+        };
+
+        this.generateEntityFilter = function(gridOptions){
+            var conditions = [];
+
+            _.each(gridOptions.columnDefs, function(columnDef){
+                if(!columnDef.field) return;
+                if(columnDef.type == 'date' && columnDef.filters){
+                    conditions.push(function(entity){
+                        var fromDate = helpers.completePartialFromDate(columnDef.filters[0].term);
+                        var toDate = helpers.completePartialToDate(columnDef.filters[1].term);
+                        var field = columnDef.field;
+                        var value = (entity.find ? entity.find(field)[0] : entity[field]) || '';
+                        return value >= fromDate && value <= toDate;
+                    });
+                } else if(columnDef.type == 'string' && columnDef.filter){
+                    conditions.push(function(entity){
+                        var field = columnDef.field;
+                        var value = (((entity.find ? entity.find(field)[0] : entity[field]) || '') + '').toLowerCase();
+                        return columnDef.filter.term === undefined || columnDef.filter.term === null || value.indexOf(columnDef.filter.term.toLowerCase()) >= 0;
+                    });
+                }
+            });
+
+            return function(row){
+                var out = true;
+                _.each(conditions, function(condition){
+                    if(!condition(row)){
+                        out = false;
+                        return false;
+                    }
+                });
+                return out;
+            };
+        };
+
     	this.completePartialFromDate = function(date){
-            var segments = date.split(/[-:\s\/]+/);
+            var segments = (date || '').split(/[-:\s\/]+/);
             var year = segments[0];
             var month = segments[1] || "01";
             var day = segments[2] || "01";
@@ -340,7 +427,7 @@
         };
 
         this.completePartialToDate = function(date){
-            var segments = date.split(/[-:\s\/]+/);
+            var segments = (date || '').split(/[-:\s\/]+/);
             var year = segments[0] || "";
             var month = segments[1] || "";
             var day = segments[2] || "";

@@ -10,7 +10,7 @@
         var entityType = stateFromTo.replace(/^.*-/, '');
         var facilityName = $state.params.facilityName;
         var facility = tc.facility(facilityName);
-        var facilityId = facility.config().facilityId;
+        var facilityId = facility.config().id;
         var icat = tc.icat(facilityName);
         var gridOptions = _.merge({data: [], appScopeProvider: this}, facility.config().browse[entityType].gridOptions);
         var uiGridState = $state.params.uiGridState ? JSON.parse($state.params.uiGridState) : null;
@@ -46,7 +46,7 @@
         _.each(this.gridOptions.columnDefs, function(columnDef){
             if(columnDef.sort){
                 sortColumns.push({
-                    colDef: {jpqlExpression: columnDef.jpqlExpression},
+                    colDef: {jpqlSort: columnDef.jpqlSort},
                     sort: columnDef.sort
                 })
             }
@@ -123,7 +123,7 @@
                     if(variableName == 'proposal'){
                         out.where(["investigation.name = ?", id]);
                     } else {
-                        out.where(["?.id = ?", variableName.safe(), parseInt(id)]);
+                        out.where(["?.id = ?", variableName.safe(), parseInt(id || "-1")]);
                     }
                 }
             });
@@ -143,7 +143,7 @@
                         to = helpers.completePartialToDate(to);
                         out.where([
                             "? between {ts ?} and {ts ?}",
-                            columnDef.jpqlExpression.safe(),
+                            columnDef.jpqlFilter.safe(),
                             from.safe(),
                             to.safe()
                         ]);
@@ -156,7 +156,7 @@
                         to = parseInt(to || '1000000000');
                         out.where([
                             "? between ? and ?",
-                            columnDef.jpqlExpression.safe(),
+                            columnDef.jpqlFilter.safe(),
                             from,
                             to
                         ]);
@@ -165,7 +165,7 @@
                 } else if(columnDef.type == 'string' && columnDef.filter && columnDef.filter.term) {
                     out.where([
                         "UPPER(?) like concat('%', ?, '%')", 
-                        columnDef.jpqlExpression.safe(),
+                        columnDef.jpqlFilter.safe(),
                         columnDef.filter.term.toUpperCase()
                     ]);
                 }
@@ -193,7 +193,7 @@
 
             _.each(sortColumns, function(sortColumn){
                 if(sortColumn.colDef){
-                    out.orderBy(sortColumn.colDef.jpqlExpression, sortColumn.sort.direction);
+                    out.orderBy(sortColumn.colDef.jpqlSort, sortColumn.sort.direction);
                 }
             });
 

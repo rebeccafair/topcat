@@ -15,7 +15,15 @@ describe('my jobs controller', function () {
         });
     });
 
-    beforeEach(module('angularApp'));
+    beforeEach(function(){
+        module('angularApp', function($provide){
+            $provide.decorator('$rootScope', function($delegate){
+                $delegate.updateLoadingState = function(){};
+                return $delegate;
+            });
+        })
+
+    })
 
     beforeEach(inject(function($controller, $rootScope, _$q_, $interval, $uibModal, $httpBackend, _mockJobs_, _mockCartItems_, APP_CONFIG){
 
@@ -75,8 +83,11 @@ describe('my jobs controller', function () {
             ijp: function(facilityName){
                 return ijpServiceMock;
             },
-            ijpFacilities() {
+            ijpFacilities: function() {
                 return [ijpFacilityMock];
+            },
+            userFacilities: function() {
+                return [];
             },
             config: function(){
                 return APP_CONFIG.site;

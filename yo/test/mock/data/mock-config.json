@@ -1,6 +1,6 @@
 {    
     "site": {
-        "topcatUrl": "https://localhost:8181",
+        "topcatUrl": "https://sig-24.esc.rl.ac.uk:8181",
         "home" : "my-data",
         "enableEuCookieLaw" : true,
         "paging" : {
@@ -209,13 +209,13 @@
 
         ]
     },
-    "facilities": {
-        "test": {
+    "facilities": [
+        {
+            "name": "test",
             "title": "TEST",
-            "icatUrl": "https://sig-24.esc.rl.ac.uk:8181",
+            "icatUrl": "https://localhost:8181",
             "idsUrl": "https://localhost:8181",
             "ijpUrl": "https://localhost:8181",
-            "facilityId": 1,
             "hierarchy": [
                 "facility",
                 "instrument",
@@ -239,90 +239,37 @@
             ],
             "downloadTransportTypes": [
                 {
-                    "title" : "DOWNLOAD.TRANSPORT.HTTPS.NAME",
                     "type" : "https",
-                    "default" : true,
-                    "url": "https://localhost:18181"
+                    "idsUrl": "https://localhost:18181"
                 },
                 {
-                    "title" : "DOWNLOAD.TRANSPORT.GLOBUS.NAME",
                     "type" : "globus",
-                    "url": "https://localhost:18181"
+                    "idsUrl": "https://localhost:18181"
                 }
             ],
             "admin":{
                 "gridOptions": {
                     "columnDefs": [
                         {
-                            "field": "userName",
-                            "title": "DOWNLOAD.COLUMN.FILE_NAME",
-                            "type" : "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            }
+                            "field": "userName"
                         },
                         {
-                            "field": "preparedId",
-                            "title": "DOWNLOAD.COLUMN.FILE_NAME",
-                            "type" : "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            }
+                            "field": "preparedId"
                         },
                         {
-                            "field": "transport",
-                            "title": "DOWNLOAD.COLUMN.TRANSPORT",
-                            "type" : "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            }
+                            "field": "transport"
                         },
                         {
-                            "field": "status",
-                            "title": "DOWNLOAD.COLUMN.STATUS",
-                            "type" : "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            }
+                            "field": "status"
                         },
                         {
-                            "field": "size",
-                            "title": "DOWNLOAD.COLUMN.SIZE",
-                            "type" : "number"
+                            "field": "size"
                         },
                         {
-                            "field": "createdAt",
-                            "title": "DOWNLOAD.COLUMN.CREATED_AT",
-                            "type": "date",
-                            "cellFilter": "date: 'yyyy-MM-dd HH:mm:ss'",
-                            "filters": [
-                                {
-                                    "placeholder": "From...",
-                                    "type": "input"
-                                },
-                                {
-                                    "placeholder": "To...",
-                                    "type": "input"
-                                }
-                            ]
+                            "field": "createdAt"
                         },
                         {
-                            "field": "isDeleted",
-                            "title": "DOWNLOAD.COLUMN.IS_DELETED",
-                            "type" : "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            }
+                            "field": "isDeleted"
                         }
                     ]
                 }
@@ -330,100 +277,43 @@
             "myData": {
                 "entityType" : "investigation",
                 "gridOptions": {
-                    "enableFiltering": true,
                     "enableSelection": false,
                     "columnDefs": [
                         {
                             "field": "title",
                             "title": "BROWSE.COLUMN.INVESTIGATION.TITLE",
-                            "type": "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            },
-                            "cellTooltip": true,
                             "link": true
                         },
                         {
                             "field": "visitId",
                             "title": "BROWSE.COLUMN.INVESTIGATION.VISIT_ID",
-                            "type": "string",
-                            "filter": {
-                                "condition": "contains",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            },
                             "link": true
                         },
                         {
                             "field": "datafileParameter.numericValue",
                             "title": "BROWSE.COLUMN.INVESTIGATION.RUN_NUMBER",
-                            "type": "number",
-                            "where": "datafileParameterType.name = 'run_number'",
-                            "filters": [
-                                {
-                                    "placeholder": "From...",
-                                    "type": "input"
-                                },
-                                {
-                                    "placeholder": "To...",
-                                    "type": "input"
-                                }
-                            ]
+                            "where": "datafileParameterType.name = 'run_number'"
                         },
                         {
                             "field": "investigationInstrument.fullName",
-                            "title": "BROWSE.COLUMN.INVESTIGATION.INSTRUMENT.NAME",
-                            "type": "string",
-                            "visible": true,
-                            "filter": {
-                                "condition": "starts_with",
-                                "placeholder": "Containing...",
-                                "type": "input"
-                            }
+                            "title": "BROWSE.COLUMN.INSTRUMENT.NAME"
                         },
                         {
                             "field": "size",
-                            "title": "BROWSE.COLUMN.INVESTIGATION.SIZE",
-                            "type": "number"
+                            "title": "BROWSE.COLUMN.INVESTIGATION.SIZE"
                         },
                         {
                             "field": "startDate",
                             "title": "BROWSE.COLUMN.INVESTIGATION.START_DATE",
-                            "type": "date",
-                            "cellFilter": "date: 'yyyy-MM-dd'",
                             "excludeFuture": true,
                             "sort": {
                               "direction": "desc",
                               "priority": 1
-                            },
-                            "filters": [
-                                {
-                                    "placeholder": "From...",
-                                    "type": "input"
-                                },
-                                {
-                                    "placeholder": "To...",
-                                    "type": "input"
-                                }
-                            ]
+                            }
                         },
                         {
                             "field": "endDate",
-                            "title": "BROWSE.COLUMN.INVESTIGATION.END_DATE",
-                            "type": "date",
-                            "cellFilter": "date: 'yyyy-MM-dd'",
-                            "filters": [
-                                {
-                                    "placeholder": "From...",
-                                    "type": "input"
-                                },
-                                {
-                                    "placeholder": "To...",
-                                    "type": "input"
-                                }
-                            ]
+                            "title": "BROWSE.COLUMN.INVESTIGATION.END_DATE"
                         }
                     ]
                 }
@@ -431,7 +321,6 @@
             "browse":{
                 "instrument": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "columnDefs": [
                             {
                                 "field": "fullName",
@@ -461,12 +350,7 @@
                             "title": "METATABS.INSTRUMENT_SCIENTISTS.TABTITLE",
                             "items": [
                                 {
-                                    "field": "user",
-                                    "data": [
-                                        {
-                                            "field": "fullName"
-                                        }
-                                    ]
+                                    "field": "instrumentScientist.fullName"
                                 }
                             ]
                         }
@@ -474,7 +358,6 @@
                 },
                 "facilityCycle": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "columnDefs": [
                             {
                                 "field": "name",
@@ -494,7 +377,6 @@
                 },
                 "proposal": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "columnDefs": [
                             {
                                 "field": "name",
@@ -505,7 +387,6 @@
                 },
                 "investigation": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "enableSelection": true,
                         "columnDefs": [
                             {
@@ -513,12 +394,19 @@
                                 "sort": {
                                     "direction": "asc"
                                 },
-                                "link": true,
-                                "minWidth": 350
+                                "link": true
                             },
                             {
                                 "field": "visitId",
                                 "link": true
+                            },
+                            {
+                                "field": "investigationVisit",
+                                "jpqlFilter": "CONCAT(investigation.name, '-', investigation.visitId)",
+                                "jpqlSort": "investigation.name, investigation.visitId",
+                                "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.name}}-{{row.entity.visitId}}</div>",
+                                "breadcrumb": true,
+                                "breadcrumbTemplate": "{{item.entity.name}}-{{item.entity.visitId}}"
                             },
                             {
                                 "field": "name",
@@ -528,8 +416,7 @@
                                 "field": "size"
                             },
                             {
-                                "field": "name",
-                                "enableSorting": false
+                                "field": "name"
                             },
                             {
                                 "field": "startDate",
@@ -568,7 +455,9 @@
                             "title": "METATABS.INVESTIGATION_USERS.TABTITLE",
                             "items": [
                                 {
-                                    "field": "investigationUser.name"
+                                    "label": "",
+                                    "field": "investigationUserPivot.role",
+                                    "template": "<span class='label'>{{item.value}}</span><span>{{item.entity.find('investigationUser.fullName')[0]}}</span>"
                                 }
                             ]
                         },
@@ -592,7 +481,6 @@
                 },
                 "dataset": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "enableSelection": true,
                         "enableConfigureJob": true,
                         "columnDefs": [
@@ -615,15 +503,7 @@
                             {
                                 "field": "datasetSample.name"
                             }
-                        ],
-                        "externalFilters": {
-                            "enableJobTypeFilter": true,
-                            "filters": [
-                                {
-                                    "field": "datasetType.name"
-                                }
-                            ]
-                        }
+                        ]
                     },
                     "metaTabs": [
                         {
@@ -658,7 +538,6 @@
                 },
                 "datafile": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "enableSelection": true,
                         "enableDownload": true,
                         "enableConfigureJob": true,
@@ -707,7 +586,7 @@
                 }
             }
         },
-        "lsf": {
+        {
             "name": "LSF",
             "title": "Octopus",
             "icatUrl": "https://vm47.nubes.stfc.ac.uk:8181",
@@ -735,8 +614,7 @@
             "downloadTransportTypes": [
                 {
                     "type" : "https",
-                    "default" : true,
-                    "url": "https://data.octopus.clf.stfc.ac.uk"
+                    "idsUrl": "https://vm47.nubes.stfc.ac.uk:8181"
                 }
             ],
             "admin":{
@@ -796,22 +674,6 @@
                 }
             },
             "browse": {
-                "proposal": {
-                    "gridOptions": {
-                        "enableFiltering": true,
-                        "columnDefs": [
-                            {
-                                "field": "investigation.title",
-                                "link": true,
-                                "breadcrumb": true
-                            },
-                            {
-                                "field": "name",
-                                "link": true
-                            }
-                        ]
-                    }
-                },
                 "investigation": {
                     "gridOptions": {
                         "columnDefs": [
@@ -889,7 +751,7 @@
                             "title": "Publications",
                             "items": [
                                 {
-                                    "title": "Reference",
+                                    "label": "Reference",
                                     "field": "fullReference"
                                 }
                             ]
@@ -921,7 +783,15 @@
                             {
                                 "field": "datasetType.name"
                             }
-                        ]
+                        ],
+                        "externalFilters": {
+                            "enableJobTypeFilter": true,
+                            "filters": [
+                                {
+                                    "field": "datasetType.name"
+                                }
+                            ]
+                        }
                     },
                     "metaTabs": [
                         {
@@ -1005,11 +875,11 @@
                 }
             }
         },
-        "dls": {
+        {
+            "name": "DLS",
             "title": "DIAMOND",
             "icatUrl": "https://icat02.diamond.ac.uk",
             "idsUrl": "https://fdsgos11.fds.rl.ac.uk",
-            "facilityId": 1,
             "hierarchy": [
                 "facility",
                 "proposal",
@@ -1030,17 +900,19 @@
             "downloadTransportTypes": [
                 {
                     "type" : "https",
-                    "default" : true,
-                    "url": "https://fdsgos11.fds.rl.ac.uk"
+                    "idsUrl": "https://fdsgos11.fds.rl.ac.uk"
                 },
                 {
                     "type" : "globus",
-                    "url": "https://fdsgos11.fds.rl.ac.uk"
+                    "idsUrl": "https://fdsgos11.fds.rl.ac.uk"
                 }
             ],
             "admin":{
                 "gridOptions": {
                     "columnDefs": [
+                        {
+                            "field": "fullName"
+                        },
                         {
                             "field": "userName"
                         },
@@ -1100,7 +972,6 @@
             "browse": {
                 "proposal": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "columnDefs": [
                             {
                                 "field": "investigation.title",
@@ -1188,7 +1059,7 @@
                             "title": "Publications",
                             "items": [
                                 {
-                                    "title": "Reference",
+                                    "label": "Reference",
                                     "field": "fullReference"
                                 }
                             ]
@@ -1241,7 +1112,7 @@
                             ]
                         },
                         {
-                            "label": "METATABS.DATASET_TYPE.TABTITLE",
+                            "title": "METATABS.DATASET_TYPE.TABTITLE",
                             "items": [
                                 {
                                     "field": "datasetType.name"
@@ -1299,7 +1170,7 @@
                 }
             }
         },
-        "isis": {
+        {
             "name": "ISIS",
             "title": "ISIS",
             "icatUrl": "https://icat-dev.isis.stfc.ac.uk",
@@ -1321,10 +1192,8 @@
             ],
             "downloadTransportTypes": [
                 {
-                    "title" : "DOWNLOAD.TRANSPORT.HTTPS.NAME",
                     "type" : "https",
-                    "default" : true,
-                    "url": "https://idsdev2.isis.cclrc.ac.uk"
+                    "idsUrl": "https://idsdev.isis.cclrc.ac.uk"
                 }
               
             ],
@@ -1355,33 +1224,10 @@
                     ]
                 }
             },
-            "myJobs": {
-                "gridOptions": {
-                    "enableFiltering": true,
-                    "columnDefs": [
-                        {
-                            "field": "jobId"
-                        },
-                        {
-                            "field": "name"
-                        },
-                        {
-                            "field": "date"
-                        },
-                        {
-                            "field": "status"
-                        }
-                    ]
-                }
-            },
             "myData": {
                 "entityType" : "investigation",
                 "gridOptions": {
-                    "enableFiltering": true,
                     "enableSelection": false,
-                    "includes" : [
-                        "investigation.investigationInstruments.instrument"
-                    ],
                     "columnDefs": [
                         {
                             "field": "title",
@@ -1399,18 +1245,7 @@
                         {
                             "field": "datafileParameter.numericValue",
                             "title": "BROWSE.COLUMN.INVESTIGATION.RUN_NUMBER",
-                            "type": "number",
-                            "where": "datafileParameterType.name = 'run_number'",
-                            "filters": [
-                                {
-                                    "placeholder": "From...",
-                                    "type": "input"
-                                },
-                                {
-                                    "placeholder": "To...",
-                                    "type": "input"
-                                }
-                            ]
+                            "where": "datafileParameterType.name = 'run_number'"
                         },
                         {
                             "field": "startDate",
@@ -1428,7 +1263,6 @@
             "browse":{
                 "instrument": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "columnDefs": [
                             {
                                 "field": "fullName",
@@ -1460,9 +1294,7 @@
                             "title": "METATABS.INSTRUMENT_SCIENTISTS.TABTITLE",
                             "items": [
                                 {
-                                    "find": "instrumentScientistUser",
-                                    "label": "METATABS.INSTRUMENT_SCIENTISTS.USERS_NAME",
-                                    "field": "fullName"
+                                    "field": "instrumentScientist.fullName"
                                 }
                             ]
                         }
@@ -1470,13 +1302,7 @@
                 },
                 "investigation": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "enableSelection": true,
-                        "includes" : [
-                            "investigation.investigationInstruments.instrument",
-                            "investigation.parameters.type"
-                            
-                        ],
                         "columnDefs": [
                             {
                                 "field": "title",
@@ -1514,7 +1340,6 @@
                     "metaTabs": [
                         {
                             "title": "METATABS.INVESTIGATION.TABTITLE",
-                            "default": true,
                             "items": [
                                 {
                                     "field": "name"
@@ -1559,7 +1384,7 @@
                             "title": "Publications",
                             "items": [
                                 {
-                                    "title": "Reference",
+                                    "label": "Reference",
                                     "field": "fullReference"
                                 }
                             ]
@@ -1568,7 +1393,6 @@
                 },
                 "dataset": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "enableSelection": true,
                         "columnDefs": [
                             {
@@ -1591,18 +1415,11 @@
                             {
                                 "field": "datasetType.name"
                             }
-                        ],
-                        "externalFilters": [
-                            {
-                                "field": "datasetType.name",
-                                "jpqlExpression": "type.name"
-                            }
                         ]
                      },
                     "metaTabs": [
                         {
                             "title": "METATABS.DATASET.TABTITLE",
-                            "default": true,
                             "items": [
                                 {
                                     "field": "name"
@@ -1635,7 +1452,6 @@
                 },
                 "facilityCycle": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "columnDefs": [
                             {
                                 "field": "name",
@@ -1662,12 +1478,8 @@
                 },
                 "datafile": {
                     "gridOptions": {
-                        "enableFiltering": true,
                         "enableSelection": true,
                         "enableDownload": true,
-                        "includes" : [
-                            "datafile.parameters.type"
-                        ],
                         "columnDefs": [
                             {
                                 "field": "name"
@@ -1730,5 +1542,5 @@
                 }
             }
         }
-    }
+    ]
 }

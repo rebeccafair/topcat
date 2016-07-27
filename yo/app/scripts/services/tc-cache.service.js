@@ -4,7 +4,7 @@
 
     var app = angular.module('angularApp');
 
-    app.service('tcCache', function($cacheFactory, $q, $timeout, helpers){
+    app.service('tcCache', function($cacheFactory, $q, $timeout, $rootScope, helpers){
 
       this.create = function(name){
         return new Cache(name);
@@ -59,6 +59,9 @@
             var nowSeconds = (new Date).getTime() /  1000;
             var putSeconds = store.get("putSeconds:" + key);
 
+            $rootScope.requestCounter++;
+            $rootScope.updateLoadingState();
+
             if(out === undefined || (putSeconds && (nowSeconds - putSeconds) > seconds)){
               fn().then(function(value){
                 store.put(key, value);
@@ -77,7 +80,14 @@
               });
             }
             
-            return defered.promise;
+            return defered.promise.then(function(value){
+              $rootScope.requestCounter--;
+              $rootScope.updateLoadingState();
+              return value;
+            }, function(){
+              $rootScope.requestCounter--;
+              $rootScope.updateLoadingState();
+            });
           },
           'string, function': function(key, fn){
             return this.getPromise(key, 0, fn);

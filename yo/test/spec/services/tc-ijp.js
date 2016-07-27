@@ -11,7 +11,15 @@ describe('tc ijp service', function () {
         });
     });
 
-    beforeEach(module('angularApp'));
+    beforeEach(function(){
+        module('angularApp', function($provide){
+            $provide.decorator('$rootScope', function($delegate){
+                $delegate.updateLoadingState = function(){};
+                return $delegate;
+            });
+        })
+
+    })
 
     beforeEach(inject(function($httpBackend, tc){
         ijpService = tc.ijp('test');

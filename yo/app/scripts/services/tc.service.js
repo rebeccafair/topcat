@@ -10,13 +10,13 @@
   	var facilities = {};
     var cache;
 
-  	this.facility = function(facilityName){
-  		if(!facilities[facilityName]) facilities[facilityName] = tcFacility.create(tc, facilityName);
-  		return facilities[facilityName];
+  	this.facility = function(name){
+  		if(!facilities[name]) facilities[name] = tcFacility.create(tc, name);
+  		return facilities[name];
   	};
 
   	this.facilities = function(){
-  		return _.map(APP_CONFIG.facilities, function(facility, facilityName){ return tc.facility(facilityName); });
+  		return _.map(APP_CONFIG.facilities, function(facility){ return tc.facility(facility.name); });
   	};
 
   	this.config = function(){ 
@@ -58,7 +58,7 @@
               maxCount: 300
             }, options);
           }).then(function(data){
-            if(data.length > 0){
+            if(data && data.length > 0){
               var ids = [];
               var scores = {};
               _.each(data, function(result){
