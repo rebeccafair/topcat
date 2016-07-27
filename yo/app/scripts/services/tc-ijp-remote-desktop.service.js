@@ -17,7 +17,7 @@
 
         this.openSession = function(sessionDetails){
           var out = $q.defer();
-          this.get('/rdp', {
+          this.get('rdp', {
             accountName: sessionDetails.username,
             password: sessionDetails.password,
             hostName: sessionDetails.host
@@ -28,7 +28,7 @@
         };
 
         if (facility.config().ijpUrl == undefined) console.error('ijpUrl is undefined for facility ' + facility.config().title);
-        helpers.generateRestMethods(this, facility.config().ijpUrl);
+        helpers.generateRestMethods(this, facility.config().ijpUrl + '/ijp/');
 
     	}
 
