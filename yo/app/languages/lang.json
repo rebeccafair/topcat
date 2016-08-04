@@ -721,7 +721,7 @@
         }
     },
     "FILTERS" : {
-        "FILTER_TEXT" : "Filter by",
+        "FILTER_TEXT" : "Filter by {{filterName}}...",
         "DATASET" : {
             "DATASET_TYPE" : "dataset type",
             "NAME" : "dataset name"

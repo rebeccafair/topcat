@@ -6,7 +6,7 @@
 
     var app = angular.module('angularApp');
 
-    app.controller('ConfigureJobController', function($q, $scope, $rootScope, $uibModal, $uibModalInstance, tc, inputEntities, facilityName){
+    app.controller('ConfigureJobController', function($q, $scope, $rootScope, $uibModal, $uibModalInstance, $filter, tc, inputEntities, facilityName){
 
         var that = this;
         var inputEntityTypes = _.uniq(_.map(inputEntities, 'entityType'));
@@ -171,7 +171,7 @@
                         if (inputContainsDatafiles) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return jobType.acceptsDatafiles});
 
                         that.compatibleJobTypes = compatibleJobTypes;
-                        that.selectedJobType = that.compatibleJobTypes[0] || "";
+                        that.selectedJobType = $filter('orderBy')(that.compatibleJobTypes, 'name')[0] || "";
                         that.loadingJobTypes = false;
                         setupJobOptions();
                     });
@@ -185,7 +185,7 @@
                     if (multipleInputEntities) compatibleJobTypes = _.filter(compatibleJobTypes, function(jobType){ return (jobType.type === "batch" || jobType.multiple) });
 
                     that.compatibleJobTypes = compatibleJobTypes;
-                    that.selectedJobType = compatibleJobTypes[0] || "";
+                    that.selectedJobType = $filter('orderBy')(that.compatibleJobTypes, 'name')[0] || "";
                     that.loadingJobTypes = false;
                     setupJobOptions();
 
@@ -193,7 +193,7 @@
                     //If there is no input, show 'job-only' jobs, where neither datasets nor datafiles are accepted
                     var compatibleJobTypes = _.filter(allJobTypes, function(jobType) { return !(jobType.acceptsDatafiles || jobType.acceptsDatasets) });
                     that.compatibleJobTypes = compatibleJobTypes;
-                    that.selectedJobType = compatibleJobTypes[0] || "";
+                    that.selectedJobType = $filter('orderBy')(that.compatibleJobTypes, 'name')[0] || "";
                     that.loadingJobTypes = false;
                     setupJobOptions();
                 }
